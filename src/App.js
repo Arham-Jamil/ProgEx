@@ -4,6 +4,7 @@ import Header from "./components/layout/Header";
 import Meals from "./components/meals/Meals";
 import Cart from "./components/cart/Cart";
 import CartProvider from "./store/CartProvider";
+import ServerCalled from "./components/callServer/ServerCalled";
 
 function App() {
   const [cartIsShown, setCartIsShown] = useState(false);
@@ -24,6 +25,7 @@ function App() {
       <main>
         <Meals />
       </main>
+      <ServerCalled />
     </CartProvider>
   );
 }
