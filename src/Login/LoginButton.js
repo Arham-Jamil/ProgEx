@@ -1,5 +1,7 @@
 const LoginButton = () =>{
     return(
-        <button></button>
+        <button>Login</button>
     )
 }
+
+export default LoginButton
