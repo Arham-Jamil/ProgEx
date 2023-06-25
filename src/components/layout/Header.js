@@ -3,11 +3,16 @@ import mainheaderImage from "../../assests/main-qimg-981ceae310b1cf68e367f110ae9
 import classes from "./Header.module.css";
 import HeaderCartButton from "./HeaderCartButton";
 
+
+//this the top bar of the application.
+//It contains the cart button(HeaderCartBtn), app title etc
+//fragment allows you to group various elements in a component without having to add them to app.js
 const Header = (props) => {
   return (
     <Fragment>
       <header className={classes.header}>
-        <h1>ZeApp</h1>
+        <h1>ZeApp</h1> 
+        {/* this ths cart btn       */}
         <HeaderCartButton onClick={props.onShowCart} />
       </header>
       <div className={classes["main-image"]}>

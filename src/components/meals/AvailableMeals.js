@@ -2,6 +2,9 @@ import classes from "./AvailableMeals.module.css";
 import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
 
+
+
+//databas connection should be made here
 const DUMMY_MEALS = [
   {
     id: "1",
@@ -30,7 +33,9 @@ const DUMMY_MEALS = [
 ];
 
 const AvailableMeals = () => {
+  //the method map is used to go through the meals picking each aspect as seen in <MealItem .. 
   const mealsList = DUMMY_MEALS.map((meal) => (
+    // the information her comes from MealItem
     <MealItem
       id={meal.id}
       key={meal.id}
@@ -43,6 +48,7 @@ const AvailableMeals = () => {
   return (
     <section className={classes.meals}>
       <Card>
+        {/* list of meals appear here */}
         <ul>{mealsList}</ul>
       </Card>
     </section>

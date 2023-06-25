@@ -10,25 +10,31 @@ const Cart = (props) => {
 
   const [showOrder, setShowOrder] = useState(false);
 
+  // total amount must be adjusted usingn the database
   const totalAmount = `€${cartCtx.totalAmount.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
 
+  // removes item from the cart
+  // must be able to communicate with the databse
   const cartItemRemoveHandler = (id) => {
     cartCtx.removeItem(id);
   };
 
+  // adds item to then cart
+  // must be able to comunicate with the database
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
 
-  
-  const orderHanlder = () => {
+  // logic here must communicate with the dashboard and the database
+  const orderHandler = () => {
     cartCtx.clearall();
     setShowOrder(true);
   };
 
   const cartItems = (
     <ul className={classes["cart-items"]}>
+      {/* loops through contennts of the cart */}
       {cartCtx.items.map((item) => (
         <CartItem
           key={item.id}
@@ -44,6 +50,7 @@ const Cart = (props) => {
 
   return (
     <Modal onClose={props.onClose}>
+      {/* shows the contents of the cart. If the order button is clicked, the card closes and a connfirmation appears on the screen */}
       {!showOrder ? (
         <>
           {cartItems}
@@ -56,7 +63,7 @@ const Cart = (props) => {
               Close
             </button>
             {hasItems && (
-              <button className={classes.button} onClick={orderHanlder}>
+              <button className={classes.button} onClick={orderHandler}>
                 Order
               </button>
             )}

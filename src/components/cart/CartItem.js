@@ -1,6 +1,7 @@
 import classes from "./CartItem.module.css";
 
 const CartItem = (props) => {
+  // must be adjusted with the database
   const price = `€${props.price.toFixed(2)}`;
 
   return (

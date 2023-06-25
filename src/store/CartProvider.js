@@ -6,8 +6,11 @@ const defaultCartState = {
   totalAmount: 0,
 };
 
+// what is suppose to happen when the add or remove button are hit.
+// this needs to be connected to the database
 const cartReducer = (state, action) => {
   if (action.type === "ADD") {
+    // keeps price with respect to item coherent
     const updatedTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
 
