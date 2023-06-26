@@ -1,28 +1,25 @@
 import { Fragment, useState } from "react";
-import KitchenOrders from "../KitchenMenu/KitchenOrders";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
-
+//logic to authenticate the credentials
 const Login = () =>{
 
     const[email, setEmail] = useState("")
     const[password, setPassword] = useState("")
-    const[KitchenOrderShown, setKitchenOrderShown]=useState(false)
+    const[loggedIn, setLoggedIn] = useState(false)
 
     const handleSubmit = (e) =>{
         //zu ergänzen mit databank staff credentials
+        //if the credentials are correct, navigate to contact page
         e.preventDefault();
-        setKitchenOrderShown(true)
+        setLoggedIn(true);
         console.log('loggen in')
     }
 
-  
-
-    //modify this 
-    if(KitchenOrderShown){
-        return <KitchenOrders />
+    if(loggedIn){
+        return <Navigate to="/src/pages/Kitchen.js"/>
     }
-
+  
 
     return(
         <Fragment>
