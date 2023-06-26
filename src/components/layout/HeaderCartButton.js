@@ -2,7 +2,7 @@ import CartIcon from "../cart/CartIcon";
 import classes from "./HeaderCartButton.module.css";
 import CartContext from "../../store/cart-context";
 import { useContext, useEffect, useState, Fragment } from "react";
-import LoginButton from "../../Login/LoginButton"
+
 
 const HeaderCartButton = (props) => {
   const [btnIsHighlighted, setBtnIsHighlighted] = useState(false);

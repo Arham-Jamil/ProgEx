@@ -1,3 +1,4 @@
+import KitchenOrders from "../KitchenMenu/KitchenOrders.js";
 import CartContext from "./cart-context.js";
 import { useReducer } from "react";
 
@@ -96,6 +97,7 @@ const CartProvider = (props) => {
   return (
     <CartContext.Provider value={cartContext}>
       {props.children}
+      <KitchenOrders />
     </CartContext.Provider>
   );
 };
