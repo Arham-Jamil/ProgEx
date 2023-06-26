@@ -1,13 +1,12 @@
 import { Fragment, useState } from "react";
-import App from "../App"
 import KitchenOrders from "../KitchenMenu/KitchenOrders";
+import { Link } from "react-router-dom";
 
 
 const Login = () =>{
 
     const[email, setEmail] = useState("")
     const[password, setPassword] = useState("")
-    const[HomepageIsShown, setHomepageIsShown]=useState(false)
     const[KitchenOrderShown, setKitchenOrderShown]=useState(false)
 
     const handleSubmit = (e) =>{
@@ -17,15 +16,9 @@ const Login = () =>{
         console.log('loggen in')
     }
 
-    //this is used to return to the homepage (Appjs)
-    const toggleHomepage = () =>{
-        setHomepageIsShown(true)
-    }
+  
 
-    if(HomepageIsShown){
-        return <App />
-    }
-
+    //modify this 
     if(KitchenOrderShown){
         return <KitchenOrders />
     }
@@ -41,7 +34,7 @@ const Login = () =>{
                 <button type="submit" onClick={handleSubmit}>Log in</button>
             </form>
             <p>Just for staff members</p>
-            <button onClick={toggleHomepage}>back</button>
+            <Link to="/src/pages/HomePage.js">back</Link>
         </Fragment>
     )
 }
