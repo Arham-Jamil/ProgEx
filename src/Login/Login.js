@@ -1,10 +1,12 @@
 import { useState } from "react";
+import App from "../App"
 
 
 const Login = () =>{
 
     const[email, setEmail] = useState("")
     const[password, setPassword] = useState("")
+    const[HomepageIsShown, setHomepageIsShown]=useState(false)
 
     const handleSubmit = (e) =>{
         //zu ergänzen
@@ -12,6 +14,14 @@ const Login = () =>{
         console.log('loggen in')
     }
 
+    const toggleHomepage = () =>{
+        setHomepageIsShown(true)
+    }
+
+    if(HomepageIsShown){
+        return <App />
+    }
+// login page should be added to app.js in such a way that is shown only when loginbtn is clicked
 
     return(
         <>
@@ -23,6 +33,7 @@ const Login = () =>{
             <button type="submit" onClick={handleSubmit}>Log in</button>
         </form>
         <p>Just for staff members</p>
+        <button onClick={toggleHomepage}>back</button>
         </>
     )
 }

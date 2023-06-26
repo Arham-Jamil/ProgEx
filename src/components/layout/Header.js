@@ -2,7 +2,6 @@ import { Fragment } from "react";
 import mainheaderImage from "../../assests/main-qimg-981ceae310b1cf68e367f110ae991ff0-lq.jpeg";
 import classes from "./Header.module.css";
 import HeaderCartButton from "./HeaderCartButton";
-import LoginButton from "../../Login/LoginButton";
 
 
 //this the top bar of the application.
@@ -13,7 +12,6 @@ const Header = (props) => {
     <Fragment>
       <header className={classes.header}>
         <h1>ZeApp</h1> 
-        <LoginButton/>
         {/* this ths cart btn       */}
         <HeaderCartButton onClick={props.onShowCart} />
       </header>
