@@ -12,6 +12,8 @@ const db = new sqlite3.Database(dbFilePath, (err) => {
     console.log('Connected to the in-memory SQlite database.');
   });
 
+//test
+
 //db.serialize(() => {
 //
 // // Create Dishes table
