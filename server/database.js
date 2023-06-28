@@ -182,11 +182,11 @@ function getAllDishes() {
 }
 
 // Create an order
-function createOrder(dishesId, status, description, additionalCharges, refunded) {
+function createOrder(tableNumber, paid, date) {
   return new Promise((resolve, reject) => {
     db.run(
-      'INSERT INTO orders (dishes_id, status, description, additionalCharges, refunded) VALUES (?, ?, ?, ?, ?)',
-      [dishesId, status, description, additionalCharges, refunded],
+      'INSERT INTO orders (tablenumber, paid, date) VALUES (?, ?, ?)',
+      [tableNumber, paid, date],
       function (err) {
         if (err) {
             console.error(err.message);
@@ -198,11 +198,11 @@ function createOrder(dishesId, status, description, additionalCharges, refunded)
   });
 }
 
-// Get all orders with dish details
+// Get all orders 
 function getAllOrders() {
   return new Promise((resolve, reject) => {
     db.all(
-      'SELECT orders.id, dishes.name, dishes.price, dishes.description, dishes.available, dishes.quantity, dishes.imagePath, orders.status, orders.description, orders.additionalCharges, orders.refunded FROM orders JOIN dishes ON orders.dishes_id = dishes.id',
+      'SELECT orders.id, orders.tablenumber, orders.paid, orders.date FROM orders',
       (err, orders) => {
         if (err) {
             console.error(err.message);
@@ -214,7 +214,27 @@ function getAllOrders() {
   });
 }
 
-// Get all orders with dish details
+
+//dennis testet Sachen
+function getTableFromQuery(queryString) {
+  return new Promise((resolve, reject) => {
+    db.all(
+      queryString,
+      (err, tableReturn) => {
+        if (err) {
+          console.error(err.message);
+          reject(err); // Reject the promise if there's an error
+        } else {
+          resolve(tableReturn); // Resolve the promise with the retrieved ordered dishes
+        }
+      }
+    );
+  });
+}
+
+
+
+//
 function closeDB() {
     db.close((err) => {
         if (err) {
@@ -224,4 +244,4 @@ function closeDB() {
       });
   }
 
-module.exports = { createDish, getAllDishes, createOrder, getAllOrders, closeDB };
+module.exports = { createDish, getAllDishes, createOrder, getAllOrders, closeDB, getTableFromQuery };
