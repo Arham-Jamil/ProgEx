@@ -11,7 +11,7 @@ const Header = (props) => {
   return (
     <Fragment>
       <header className={classes.header}>
-        <h1>ZeApp</h1> 
+        <h1>Restaurant Order App</h1> 
         {/* this ths cart btn       */}
         <HeaderCartButton onClick={props.onShowCart} />
       </header>

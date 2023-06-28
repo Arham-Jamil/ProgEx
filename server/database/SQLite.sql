@@ -181,15 +181,61 @@
 -- INSERT INTO OrderedDrinks (Orders_ID,Drinks_ID,Status,Description,AdditionalCharges,Refunded)
 -- VALUES(1,2,0,NULL,0,0);
 
-SELECT * FROM Orders;
+
+
+
+-- INSERT INTO Extras (Name, Price, Available)
+-- VALUES('Salad',0.5,0);
+
+
+-- INSERT INTO Ingredients (Name, Quantity, UnitOfMeasurement)
+-- VALUES('Mango',0,'g');
+
+-- INSERT INTO StaffAccount (Username, Password, Salt, Active)
+-- VALUES ('TestAdmin','Passwort','Salz',1),
+-- ('TestUser','75170fc230csadd88f32e475ff4087f81d9','f604b036bfa56das8441f0fd63c75fc0404',0);
+
 SELECT * FROM OrderedDishes;
 SELECT * FROM OrderedDrinks;
+SELECT * FROM Orders;
 
-SELECT * FROM CategoryDish;
-SELECT * FROM CategoryDrinks;
+
 SELECT * FROM Extras;
 SELECT * FROM Ingredients;
 SELECT * FROM StaffAccount;
 
-SELECT * FROM Drinks;
 SELECT * FROM Dishes;
+SELECT * FROM CategoryDish;
+SELECT * FROM Dish_Cat;
+
+SELECT * FROM CategoryDrinks;
+SELECT * FROM Drinks;
+SELECT * FROM Drinks_Cat;
+
+
+
+-- Join Drinks
+SELECT Drinks.*, CategoryDrinks.name AS 'Category'
+FROM Drinks
+INNER JOIN Drinks_Cat ON Drinks.id = Drinks_Cat.drinks_id
+INNER JOIN CategoryDrinks ON Drinks_Cat.categoryDrinks_id = CategoryDrinks.id;
+
+--join dishes
+SELECT Dishes.*, CategoryDish.name AS 'Category'
+FROM Dishes
+INNER JOIN Dish_Cat ON Dishes.id = Dish_Cat.dishes_id
+INNER JOIN CategoryDish ON Dish_Cat.categoryDish_id = Categorydish.id;
+
+--join Orders
+
+
+
+SELECT * FROM OrderedDishes;
+SELECT * FROM OrderedDrinks;
+SELECT * FROM Orders;
+
+
+SELECT Orders.ID, Orders.TableNumber, Orders.Paid, Orders.Date, OrderedDishes.*, OrderedDrinks.*
+FROM Orders
+LEFT JOIN OrderedDishes ON Orders.ID = OrderedDishes.Orders_ID
+LEFT JOIN OrderedDrinks ON Orders.ID = OrderedDrinks.Orders_ID;

@@ -1,3 +1,17 @@
+#### ------------------ ####
+# Install Depenencies
+Client: 
+-npm install
+-npm install axios
+Server: 
+npm install react-router-dom
+
+# Build for server
+Currently "npm run build" in client directory
+
+#### ------------------ ####
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
