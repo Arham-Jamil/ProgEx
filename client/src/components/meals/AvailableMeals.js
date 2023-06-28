@@ -1,49 +1,36 @@
 import classes from "./AvailableMeals.module.css";
 import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
-
-
-
-//databas connection should be made here
-const DUMMY_MEALS = [
-  {
-    id: "1",
-    name: "Hamburger",
-    description: "The Classic Burger",
-    price: 22.99,
-  },
-  {
-    id: "2",
-    name: "Fried chicken",
-    description: "Special crispy chicken.",
-    price: 16.5,
-  },
-  {
-    id: "3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const AvailableMeals = () => {
-  //the method map is used to go through the meals picking each aspect as seen in <MealItem .. 
-  const mealsList = DUMMY_MEALS.map((meal) => (
-    // the information her comes from MealItem
-    <MealItem
-      id={meal.id}
-      key={meal.id}
-      name={meal.name}
-      description={meal.description}
-      price={meal.price}
-    />
-  ));
+  const [meals, setMeals] = useState([]);
+
+  useEffect(() => {
+    // Function to fetch dishes
+    const fetchMeals = async () => {
+      try {
+        const response = await axios.get('/dishes'); // Make the GET request to the API endpoint
+        setMeals(response.data); // Set the fetched dishes in the state variable
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchMeals(); // Call the function to fetch dishes when the component mounts
+  }, []);
+
+    const mealsList = meals.map((meal) => (
+      // the information her comes from MealItem
+      <MealItem
+        id={meal.ID}
+        key={meal.ID}
+        name={meal.Name}
+        description={meal.Description}
+        price={meal.Price}
+      />
+    ));
 
   return (
     <section className={classes.meals}>
