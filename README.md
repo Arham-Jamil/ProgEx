@@ -1,13 +1,15 @@
-#### ------------------ ####
 # Install Depenencies
-Client: 
+# Client 
 -npm install
 -npm install axios
-Server: 
+# Server
 npm install react-router-dom
 
 # Build for server
-Currently "npm run build" in client directory
+cd ../client
+npm run build
+
+Then "npm start" in /server
 
 #### ------------------ ####
 
