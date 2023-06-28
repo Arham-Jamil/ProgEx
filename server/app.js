@@ -2,7 +2,7 @@
 
 const express = require('express');
 const path = require('path');
-const { getAllDishes, createDish, createOrder, getAllOrders, closeDB, getTableFromQuery } = require('./database');
+const {createDish, createOrder, closeDB, getTableFromQuery, queries } = require('./database');
 const app = express();
 
 // Middleware to parse JSON requests
@@ -20,16 +20,6 @@ app.post('/dishes', async (req, res) => {
   }
 });
 
-// app.get('/dishes', async (req, res) => {
-//   try {
-//     const dishes = await getAllDishes();
-//     res.json(dishes);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Failed to fetch dishes' });
-//   }
-// });
-
 //muss noch angepasst werden
 app.post('/orders', async (req, res) => {
   const { dishesId, status, description, additionalCharges, refunded } = req.body;
@@ -42,43 +32,21 @@ app.post('/orders', async (req, res) => {
   }
 });
 
-// app.get('/orders', async (req, res) => {
-//   try {
-//     const orders = await getAllOrders();
-//     res.json(orders);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Failed to fetch orders' });
-//   }
-// });
+/*implement here every other app.get() which is handled differently
+*
+*
+*
+*/
 
-
-//dennis testet Sachen
-
-// Global queries for SELECT * for each table
-const queries = {
-  ordereddishes: 'SELECT * FROM OrderedDishes',
-  ordereddrinks: 'SELECT * FROM OrderedDrinks',
-  categorydish: 'SELECT * FROM CategoryDish',
-  categorydrinks: 'SELECT * FROM CategoryDrinks',
-  extras: 'SELECT * FROM Extras',
-  ingredients: 'SELECT * FROM Ingredients',
-  staffaccount: 'SELECT * FROM StaffAccount',
-  drinks: 'SELECT * FROM Drinks',
-  dishes: 'SELECT * FROM Dishes',
-  orders: 'SELECT * FROM Orders',
-  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.name AS Category FROM Drinks INNER JOIN Drinks_Cat ON Drinks.id = Drinks_Cat.drinks_id INNER JOIN CategoryDrinks ON Drinks_Cat.categoryDrinks_id = CategoryDrinks.id',
-  dishesjoin: 'SELECT Dishes.*, CategoryDish.name AS Category FROM Dishes INNER JOIN Dish_Cat ON Dishes.id = Dish_Cat.dishes_id INNER JOIN CategoryDish ON Dish_Cat.categoryDish_id = Categorydish.id'
-};
-
-
-// Route handler. 
-//every table as a path results in getting a SELECT * from said table
-app.get(['/ordereddishes', '/ordereddrinks', '/categorydish', '/categorydrinks', '/extras', '/ingredients', '/staffaccount', '/drinks', '/dishes', '/orders', '/drinksjoin', '/dishesjoin'], async (req, res) => {
-  const resource = req.path.slice(1).toLowerCase(); //cut the "/" so it matches the property names of the queries object
+/*Route handler. every table as a path results in getting a SELECT * from said table
+    old: /ordereddishes', '/ordereddrinks', '/categorydish', '/categorydrinks', '/extras', '/ingredients', '/staffaccount', '/drinks', '/dishes', '/orders', '/drinksjoin', '/dishesjoin'
+*/
+app.get(['/:resource'], async (req, res) => {
+  const resource = req.params.resource.toLowerCase();
+  //const resource = req.path.slice(1).toLowerCase();
   try {
 
-    const query = queries[resource]; //kann man später mit nem switch ersetzen wenn der Pfad nicht dem Table entsprechen soll (joins usw)
+    const query = queries[resource]; //vllt später mit switch ersetzen
 
     if (!query) { 
       console.log("Query: "+query);
