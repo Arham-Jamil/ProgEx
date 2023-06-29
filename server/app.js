@@ -1,5 +1,4 @@
 // server/app.js
-
 const express = require('express');
 const path = require('path');
 const {createDish, createOrder, closeDB, getTableFromQuery, queries } = require('./database');
@@ -8,7 +7,16 @@ const app = express();
 // Middleware to parse JSON requests
 app.use(express.json());
 
+//allows client to access server resources (to display dishes etc.)
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  next();
+});
+
 // API endpoints
+
+
+//muss noch angepasst werden
 app.post('/dishes', async (req, res) => {
   const { name, price, description, available, quantity, imagePath } = req.body;
   try {
@@ -19,7 +27,6 @@ app.post('/dishes', async (req, res) => {
     res.status(500).json({ error: 'Failed to create dish' });
   }
 });
-
 //muss noch angepasst werden
 app.post('/orders', async (req, res) => {
   const { dishesId, status, description, additionalCharges, refunded } = req.body;
@@ -38,9 +45,8 @@ app.post('/orders', async (req, res) => {
 *
 */
 
-/*Route handler. every table as a path results in getting a SELECT * from said table
-    old: /ordereddishes', '/ordereddrinks', '/categorydish', '/categorydrinks', '/extras', '/ingredients', '/staffaccount', '/drinks', '/dishes', '/orders', '/drinksjoin', '/dishesjoin'
-*/
+//Route handler. every table as a path results in getting a SELECT * from said table
+//  old: /ordereddishes', '/ordereddrinks', '/categorydish', '/categorydrinks', '/extras', '/ingredients', '/staffaccount', '/drinks', '/dishes', '/orders', '/drinksjoin', '/dishesjoin'
 app.get(['/:resource'], async (req, res) => {
   const resource = req.params.resource.toLowerCase();
   //const resource = req.path.slice(1).toLowerCase();

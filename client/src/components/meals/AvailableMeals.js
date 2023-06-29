@@ -11,7 +11,7 @@ const AvailableMeals = () => {
     // Function to fetch dishes
     const fetchMeals = async () => {
       try {
-        const response = await axios.get('/dishes'); // Make the GET request to the API endpoint
+        const response = await axios.get('http://localhost:3001/dishes'); // Make the GET request to the API endpoint
         setMeals(response.data); // Set the fetched dishes in the state variable
       } catch (error) {
         console.error(error);
