@@ -6,8 +6,7 @@
 npm install react-router-dom
 
 # Build for server
-cd ../client
-npm run build
+npm run build #can be executed in /server directory
 
 Then "npm start" in /server
 
