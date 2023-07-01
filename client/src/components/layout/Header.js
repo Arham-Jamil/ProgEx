@@ -1,5 +1,5 @@
 import { Fragment,useContext, useEffect, useState } from "react";
-import mainheaderImage from "../../assests/main-qimg-981ceae310b1cf68e367f110ae991ff0-lq.jpeg";
+import mainheaderImage from "../../assests/frontPageImage.jpeg";
 import classes from "./Header.module.css";
 import CartContext from "../../store/cart-context";
 import Cart from "../cart/Cart";

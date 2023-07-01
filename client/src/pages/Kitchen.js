@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Card from '../components/UI/Card'
 
 const Kitchen = () =>{
     const [orders, setOrders] = useState([]);
@@ -22,7 +21,7 @@ const Kitchen = () =>{
   }, []);
 
   const orderList = orders.map((order) => (
-    <Card>
+
     <div key={order.ID}>
       <p>ID: {order.ID}</p>
       <p>Table Number: {order.TableNumber}</p>
@@ -30,7 +29,6 @@ const Kitchen = () =>{
       <p>Date: {order.Date}</p>
       <hr />
     </div>
-    </Card>
   ));
   
     return(
