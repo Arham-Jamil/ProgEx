@@ -1,4 +1,4 @@
-import MealsSummary from "./MealsSummary";
+import RestaurantDescription from "./RestaurantDescription";
 import AvailableMeals from "./AvailableMeals";
 import { Fragment } from "react";
 import ServerCalled from "../callServer/ServerCalled";
@@ -7,7 +7,7 @@ import ServerCalled from "../callServer/ServerCalled";
 const Meals = () => {
   return (
     <Fragment>
-      <MealsSummary />
+      <RestaurantDescription />
       <AvailableMeals />
       <ServerCalled />
     </Fragment>

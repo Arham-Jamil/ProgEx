@@ -1,4 +1,4 @@
-import classes from "./MealsSummary.module.css";
+import classes from "./RestaurantDescription.module.css";
 
 // the big banner at the beginning
 const MealsSummary = () => {

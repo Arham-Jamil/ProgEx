@@ -9,9 +9,9 @@ const Login = () =>{
     const[loggedIn, setLoggedIn] = useState(false)
 
     const handleSubmit = (e) =>{
+        e.preventDefault();
         //zu ergänzen mit databank staff credentials
         //if the credentials are correct, navigate to contact page
-        e.preventDefault();
         setLoggedIn(true);
         console.log('loggen in')
     }

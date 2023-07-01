@@ -6,6 +6,7 @@ const ServerCalled = (props) =>{
 
     const togglePopup = () => {
     setPopup(!popup);
+    ///////
   };
     return(
         <>
