@@ -1,9 +1,10 @@
 // server/app.js
 const express = require('express');
 const path = require('path');
-const {createDish, createOrder, closeDB, getTableFromQuery, queries } = require('./database');
+const {createDish, updateIngredientQuantity,createIngredient, closeDB, getTableFromQuery, queries, deleteIngredientById } = require('./database');
 const app = express();
 
+const cors = require('cors');
 // Middleware to parse JSON requests
 app.use(express.json());
 
@@ -13,31 +14,53 @@ app.use((req, res, next) => {
   next();
 });
 
+//apparently needed for post requests
+app.use(cors());
+
 // API endpoints
 
 
 //muss noch angepasst werden
-app.post('/dishes', async (req, res) => {
-  const { name, price, description, available, quantity, imagePath } = req.body;
+app.post('/ingredients', async (req, res) => {
+  console.log('req.body: ', req.body);
+  const {Name: name, Quantity: quantity,UnitOfMeasurement: unitOfMeasurement} = req.body;
+  console.log('name in post: ',name);
   try {
-    const dishId = await createDish(name, price, description, available, quantity, imagePath);
-    res.status(201).json({ id: dishId });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to create dish' });
-  }
-});
-//muss noch angepasst werden
-app.post('/orders', async (req, res) => {
-  const { dishesId, status, description, additionalCharges, refunded } = req.body;
-  try {
-    const orderId = await createOrder(dishesId, status, description, additionalCharges, refunded);
-    res.status(201).json({ id: orderId });
+    const ingredientId = await createIngredient(name, quantity, unitOfMeasurement);
+    res.status(201).json({ id: ingredientId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to create order' });
   }
 });
+
+//gets called by await axios.delete(`http://localhost:3001/ingredients/${id}`);
+app.delete('/ingredients/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await deleteIngredientById(id);
+    res.status(200).json({ message: `Ingredient with ID ${id} deleted successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete ingredient' });
+  }
+});
+
+//gets called by axios.patch
+app.patch('/ingredients/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Quantity } = req.body;
+  try {
+    await updateIngredientQuantity(id, Quantity);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update ingredient quantity' });
+  }
+});
+
+
+
 
 /*implement here every other app.get() which is handled differently
 *

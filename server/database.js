@@ -62,6 +62,43 @@ function createOrder(tableNumber, paid, date) {
   });
 }
 
+// Create Ingredient
+function createIngredient(name, quantity, unitOfMeasurement) {
+  console.log('name: ' , name);
+  return new Promise((resolve, reject) => {
+    db.run(
+      'INSERT INTO ingredients (name, quantity, unitOfMeasurement) VALUES (?, ?, ?)',
+      [name, quantity, unitOfMeasurement],
+      function (err) {
+        if (err) {
+            console.error(err.message);
+        } else {
+          resolve(this.lastID);
+        }
+      }
+    );
+  });
+}
+
+function deleteIngredientById(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'DELETE FROM ingredients WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Ingredient with ID ${id} deleted successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
+
+
 //function which gets a query and returns the output (table) of the given query
 function getTableFromQuery(queryString) {
   return new Promise((resolve, reject) => {
@@ -79,6 +116,23 @@ function getTableFromQuery(queryString) {
   });
 }
 
+function updateIngredientQuantity(id, newQuantity){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE ingredients SET quantity = ? WHERE id = ?',
+      [newQuantity, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
 
 
 //
@@ -93,4 +147,4 @@ function closeDB() {
 
 
 
-module.exports = { createDish, createOrder, closeDB, getTableFromQuery, queries };
+module.exports = { createDish, updateIngredientQuantity,createOrder, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById};

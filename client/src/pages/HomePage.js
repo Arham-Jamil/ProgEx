@@ -2,7 +2,6 @@ import CartProvider from "../store/CartProvider"
 import Header from "../components/layout/Header"
 import Meals from "../components/meals/Meals"
 import Cart from "../components/cart/Cart"
-import { Link } from "react-router-dom"
 import { useState } from "react"
 
 
@@ -25,7 +24,6 @@ const HomePage = () =>{
       <Header onShowCart={showCartHandler} onClose={hideCartHandler} />
       <main>
         <Meals />
-        <Link to="/src/pages/Login.js">Login</Link>
       </main>
     </CartProvider>
     )

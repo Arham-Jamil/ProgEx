@@ -97,7 +97,6 @@ const CartProvider = (props) => {
   return (
     <CartContext.Provider value={cartContext}>
       {props.children}
-      <KitchenOrders />
     </CartContext.Provider>
   );
 };
