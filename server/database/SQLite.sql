@@ -239,3 +239,5 @@ SELECT Orders.ID, Orders.TableNumber, Orders.Paid, Orders.Date, OrderedDishes.*,
 FROM Orders
 LEFT JOIN OrderedDishes ON Orders.ID = OrderedDishes.Orders_ID
 LEFT JOIN OrderedDrinks ON Orders.ID = OrderedDrinks.Orders_ID;
+
+INSERT INTO ingredients
