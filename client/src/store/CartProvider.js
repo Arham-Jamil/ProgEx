@@ -1,4 +1,3 @@
-import KitchenOrders from "../KitchenMenu/KitchenOrders.js";
 import CartContext from "./cart-context.js";
 import { useReducer } from "react";
 

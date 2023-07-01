@@ -7,6 +7,7 @@ import OrderDelivered from "./OrderDelivered";
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
+  
 
   const [showOrder, setShowOrder] = useState(false);
 
@@ -28,7 +29,7 @@ const Cart = (props) => {
 
   // logic here must communicate with the dashboard and the database
   const orderHandler = () => {
-    cartCtx.clearall();
+    // cartCtx.clearall();
     setShowOrder(true);
   };
 
@@ -47,6 +48,8 @@ const Cart = (props) => {
       ))}
     </ul>
   );
+
+
 
   return (
     <Modal onClose={props.onClose}>

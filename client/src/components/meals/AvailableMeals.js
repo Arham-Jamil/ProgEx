@@ -1,5 +1,4 @@
 import classes from "./AvailableMeals.module.css";
-import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -34,10 +33,8 @@ const AvailableMeals = () => {
 
   return (
     <section className={classes.meals}>
-      <Card>
         {/* list of meals appear here */}
         <ul>{mealsList}</ul>
-      </Card>
     </section>
   );
 };
