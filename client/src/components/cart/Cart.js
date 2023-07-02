@@ -4,6 +4,7 @@ import classes from "./Cart.module.css";
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
 import OrderDelivered from "./OrderDelivered";
+import axios from 'axios';
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
@@ -29,6 +30,27 @@ const Cart = (props) => {
 
   // logic here must communicate with the dashboard and the database
   const orderHandler = () => {
+
+    const postOrder = async () => {
+      const queryParams = new URLSearchParams(window.location.search);
+      const tableNumber = queryParams.get('tableNumber');
+      const orderItems = cartCtx.items;
+      const data = {
+        orderItems,
+        tableNumber,
+      };
+
+    try {
+      console.log('accessing db...\n new Order: ', data);
+      const response = await axios.post('http://localhost:3001/order', data);
+      console.log(response.data.message); // Log the response message
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  postOrder(); // Call the function to post order
+
     // cartCtx.clearall();
     setShowOrder(true);
   };

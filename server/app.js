@@ -1,7 +1,7 @@
 // server/app.js
 const express = require('express');
 const path = require('path');
-const {createDish, updateIngredientQuantity,createIngredient, closeDB, getTableFromQuery, queries, deleteIngredientById } = require('./database');
+const {createDish, updateIngredientQuantity, createIngredient, closeDB, getTableFromQuery, queries, deleteIngredientById, checkDishAvailability, addOrder } = require('./database');
 const app = express();
 
 const cors = require('cors');
@@ -56,6 +56,24 @@ app.patch('/ingredients/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to update ingredient quantity' });
+  }
+});
+
+
+app.post('/order', (req, res) => {
+  const orderItems = req.body.orderItems;
+  const tableNumber = req.body.tableNumber;
+  // Check the availability of orderItems in your database or any other data source
+  // Assume you have a function called checkAvailability() that returns a boolean value
+  const isAvailable = checkDishAvailability(orderItems);
+
+  if (isAvailable && tableNumber != null) {
+   addOrder(tableNumber, orderItems);
+    // Send a success response
+    res.status(200).json({ message: 'Order placed successfully!' });
+  } else {
+    // Send an error response indicating the unavailable items
+    res.status(400).json({ message: 'Some items are not available for order.' });
   }
 });
 
