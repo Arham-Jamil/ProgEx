@@ -2,8 +2,10 @@
 # Client 
 -npm install
 -npm install axios
+-npm install react-icons
 # Server
-npm install react-router-dom
+npm install react-router-dom 
+npm install cors
 
 # Build for server
 npm run build #can be executed in /server directory
