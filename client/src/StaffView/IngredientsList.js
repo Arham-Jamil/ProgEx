@@ -95,8 +95,8 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
   const handleAddIngredient = async () => {
 
     if (!(/^[0-9]+$/.test(newIngredient.Quantity))
-      || newIngredient.UnitOfMeasurement == "" //leerzeichen geht aber, muss noch gefixt werden
-      || newIngredient.Name == "") { //hier muss noch auch unique name getestet werden
+      || newIngredient.UnitOfMeasurement === "" //leerzeichen geht aber, muss noch gefixt werden
+      || newIngredient.Name === "") { //hier muss noch auch unique name getestet werden
       console.error("Keine Zahl");
       alert("Failed! Check your input!!");
       return;

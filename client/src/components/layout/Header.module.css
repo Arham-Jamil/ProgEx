@@ -21,11 +21,11 @@
   overflow: hidden;
 }
 
-/* .main-image img {
-  width: 110%;
-  height: 70%;
+.main-image img {
+  width: 105%;
+  height: 90%;
   object-fit: cover;
-} */
+} 
 
 @media screen and (max-width: 600px) {
   .header h1 {
