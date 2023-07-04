@@ -4,6 +4,7 @@ import Error from "./pages/Error";
 import Login from "./pages/Login";
 import Kitchen from "./pages/Kitchen";
 import IngredientsList from "./StaffView/IngredientsList";
+import OrdersPage from "./StaffView/OrdersPage";
 
 const App = () =>{
  
@@ -18,6 +19,7 @@ const App = () =>{
           <Route path="/Login" element={<Login/>}/>
           <Route path="/src/pages/Kitchen.js" element={<Kitchen/>}/>
           <Route path="/ingredientsList" element={<IngredientsList/>}/>
+          <Route path="/OrdersPage" element={<OrdersPage/>}/>
           <Route path="*" element={<Error/>}/>
         </Routes>
       </BrowserRouter>

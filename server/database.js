@@ -272,6 +272,39 @@ function updateIngredientQuantity(id, newQuantity){
 };
 
 
+function updateDishOrderStatus(id, status){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE OrderedDishes SET status = ? WHERE id = ? ',
+      [status, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+function updateDrinkOrderStatus(id, status){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE OrderedDrinks SET status = ? WHERE id = ? ',
+      [status, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
 
 //
 function closeDB() {
@@ -285,4 +318,4 @@ function closeDB() {
 
 
 
-module.exports = { createDish, updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder};
+module.exports = { createDish, updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder, updateDishOrderStatus,updateDrinkOrderStatus};
