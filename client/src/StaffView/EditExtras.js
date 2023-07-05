@@ -28,10 +28,15 @@ const EditExtras = () => {
     }));
   };
 
+  //geht das nicht effizienter?
   const toggleAvailableValue = (id) => {
     setExtras((prevExtras) =>
       prevExtras.map((extra) => {
         if (extra.ID === id) {
+          console.log('prevExtras.map() id: ', id);
+          console.log('prevExtras.map() extra.ID: ', extra.ID);
+          handleChangeAvailable(id, !extra.Available); //testing
+
           return {
             ...extra,
             Available: !extra.Available,
@@ -41,6 +46,21 @@ const EditExtras = () => {
       })
     );
   };
+  //testttt
+  const handleChangeAvailable = async (id, newAvailable) => {
+    console.log('handleChangeAvailable() id: ', id);
+    console.log('handleChangeAvailable() newAvailable: ', newAvailable);
+
+    try {
+      await axios.patch(`http://localhost:3001/extras/${id}`, {
+        Available: newAvailable,
+      });
+      fetchExtras();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   const handleAddExtra = async () => {
     try {

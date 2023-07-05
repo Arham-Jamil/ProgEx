@@ -288,6 +288,7 @@ function getTableFromQuery(queryString) {
   });
 }
 
+// -------------------- update functions --------------------
 function updateIngredientQuantity(id, newQuantity){
   return new Promise((resolve, reject) => {
     db.run(
@@ -304,6 +305,25 @@ function updateIngredientQuantity(id, newQuantity){
     );
   });
 };
+
+function updateExtraAvailable(id, newAvailable){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE extras SET available = ? WHERE id = ?',
+      [newAvailable, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+
 
 
 function updateDishOrderStatus(id, status){
@@ -352,4 +372,4 @@ function closeDB() {
 
 
 
-module.exports = { createDish,createExtra, deleteExtraById,updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder, updateDishOrderStatus,updateDrinkOrderStatus};
+module.exports = { createDish,createExtra,updateExtraAvailable,deleteExtraById,updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder, updateDishOrderStatus,updateDrinkOrderStatus};

@@ -239,7 +239,3 @@ SELECT * FROM Drinks_Cat;
 
 
 
--- gucken wie man das mit Dishes und Dishes Category macht
--- mit DropDown dann auswählen? und jedes Dish kann nur eine Category sein?
---macht aber bei Drinks kein Sinn weil es da kalt und alkoholisch usw gibt
--- oder wir machen eine Kategorie kalt und eine kalt-alkohol usw

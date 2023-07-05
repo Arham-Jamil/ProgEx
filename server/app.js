@@ -14,12 +14,12 @@ const {createDish,
   updateDishOrderStatus,
   updateDrinkOrderStatus,
   deleteExtraById,
-  createExtra
+  createExtra,
+  updateExtraAvailable
 } = require('./database');
-const app = express();
-//wenn alle mal gepusht haben import * as db from './database'; 
-//und dann alle functionen davon mit db. aufrufen
+//wenn alle mal gepusht haben import * as db from './database'; und dann alle functionen davon mit db. aufrufen
 
+const app = express();
 const cors = require('cors');
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -100,6 +100,23 @@ app.patch('/ingredients/:id', async (req, res) => {
   }
 });
 
+app.patch('/extras/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Available } = req.body;
+  console.log('app.patch() id: ', id);
+  console.log('app.patch() Available: ', Available);
+
+  try {
+    await updateExtraAvailable(id, Available);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update extra available' });
+  }
+});
+
+
+
 app.patch('/orderedDishes', async (req, res) => {
   const orderID = req.body.orderId;
   const Status = req.body.newStatus;
@@ -124,10 +141,6 @@ app.patch('/orderedDrinks', async (req, res) => {
     res.status(500).json({ error: 'Failed to update ordered Drink' });
   }
 });
-
-
-
-
 
 app.post('/order', (req, res) => {
   const orderItems = req.body.orderItems;
