@@ -17,9 +17,9 @@ const Login = () =>{
     }
 
     if(loggedIn){
-        return <Navigate to="/src/pages/Kitchen.js"/>
+        return <Navigate to="/src/StaffView/OrdersPage.js"/>
     }
-  
+
 
     return(
         <Fragment>

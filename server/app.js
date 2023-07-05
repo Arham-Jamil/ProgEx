@@ -1,7 +1,21 @@
 // server/app.js
 const express = require('express');
 const path = require('path');
-const {createDish, deleteExtraById,createExtra,updateIngredientQuantity, createIngredient, closeDB, getTableFromQuery, queries, deleteIngredientById, checkDishAvailability, addOrder } = require('./database');
+const {createDish, 
+  updateIngredientQuantity, 
+  createIngredient, 
+  closeDB, 
+  getTableFromQuery, 
+  queries, 
+  deleteIngredientById, 
+  checkDishAvailability, 
+  addOrder, 
+  updateOrderStatus,
+  updateDishOrderStatus,
+  updateDrinkOrderStatus,
+  deleteExtraById,
+  createExtra
+} = require('./database');
 const app = express();
 //wenn alle mal gepusht haben import * as db from './database'; 
 //und dann alle functionen davon mit db. aufrufen
@@ -86,6 +100,30 @@ app.patch('/ingredients/:id', async (req, res) => {
   }
 });
 
+app.patch('/orderedDishes', async (req, res) => {
+  const orderID = req.body.orderId;
+  const Status = req.body.newStatus;
+  console.log(orderID);
+  try {
+    await updateDishOrderStatus(orderID, Status);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update ordered Dish' });
+  }
+});
+
+app.patch('/orderedDrinks', async (req, res) => {
+  const orderID = req.body.orderId;
+  const Status = req.body.newStatus;
+  try {
+    await updateDrinkOrderStatus('orderedDrinks', orderID, Status);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update ordered Drink' });
+  }
+});
 
 
 

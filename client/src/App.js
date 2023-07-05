@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Kitchen from "./pages/Kitchen";
 import IngredientsList from "./StaffView/IngredientsList";
 import EditExtras from "./StaffView/EditExtras";
+import OrdersPage from "./StaffView/OrdersPage";
 
 const App = () =>{
  
@@ -20,6 +21,7 @@ const App = () =>{
           <Route path="/src/pages/Kitchen.js" element={<Kitchen/>}/>
           <Route path="/ingredientsList" element={<IngredientsList/>}/>
           <Route path="/editExtras" element={<EditExtras/>}/>
+          <Route path="/OrdersPage" element={<OrdersPage/>}/>
           <Route path="*" element={<Error/>}/>
         </Routes>
       </BrowserRouter>
