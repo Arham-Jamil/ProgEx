@@ -1,8 +1,10 @@
 // server/app.js
 const express = require('express');
 const path = require('path');
-const {createDish, updateIngredientQuantity, createIngredient, closeDB, getTableFromQuery, queries, deleteIngredientById, checkDishAvailability, addOrder } = require('./database');
+const {createDish, deleteExtraById,createExtra,updateIngredientQuantity, createIngredient, closeDB, getTableFromQuery, queries, deleteIngredientById, checkDishAvailability, addOrder } = require('./database');
 const app = express();
+//wenn alle mal gepusht haben import * as db from './database'; 
+//und dann alle functionen davon mit db. aufrufen
 
 const cors = require('cors');
 // Middleware to parse JSON requests
@@ -20,7 +22,8 @@ app.use(cors());
 // API endpoints
 
 
-//muss noch angepasst werden
+//------------- POST REQUESTS ------ Kann man später vllt noch zusammenfassen
+//gets called by axios.post
 app.post('/ingredients', async (req, res) => {
   console.log('req.body: ', req.body);
   const {Name: name, Quantity: quantity,UnitOfMeasurement: unitOfMeasurement} = req.body;
@@ -33,8 +36,32 @@ app.post('/ingredients', async (req, res) => {
     res.status(500).json({ error: 'Failed to create order' });
   }
 });
+app.post('/extras', async (req, res) => {
+  console.log('req.body: ', req.body);
+  const {Name: name, Price: price, Available: available} = req.body;
+  console.log('name in post: ',name);
+  try {
+    const extraId = await createExtra(name, price, available);
+    res.status(201).json({ id: extraId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create order' });
+  }
+});
 
-//gets called by await axios.delete(`http://localhost:3001/ingredients/${id}`);
+
+//------------- Delete REQUESTS ------ Kann man später vllt noch zusammenfassen
+//gets called by axios.delete(`http://localhost:3001/ingredients/${id}`) zb
+app.delete('/extras/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await deleteExtraById(id);
+    res.status(200).json({ message: `Extra with ID ${id} deleted successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete extra' });
+  }
+});
 app.delete('/ingredients/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -46,7 +73,7 @@ app.delete('/ingredients/:id', async (req, res) => {
   }
 });
 
-//gets called by axios.patch
+//------------- Patch/Update REQUESTS ------ Kann man später vllt noch zusammenfassen
 app.patch('/ingredients/:id', async (req, res) => {
   const { id } = req.params;
   const { Quantity } = req.body;
@@ -58,6 +85,10 @@ app.patch('/ingredients/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to update ingredient quantity' });
   }
 });
+
+
+
+
 
 
 app.post('/order', (req, res) => {
@@ -77,14 +108,7 @@ app.post('/order', (req, res) => {
   }
 });
 
-
-
-
-/*implement here every other app.get() which is handled differently
-*
-*
-*
-*/
+//every get which should be handled differently needs to be declared above this !!
 
 //Route handler. every table as a path results in getting a SELECT * from said table
 //  old: /ordereddishes', '/ordereddrinks', '/categorydish', '/categorydrinks', '/extras', '/ingredients', '/staffaccount', '/drinks', '/dishes', '/orders', '/drinksjoin', '/dishesjoin'

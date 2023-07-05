@@ -4,6 +4,7 @@ import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import './IngredientsList.css';
 
 const IngredientsList = () => {
+  
   const [ingredients, setIngredients] = useState([]);
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');

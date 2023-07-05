@@ -45,7 +45,7 @@ function createDish(name, price, description, available, quantity, imagePath) {
   });
 }
 
-// Create Ingredient
+// Kann man create zusammenfassen??
 function createIngredient(name, quantity, unitOfMeasurement) {
   console.log('name: ' , name);
   return new Promise((resolve, reject) => {
@@ -62,7 +62,41 @@ function createIngredient(name, quantity, unitOfMeasurement) {
     );
   });
 }
+function createExtra(name, price, available) {
+  console.log('name: ' , name);
+  return new Promise((resolve, reject) => {
+    db.run(
+      'INSERT INTO extras (name, price, available) VALUES (?, ?, ?)',
+      [name, price, available],
+      function (err) {
+        if (err) {
+            console.error(err.message);
+        } else {
+          resolve(this.lastID);
+        }
+      }
+    );
+  });
+}
 
+//kann man die deleteByID zusammenfassen??
+function deleteExtraById(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'DELETE FROM extras WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Extra with ID ${id} deleted successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
 function deleteIngredientById(id) {
   return new Promise((resolve, reject) => {
     db.run(
@@ -285,4 +319,4 @@ function closeDB() {
 
 
 
-module.exports = { createDish, updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder};
+module.exports = { createDish,deleteExtraById, createExtra,updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder};
