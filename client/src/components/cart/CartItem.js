@@ -1,6 +1,13 @@
 import classes from "./CartItem.module.css";
+import {useId, useState} from 'react'
 
 const CartItem = (props) => {
+
+  const[text, setText] = useState("")
+  const extras = (e) =>{
+    setText(e.target.value);
+  }
+  const theId = useId()
   // must be adjusted with the database
   const price = `€${props.price.toFixed(2)}`;
 
@@ -16,6 +23,7 @@ const CartItem = (props) => {
       <div className={classes.actions}>
         <button onClick={props.onRemove}>−</button>
         <button onClick={props.onAdd}>+</button>
+        <textarea name="extra" id={theId} value={text} onChange={extras}></textarea>
       </div>
     </li>
   );

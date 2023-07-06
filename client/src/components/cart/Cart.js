@@ -51,7 +51,7 @@ const Cart = (props) => {
 
   postOrder(); // Call the function to post order
 
-    // cartCtx.clearall();
+    cartCtx.clearall();
     setShowOrder(true);
   };
 
