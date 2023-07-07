@@ -26,8 +26,8 @@ app.use(cors());
 //------------- POST REQUESTS -----------------------------------------
 app.post('/ingredients', async (req, res) => {
   console.log('req.body: ', req.body);
-  const {Name: name, Quantity: quantity,UnitOfMeasurement: unitOfMeasurement} = req.body;
-  console.log('name in post: ',name);
+  const { Name: name, Quantity: quantity, UnitOfMeasurement: unitOfMeasurement } = req.body;
+  console.log('name in post: ', name);
   try {
     const ingredientId = await db.createIngredient(name, quantity, unitOfMeasurement);
     res.status(201).json({ id: ingredientId });
@@ -38,8 +38,8 @@ app.post('/ingredients', async (req, res) => {
 });
 app.post('/extras', async (req, res) => {
   console.log('req.body: ', req.body);
-  const {Name: name, Price: price, Available: available} = req.body;
-  console.log('name in post: ',name);
+  const { Name: name, Price: price, Available: available } = req.body;
+  console.log('name in post: ', name);
   try {
     const extraId = await db.createExtra(name, price, available);
     res.status(201).json({ id: extraId });
@@ -51,8 +51,8 @@ app.post('/extras', async (req, res) => {
 
 app.post('/categorydish', async (req, res) => {
   console.log('req.body: ', req.body);
-  const {Name: name} = req.body;
-  console.log('name in post: ',name);
+  const { Name: name } = req.body;
+  console.log('name in post: ', name);
   try {
     const categoryDishId = await db.createCategoryDish(name);
     res.status(201).json({ id: categoryDishId });
@@ -64,14 +64,34 @@ app.post('/categorydish', async (req, res) => {
 
 app.post('/categorydrinks', async (req, res) => {
   console.log('req.body: ', req.body);
-  const {Name: name} = req.body;
-  console.log('name in post: ',name);
+  const { Name: name } = req.body;
+  console.log('name in post: ', name);
   try {
     const categoryDrinkId = await db.createCategoryDrink(name);
     res.status(201).json({ id: categoryDrinkId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to add category Drink' });
+  }
+});
+
+
+app.post('/dishes', async (req, res) => {
+  console.log('req.body: ', req.body);
+  const { Name: name,
+    Price: price,
+    CategoryName: category_id, //In categoryName ist die ID geschrieben
+    Description: description,
+    Available: available,
+    Quantity: quantity,
+    ImagePath: imagePath } = req.body;
+  console.log('name in post: ', name);
+  try {
+    const dishID = await db.createDish(name, price, description, available, quantity, imagePath, category_id);
+    res.status(201).json({ id: dishID });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create dish' });
   }
 });
 
@@ -193,7 +213,7 @@ app.post('/order', (req, res) => {
   const isAvailable = db.checkDishAvailability(orderItems);
 
   if (isAvailable && tableNumber != null) {
-   db.addOrder(tableNumber, orderItems);
+    db.addOrder(tableNumber, orderItems);
     // Send a success response
     res.status(200).json({ message: 'Order placed successfully!' });
   } else {
@@ -213,9 +233,9 @@ app.get(['/:resource'], async (req, res) => {
 
     const query = db.queries[resource]; //vllt später mit switch ersetzen
 
-    if (!query) { 
-      console.log("Query: "+query);
-      console.log("Resource: "+resource);
+    if (!query) {
+      console.log("Query: " + query);
+      console.log("Resource: " + resource);
       res.status(404).json({ error: 'Resource not found' });
       return;
     }

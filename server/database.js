@@ -15,8 +15,8 @@ const queries = {
   drinks: 'SELECT * FROM Drinks',
   dishes: 'SELECT * FROM Dishes',
   orders: 'SELECT * FROM Orders',
-  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.name AS Category FROM Drinks INNER JOIN Drinks_Cat ON Drinks.id = Drinks_Cat.drinks_id INNER JOIN CategoryDrinks ON Drinks_Cat.categoryDrinks_id = CategoryDrinks.id',
-  dishesjoin: 'SELECT Dishes.*, CategoryDish.name AS Category FROM Dishes INNER JOIN Dish_Cat ON Dishes.id = Dish_Cat.dishes_id INNER JOIN CategoryDish ON Dish_Cat.categoryDish_id = Categorydish.id'
+  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id',
+  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id'
 };
 
 // Connect to SQLite database
@@ -30,11 +30,11 @@ const db = new sqlite3.Database(dbFilePath, (err) => {
 
 
 // Create a dish
-function createDish(name, price, description, available, quantity, imagePath) {
+function createDish(name, price, description, available, quantity, imagePath, category_id) {
   return new Promise((resolve, reject) => {
     db.run(
-      'INSERT INTO dishes (name, price, description, available, quantity, imagePath) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, price, description, available, quantity, imagePath],
+      'INSERT INTO Dishes (Name, Price, Description, Available, Quantity, ImagePath, Category_ID) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name, price, description, available, quantity, imagePath, category_id],
       function (err) {
         if (err) {
           console.error(err.message);
@@ -459,7 +459,7 @@ module.exports = {
 
   deleteExtraById,
   deleteIngredientById,
-  
+
   checkDishAvailability,
   addOrder,
   getTableFromQuery,

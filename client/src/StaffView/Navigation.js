@@ -8,9 +8,15 @@ const Navigation = () => {
       <ul>
         <h3>Client Sites</h3>
         <li>
-          <Link to="/?tableNumber=696969">Homepage with TableNumber 696969</Link>
+          <Link to="/?tableNumber=696969">Homepage /?tableNumber=696969</Link>
         </li>
         <h3>KitchenView Sites</h3>
+        <li>
+          <Link to="/Login">Login</Link>
+        </li>
+        <li>
+          <Link to="/OrdersPage">OrdersPage</Link>
+        </li>
         <li>
           <Link to="/ingredientsList">Ingredients List</Link>
         </li>
@@ -23,10 +29,15 @@ const Navigation = () => {
         <li>
           <Link to="/editCategoryDrinks">Edit Category Drinks</Link>
         </li>
+        <li>
+          <Link to="/editDishes">Edit Dishes</Link>
+        </li>
         <h3>Server</h3>
+       
         <li>
           <Link to="http://localhost:3001/orders">Orders</Link>
         </li>
+        
         <li>
           <Link to="http://localhost:3001/ordereddishes">OrderedDishes</Link>
         </li>
@@ -50,6 +61,12 @@ const Navigation = () => {
         </li>
         <li>
           <Link to="http://localhost:3001/Dishes">Dishes</Link>
+        </li>
+        <li>
+          <Link to="http://localhost:3001/drinksjoin">drinksjoin</Link>
+        </li>
+        <li>
+          <Link to="http://localhost:3001/dishesjoin">dishesjoin</Link>
         </li>
       </ul>
     </div>

@@ -226,11 +226,15 @@ SELECT * FROM Drinks;
 -- INNER JOIN Drinks_Cat ON Drinks.id = Drinks_Cat.drinks_id
 -- INNER JOIN CategoryDrinks ON Drinks_Cat.categoryDrinks_id = CategoryDrinks.id;
 
--- --join dishes
--- SELECT Dishes.*, CategoryDish.name AS 'Category'
--- FROM Dishes
--- INNER JOIN Dish_Cat ON Dishes.id = Dish_Cat.dishes_id
--- INNER JOIN CategoryDish ON Dish_Cat.categoryDish_id = Categorydish.id;
+--join dishes
+SELECT Dishes.*, CategoryDish.Name AS 'CategoryName'
+FROM Dishes
+INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id;
+
+--join drinks
+SELECT Drinks.*, CategoryDrinks.Name AS 'CategoryName'
+FROM Drinks
+INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id;
 
 
 -- SELECT Orders.ID, Orders.TableNumber, Orders.Paid, Orders.Date, OrderedDishes.*, OrderedDrinks.*

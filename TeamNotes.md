@@ -1,18 +1,47 @@
-File for Comments regarding:
-*To-Do´s
-*Changes to be made
-*Bugs to be fixed 
- etc.
+# Note File for Comments 
 
+## Dennis
+-erlauben Categories zu löschen? dann mit cascade on delete?
 
+### Idee im Moment: 
+    -pro Drink/Dish nur eine Category
+    -Category kann man nicht löschen aber bearbeiten (Name)
+    -Category per DropDown auswählen
+    -Categories als used/not used markieren??
 
-### Dennis
--- gucken wie man das mit Dishes und Dishes Category macht
--- mit DropDown dann auswählen? und jedes Dish kann nur eine Category sein?
---macht aber bei Drinks kein Sinn weil es da kalt und alkoholisch usw gibt
--- oder wir machen eine Kategorie kalt und eine kalt-alkohol usw
+    Dishes/Drinks
+    -Löschen können wäre ja nicht so gut
+    -updaten? dann geht der alte Preis usw verloren
+    -also nicht updaten und nur neue erstellen + "löschen" welche die Dishes einfach nur aus der Ansicht entfernen?
+    -oder updaten lassen aber beim updaten wird eigentlich ein neues Dish erstellt
 
---oder mit main Category (Dessert) und dann subcategory (vegan) oders so?
+    
+### Freitag:
+    -Edit Dishes & Drinks hinzufügen
+    -Homepage muss solangsam gut aussehn
+    -ORDERS VON EINER BESTIMMTEN TABLE NUMBER MUESSEN FARBIG MARKIERT WERDEN -> zum mitnehmen
 
+### Sa & So:
+    -Auto-reload on order page for kitchen view
+    -Navigation bei KitchenViw hinzufügen (am Rand? mit vor + zurück?)
+    -ALLE Funktionen testen (Pflichtenheft anschauen)
+    -Check bei ALLEN inputs nach korrektem Format
+    -Login mit gehashtem PW
+    -auf KitchenView nur nach erfolgreicher Anmeldung
+    -Mögliche Errors, Probleme, Bugs, SQL Injection usw testen
+    
+###   Montag:
+    -css Dateien bearbeiten
+    -generell Sachen verschönern
+    -auf Verbesserungsvorschläge drauf eingehen?
 
---erlauben Categories zu löschen? dann mit cascade on delete?
+###   Dienstag:
+    -DB KOnzept überarbeiten
+    -Anleitung für Sabba zum Testen schreiben
+
+###   Mittwoch:
+    - Abgabe
+    - den restlichen Leuden den Code erklären
+
+ ###   Other
+ //wenn man noch Spaß hat Funktionen zusammenfassen und Code verschönern
