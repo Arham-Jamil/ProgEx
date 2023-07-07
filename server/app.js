@@ -1,22 +1,9 @@
 // server/app.js
 const express = require('express');
 const path = require('path');
-const {createDish, 
-  updateIngredientQuantity, 
-  createIngredient, 
-  closeDB, 
-  getTableFromQuery, 
-  queries, 
-  deleteIngredientById, 
-  checkDishAvailability, 
-  addOrder, 
-  updateOrderStatus,
-  updateDishOrderStatus,
-  updateDrinkOrderStatus,
-  deleteExtraById,
-  createExtra,
-  updateExtraAvailable
-} = require('./database');
+// const {createDish,   updateIngredientQuantity,   createIngredient,   closeDB,   getTableFromQuery,   queries,   deleteIngredientById,   checkDishAvailability,   addOrder,   updateOrderStatus,  updateDishOrderStatus,  updateDrinkOrderStatus,  deleteExtraById,  createExtra,  updateExtraAvailable,  createCategoryDish,  createCategoryDrink,  updateCategoryDishName,  updateCategoryDrinksName} = require('./database');
+const db = require('./database'); //access every function from database with db.functionName()
+
 //wenn alle mal gepusht haben import * as db from './database'; und dann alle functionen davon mit db. aufrufen
 
 const app = express();
@@ -36,14 +23,13 @@ app.use(cors());
 // API endpoints
 
 
-//------------- POST REQUESTS ------ Kann man später vllt noch zusammenfassen
-//gets called by axios.post
+//------------- POST REQUESTS -----------------------------------------
 app.post('/ingredients', async (req, res) => {
   console.log('req.body: ', req.body);
-  const {Name: name, Quantity: quantity,UnitOfMeasurement: unitOfMeasurement} = req.body;
-  console.log('name in post: ',name);
+  const { Name: name, Quantity: quantity, UnitOfMeasurement: unitOfMeasurement } = req.body;
+  console.log('name in post: ', name);
   try {
-    const ingredientId = await createIngredient(name, quantity, unitOfMeasurement);
+    const ingredientId = await db.createIngredient(name, quantity, unitOfMeasurement);
     res.status(201).json({ id: ingredientId });
   } catch (error) {
     console.error(error);
@@ -52,10 +38,10 @@ app.post('/ingredients', async (req, res) => {
 });
 app.post('/extras', async (req, res) => {
   console.log('req.body: ', req.body);
-  const {Name: name, Price: price, Available: available} = req.body;
-  console.log('name in post: ',name);
+  const { Name: name, Price: price, Available: available } = req.body;
+  console.log('name in post: ', name);
   try {
-    const extraId = await createExtra(name, price, available);
+    const extraId = await db.createExtra(name, price, available);
     res.status(201).json({ id: extraId });
   } catch (error) {
     console.error(error);
@@ -63,13 +49,59 @@ app.post('/extras', async (req, res) => {
   }
 });
 
+app.post('/categorydish', async (req, res) => {
+  console.log('req.body: ', req.body);
+  const { Name: name } = req.body;
+  console.log('name in post: ', name);
+  try {
+    const categoryDishId = await db.createCategoryDish(name);
+    res.status(201).json({ id: categoryDishId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to add category Dish' });
+  }
+});
 
-//------------- Delete REQUESTS ------ Kann man später vllt noch zusammenfassen
+app.post('/categorydrinks', async (req, res) => {
+  console.log('req.body: ', req.body);
+  const { Name: name } = req.body;
+  console.log('name in post: ', name);
+  try {
+    const categoryDrinkId = await db.createCategoryDrink(name);
+    res.status(201).json({ id: categoryDrinkId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to add category Drink' });
+  }
+});
+
+
+app.post('/dishes', async (req, res) => {
+  console.log('req.body: ', req.body);
+  const { Name: name,
+    Price: price,
+    CategoryName: category_id, //In categoryName ist die ID geschrieben
+    Description: description,
+    Available: available,
+    Quantity: quantity,
+    ImagePath: imagePath } = req.body;
+  console.log('name in post: ', name);
+  try {
+    const dishID = await db.createDish(name, price, description, available, quantity, imagePath, category_id);
+    res.status(201).json({ id: dishID });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create dish' });
+  }
+});
+
+
+//------------- DELETE REQUESTS -----------------------------------------
 //gets called by axios.delete(`http://localhost:3001/ingredients/${id}`) zb
 app.delete('/extras/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    await deleteExtraById(id);
+    await db.deleteExtraById(id);
     res.status(200).json({ message: `Extra with ID ${id} deleted successfully` });
   } catch (error) {
     console.error(error);
@@ -79,7 +111,7 @@ app.delete('/extras/:id', async (req, res) => {
 app.delete('/ingredients/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    await deleteIngredientById(id);
+    await db.deleteIngredientById(id);
     res.status(200).json({ message: `Ingredient with ID ${id} deleted successfully` });
   } catch (error) {
     console.error(error);
@@ -87,12 +119,12 @@ app.delete('/ingredients/:id', async (req, res) => {
   }
 });
 
-//------------- Patch/Update REQUESTS ------ Kann man später vllt noch zusammenfassen
+//------------- Patch/Update REQUESTS --------------------------------
 app.patch('/ingredients/:id', async (req, res) => {
   const { id } = req.params;
   const { Quantity } = req.body;
   try {
-    await updateIngredientQuantity(id, Quantity);
+    await db.updateIngredientQuantity(id, Quantity);
     res.sendStatus(204); // Respond with a success status code (No Content)
   } catch (error) {
     console.error(error);
@@ -107,13 +139,42 @@ app.patch('/extras/:id', async (req, res) => {
   console.log('app.patch() Available: ', Available);
 
   try {
-    await updateExtraAvailable(id, Available);
+    await db.updateExtraAvailable(id, Available);
     res.sendStatus(204); // Respond with a success status code (No Content)
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to update extra available' });
   }
 });
+app.patch('/categorydish/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Name } = req.body;
+  console.log('app.patch() id: ', id);
+  console.log('app.patch() Name: ', Name);
+
+  try {
+    await db.updateCategoryDishName(id, Name);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update dish category name' });
+  }
+});
+app.patch('/categorydrinks/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Name } = req.body;
+  console.log('app.patch() id: ', id);
+  console.log('app.patch() Name: ', Name);
+
+  try {
+    await db.updateCategoryDrinksName(id, Name);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update drink category name' });
+  }
+});
+
 
 
 
@@ -122,7 +183,7 @@ app.patch('/orderedDishes', async (req, res) => {
   const Status = req.body.newStatus;
   console.log(orderID);
   try {
-    await updateDishOrderStatus(orderID, Status);
+    await db.updateDishOrderStatus(orderID, Status);
     res.sendStatus(204); // Respond with a success status code (No Content)
   } catch (error) {
     console.error(error);
@@ -134,7 +195,7 @@ app.patch('/orderedDrinks', async (req, res) => {
   const orderID = req.body.orderId;
   const Status = req.body.newStatus;
   try {
-    await updateDrinkOrderStatus('orderedDrinks', orderID, Status);
+    await db.updateDrinkOrderStatus('orderedDrinks', orderID, Status);
     res.sendStatus(204); // Respond with a success status code (No Content)
   } catch (error) {
     console.error(error);
@@ -142,15 +203,17 @@ app.patch('/orderedDrinks', async (req, res) => {
   }
 });
 
+//-----------------------------------------------------------------------------------//
+
 app.post('/order', (req, res) => {
   const orderItems = req.body.orderItems;
   const tableNumber = req.body.tableNumber;
   // Check the availability of orderItems in your database or any other data source
   // Assume you have a function called checkAvailability() that returns a boolean value
-  const isAvailable = checkDishAvailability(orderItems);
+  const isAvailable = db.checkDishAvailability(orderItems);
 
   if (isAvailable && tableNumber != null) {
-   addOrder(tableNumber, orderItems);
+    db.addOrder(tableNumber, orderItems);
     // Send a success response
     res.status(200).json({ message: 'Order placed successfully!' });
   } else {
@@ -168,15 +231,15 @@ app.get(['/:resource'], async (req, res) => {
   //const resource = req.path.slice(1).toLowerCase();
   try {
 
-    const query = queries[resource]; //vllt später mit switch ersetzen
+    const query = db.queries[resource]; //vllt später mit switch ersetzen
 
-    if (!query) { 
-      console.log("Query: "+query);
-      console.log("Resource: "+resource);
+    if (!query) {
+      console.log("Query: " + query);
+      console.log("Resource: " + resource);
       res.status(404).json({ error: 'Resource not found' });
       return;
     }
-    const resourceData = await getTableFromQuery(query);
+    const resourceData = await db.getTableFromQuery(query);
     res.json(resourceData);
   } catch (error) {
     console.error(error);

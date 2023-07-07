@@ -1,5 +1,6 @@
 import CartContext from "./cart-context.js";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
+import {v4 as uuidv4} from "uuid"
 
 const defaultCartState = {
   items: [],
@@ -27,8 +28,15 @@ const cartReducer = (state, action) => {
       };
       updatedItems = [...state.items];
       updatedItems[existingCartItemIndex] = updatedItem;
+      // updatedItems = state.items.concat(action.item);
+      updatedItems = [...state.items, action.item];
     } else {
-      updatedItems = state.items.concat(action.item);
+      const updatedItem = {
+        ...action.item,
+        uniqueId: uuidv4, // Add a unique identifier to the item
+      };
+      // updatedItems = state.items.concat(action.item);
+      updatedItems = [...state.items, action.item];
     }
 
     return {
@@ -39,24 +47,33 @@ const cartReducer = (state, action) => {
 
   if (action.type === "REMOVE") {
     const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id === action.id
+      (item) => item.uniqueId === action.uniqueId
     );
     const existingItem = state.items[existingCartItemIndex];
     const updatedTotalAmount = state.totalAmount - existingItem.price;
     let updatedItems;
-    if (existingItem.amount === 1) {
-      updatedItems = state.items.filter((item) => item.id !== action.id);
-    } else {
-      const updatedItem = { ...existingItem, amount: existingItem.amount - 1 };
+    if (existingItem.amount !== -1) {
       updatedItems = [...state.items];
-      updatedItems[existingCartItemIndex] = updatedItem;
-    }
-
+      updatedItems.splice(existingCartItemIndex, 1)
     return {
+      ...state,
       items: updatedItems,
       totalAmount: updatedTotalAmount,
     };
   }
+}
+
+if (action.type === "ADD_TEXT") {
+  const { uniqueId, text } = action;
+  const updatedItems = state.items.map((item) =>
+    item.uniqueId === uniqueId ? { ...item, text } : item
+  );
+
+  return {
+    ...state,
+    items: updatedItems,
+  };
+}
 
   if (action.type === "CLEARALL") {
     return {
@@ -68,6 +85,7 @@ const cartReducer = (state, action) => {
   return defaultCartState;
 };
 
+
 const CartProvider = (props) => {
   const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
@@ -78,13 +96,18 @@ const CartProvider = (props) => {
     dispatchCartAction({ type: "ADD", item: item });
   };
 
-  const removeItemFromCartHandler = (id) => {
-    dispatchCartAction({ type: "REMOVE", id: id });
+  const removeItemFromCartHandler = (uniqueid) => {
+    dispatchCartAction({ type: "REMOVE", uniqueid: uniqueid });
   };
 
   const clearAllItemsFromCartHandler = () => {
     dispatchCartAction({ type: "CLEARALL" });
   };
+  
+  const addTextToItem = (uniqueId, text) => {
+    dispatchCartAction({ type: "ADD_TEXT", uniqueId, text });
+  };
+
 
   const cartContext = {
     items: cartState.items,
@@ -92,6 +115,7 @@ const CartProvider = (props) => {
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
     clearall: clearAllItemsFromCartHandler,
+    addText: addTextToItem 
   };
   return (
     <CartContext.Provider value={cartContext}>
