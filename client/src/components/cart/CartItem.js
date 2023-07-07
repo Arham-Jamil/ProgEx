@@ -1,11 +1,13 @@
+import CartContext from "../../store/cart-context";
 import classes from "./CartItem.module.css";
-import {useId, useState} from 'react'
+import {useContext, useId, useState} from 'react'
 
 const CartItem = (props) => {
 
   const[text, setText] = useState("")
+  const CartCTX = useContext(CartContext)
   const extras = (e) =>{
-    setText(e.target.value);
+    setText(CartCTX.addText(e.target.value))
   }
   const theId = useId()
   // must be adjusted with the database
@@ -17,7 +19,7 @@ const CartItem = (props) => {
         <h2>{props.name}</h2>
         <div className={classes.summary}>
           <span className={classes.price}>{price}</span>
-          <span className={classes.amount}>x {props.amount}</span>
+          {/* <span className={classes.amount}>x {props.amount}</span> */}
         </div>
       </div>
       <div className={classes.actions}>
