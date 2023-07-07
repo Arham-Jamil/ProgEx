@@ -28,6 +28,7 @@ const db = new sqlite3.Database(dbFilePath, (err) => {
     console.log('Connected to the in-memory SQlite database.');
   });
 
+
 // Create a dish
 function createDish(name, price, description, available, quantity, imagePath) {
   return new Promise((resolve, reject) => {
@@ -45,7 +46,7 @@ function createDish(name, price, description, available, quantity, imagePath) {
   });
 }
 
-// Kann man create zusammenfassen??
+// -------------------- CREATE functions --------------------------------
 function createIngredient(name, quantity, unitOfMeasurement) {
   console.log('name: ' , name);
   return new Promise((resolve, reject) => {
@@ -79,7 +80,41 @@ function createExtra(name, price, available) {
   });
 }
 
-//kann man die deleteByID zusammenfassen??
+function createCategoryDish(name) {
+  console.log('name: ' , name);
+  return new Promise((resolve, reject) => {
+    db.run(
+      'INSERT INTO CategoryDish (name) VALUES (?)',
+      [name],
+      function (err) {
+        if (err) {
+            console.error(err.message);
+        } else {
+          resolve(this.lastID);
+        }
+      }
+    );
+  });
+}
+
+function createCategoryDrink(name) {
+  console.log('name: ' , name);
+  return new Promise((resolve, reject) => {
+    db.run(
+      'INSERT INTO CategoryDrinks (name) VALUES (?)',
+      [name],
+      function (err) {
+        if (err) {
+            console.error(err.message);
+        } else {
+          resolve(this.lastID);
+        }
+      }
+    );
+  });
+}
+
+// -------------------- DELETE functions --------------------------------
 function deleteExtraById(id) {
   return new Promise((resolve, reject) => {
     db.run(
@@ -114,6 +149,113 @@ function deleteIngredientById(id) {
     );
   });
 }
+
+// -------------------- UPDATE functions --------------------------------
+function updateIngredientQuantity(id, newQuantity){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE ingredients SET quantity = ? WHERE id = ?',
+      [newQuantity, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+function updateExtraAvailable(id, newAvailable){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE extras SET available = ? WHERE id = ?',
+      [newAvailable, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+
+function updateCategoryDishName(id, newCategoryName){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE CategoryDish SET Name = ? WHERE id = ?',
+      [newCategoryName, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+function updateCategoryDrinksName(id, newCategoryName){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE CategoryDrinks SET Name = ? WHERE id = ?',
+      [newCategoryName, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+
+function updateDishOrderStatus(id, status){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE OrderedDishes SET status = ? WHERE id = ? ',
+      [status, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+function updateDrinkOrderStatus(id, status){
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE OrderedDrinks SET status = ? WHERE id = ? ',
+      [status, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+//----------------------------------------------------------------------//
 
 // Function to check the availability and quantity of order items
 function checkDishAvailability(orderItems) {
@@ -202,8 +344,8 @@ function addOrder(tableNumber, orderItems) {
       return new Promise((resolve, reject) => {
         // Prepare the SQL query to insert a new order
         const sql = `
-          INSERT INTO Orders (TableNumber, Paid, Date)
-          VALUES (?, 0, Date('now'))
+          INSERT INTO Orders (TableNumber, Paid, Datetime)
+          VALUES (?, 0, Datetime('now'))
         `;
 
         // Execute the query with the table number as a parameter
@@ -288,78 +430,6 @@ function getTableFromQuery(queryString) {
   });
 }
 
-// -------------------- update functions --------------------
-function updateIngredientQuantity(id, newQuantity){
-  return new Promise((resolve, reject) => {
-    db.run(
-      'UPDATE ingredients SET quantity = ? WHERE id = ?',
-      [newQuantity, id],
-      function (err) {
-        if (err) {
-          console.error(err.message);
-          reject(err);
-        } else {
-          resolve();
-        }
-      }
-    );
-  });
-};
-
-function updateExtraAvailable(id, newAvailable){
-  return new Promise((resolve, reject) => {
-    db.run(
-      'UPDATE extras SET available = ? WHERE id = ?',
-      [newAvailable, id],
-      function (err) {
-        if (err) {
-          console.error(err.message);
-          reject(err);
-        } else {
-          resolve();
-        }
-      }
-    );
-  });
-};
-
-
-
-
-function updateDishOrderStatus(id, status){
-  return new Promise((resolve, reject) => {
-    db.run(
-      'UPDATE OrderedDishes SET status = ? WHERE id = ? ',
-      [status, id],
-      function (err) {
-        if (err) {
-          console.error(err.message);
-          reject(err);
-        } else {
-          resolve();
-        }
-      }
-    );
-  });
-};
-
-function updateDrinkOrderStatus(id, status){
-  return new Promise((resolve, reject) => {
-    db.run(
-      'UPDATE OrderedDrinks SET status = ? WHERE id = ? ',
-      [status, id],
-      function (err) {
-        if (err) {
-          console.error(err.message);
-          reject(err);
-        } else {
-          resolve();
-        }
-      }
-    );
-  });
-};
-
 //
 function closeDB() {
     db.close((err) => {
@@ -372,4 +442,4 @@ function closeDB() {
 
 
 
-module.exports = { createDish,createExtra,updateExtraAvailable,deleteExtraById,updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder, updateDishOrderStatus,updateDrinkOrderStatus};
+module.exports = { updateCategoryDishName,updateCategoryDrinksName, createDish,createCategoryDrink,createCategoryDish,createExtra,updateExtraAvailable,deleteExtraById,updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder, updateDishOrderStatus,updateDrinkOrderStatus};

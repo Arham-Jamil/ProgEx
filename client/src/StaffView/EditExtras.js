@@ -46,7 +46,7 @@ const EditExtras = () => {
       })
     );
   };
-  //testttt
+
   const handleChangeAvailable = async (id, newAvailable) => {
     console.log('handleChangeAvailable() id: ', id);
     console.log('handleChangeAvailable() newAvailable: ', newAvailable);

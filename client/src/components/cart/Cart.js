@@ -34,6 +34,7 @@ const Cart = (props) => {
     const postOrder = async () => {
       const queryParams = new URLSearchParams(window.location.search); // URL parameter
       const tableNumber = queryParams.get('tableNumber');
+      console.log('read in tableNumber: ',tableNumber);
       const orderItems = cartCtx.items;
       const data = {
         orderItems,

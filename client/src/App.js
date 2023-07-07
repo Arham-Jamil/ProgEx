@@ -6,6 +6,9 @@ import Kitchen from "./pages/Kitchen";
 import IngredientsList from "./StaffView/IngredientsList";
 import EditExtras from "./StaffView/EditExtras";
 import OrdersPage from "./StaffView/OrdersPage";
+import EditCategoryDish from "./StaffView/EditCategoryDish";
+import EditCategoryDrinks from "./StaffView/EditCategoryDrinks";
+import Navigation from "./StaffView/Navigation";
 
 const App = () =>{
  
@@ -21,6 +24,13 @@ const App = () =>{
           <Route path="/src/pages/Kitchen.js" element={<Kitchen/>}/>
           <Route path="/ingredientsList" element={<IngredientsList/>}/>
           <Route path="/editExtras" element={<EditExtras/>}/>
+          <Route path="/editCategoryDish" element={<EditCategoryDish/>}/>
+          <Route path="/editCategoryDrinks" element={<EditCategoryDrinks/>}/>
+          
+          <Route path="/Navigation" element={<Navigation/>}/>
+
+          
+
           <Route path="/OrdersPage" element={<OrdersPage/>}/>
           <Route path="*" element={<Error/>}/>
         </Routes>
