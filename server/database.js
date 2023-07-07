@@ -202,8 +202,8 @@ function addOrder(tableNumber, orderItems) {
       return new Promise((resolve, reject) => {
         // Prepare the SQL query to insert a new order
         const sql = `
-          INSERT INTO Orders (TableNumber, Paid, Date)
-          VALUES (?, 0, Date('now'))
+          INSERT INTO Orders (TableNumber, Paid, Datetime)
+          VALUES (?, 0, Datetime('now'))
         `;
 
         // Execute the query with the table number as a parameter
