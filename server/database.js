@@ -22,11 +22,11 @@ const queries = {
 // Connect to SQLite database
 const dbFilePath = path.join(__dirname, "./database/RestaurantDB.db");
 const db = new sqlite3.Database(dbFilePath, (err) => {
-    if (err) {
-      return console.error(err.message);
-    }
-    console.log('Connected to the in-memory SQlite database.');
-  });
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log('Connected to the in-memory SQlite database.');
+});
 
 
 // Create a dish
@@ -37,7 +37,7 @@ function createDish(name, price, description, available, quantity, imagePath) {
       [name, price, description, available, quantity, imagePath],
       function (err) {
         if (err) {
-            console.error(err.message);
+          console.error(err.message);
         } else {
           resolve(this.lastID);
         }
@@ -48,14 +48,14 @@ function createDish(name, price, description, available, quantity, imagePath) {
 
 // -------------------- CREATE functions --------------------------------
 function createIngredient(name, quantity, unitOfMeasurement) {
-  console.log('name: ' , name);
+  console.log('name: ', name);
   return new Promise((resolve, reject) => {
     db.run(
       'INSERT INTO ingredients (name, quantity, unitOfMeasurement) VALUES (?, ?, ?)',
       [name, quantity, unitOfMeasurement],
       function (err) {
         if (err) {
-            console.error(err.message);
+          console.error(err.message);
         } else {
           resolve(this.lastID);
         }
@@ -64,14 +64,14 @@ function createIngredient(name, quantity, unitOfMeasurement) {
   });
 }
 function createExtra(name, price, available) {
-  console.log('name: ' , name);
+  console.log('name: ', name);
   return new Promise((resolve, reject) => {
     db.run(
       'INSERT INTO extras (name, price, available) VALUES (?, ?, ?)',
       [name, price, available],
       function (err) {
         if (err) {
-            console.error(err.message);
+          console.error(err.message);
         } else {
           resolve(this.lastID);
         }
@@ -81,14 +81,14 @@ function createExtra(name, price, available) {
 }
 
 function createCategoryDish(name) {
-  console.log('name: ' , name);
+  console.log('name: ', name);
   return new Promise((resolve, reject) => {
     db.run(
       'INSERT INTO CategoryDish (name) VALUES (?)',
       [name],
       function (err) {
         if (err) {
-            console.error(err.message);
+          console.error(err.message);
         } else {
           resolve(this.lastID);
         }
@@ -98,14 +98,14 @@ function createCategoryDish(name) {
 }
 
 function createCategoryDrink(name) {
-  console.log('name: ' , name);
+  console.log('name: ', name);
   return new Promise((resolve, reject) => {
     db.run(
       'INSERT INTO CategoryDrinks (name) VALUES (?)',
       [name],
       function (err) {
         if (err) {
-            console.error(err.message);
+          console.error(err.message);
         } else {
           resolve(this.lastID);
         }
@@ -151,7 +151,7 @@ function deleteIngredientById(id) {
 }
 
 // -------------------- UPDATE functions --------------------------------
-function updateIngredientQuantity(id, newQuantity){
+function updateIngredientQuantity(id, newQuantity) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE ingredients SET quantity = ? WHERE id = ?',
@@ -168,7 +168,7 @@ function updateIngredientQuantity(id, newQuantity){
   });
 };
 
-function updateExtraAvailable(id, newAvailable){
+function updateExtraAvailable(id, newAvailable) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE extras SET available = ? WHERE id = ?',
@@ -186,7 +186,7 @@ function updateExtraAvailable(id, newAvailable){
 };
 
 
-function updateCategoryDishName(id, newCategoryName){
+function updateCategoryDishName(id, newCategoryName) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE CategoryDish SET Name = ? WHERE id = ?',
@@ -203,7 +203,7 @@ function updateCategoryDishName(id, newCategoryName){
   });
 };
 
-function updateCategoryDrinksName(id, newCategoryName){
+function updateCategoryDrinksName(id, newCategoryName) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE CategoryDrinks SET Name = ? WHERE id = ?',
@@ -221,7 +221,7 @@ function updateCategoryDrinksName(id, newCategoryName){
 };
 
 
-function updateDishOrderStatus(id, status){
+function updateDishOrderStatus(id, status) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE OrderedDishes SET status = ? WHERE id = ? ',
@@ -238,7 +238,7 @@ function updateDishOrderStatus(id, status){
   });
 };
 
-function updateDrinkOrderStatus(id, status){
+function updateDrinkOrderStatus(id, status) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE OrderedDrinks SET status = ? WHERE id = ? ',
@@ -289,7 +289,7 @@ function checkDishAvailability(orderItems) {
         if (!isAvailable || (!hasEnoughQuantity && !hasUnrestrictedQuantity)) {
           // Set the available quantity of the item to 0
           availableQuantities.set(item, 0);
-        } else if(hasUnrestrictedQuantity) {
+        } else if (hasUnrestrictedQuantity) {
           // Set the available quantity of the item to the requested quantity if quantity is not restriced
           availableQuantities.set(item, item.amount);
         } else {
@@ -421,9 +421,9 @@ function getTableFromQuery(queryString) {
       (err, tableReturn) => {
         if (err) {
           console.error(err.message);
-          reject(err); 
+          reject(err);
         } else {
-          resolve(tableReturn); 
+          resolve(tableReturn);
         }
       }
     );
@@ -432,14 +432,36 @@ function getTableFromQuery(queryString) {
 
 //
 function closeDB() {
-    db.close((err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        console.log('Close the database connection.');
-      });
-  }
+  db.close((err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Close the database connection.');
+  });
+}
 
 
 
-module.exports = { updateCategoryDishName,updateCategoryDrinksName, createDish,createCategoryDrink,createCategoryDish,createExtra,updateExtraAvailable,deleteExtraById,updateIngredientQuantity, closeDB, getTableFromQuery, queries ,createIngredient, deleteIngredientById, checkDishAvailability, addOrder, updateDishOrderStatus,updateDrinkOrderStatus};
+module.exports = {
+  queries,
+  createDish,
+  createCategoryDrink,
+  createCategoryDish,
+  createExtra,
+  createIngredient,
+
+  updateCategoryDishName,
+  updateCategoryDrinksName,
+  updateIngredientQuantity,
+  updateExtraAvailable,
+  updateDishOrderStatus,
+  updateDrinkOrderStatus,
+
+  deleteExtraById,
+  deleteIngredientById,
+  
+  checkDishAvailability,
+  addOrder,
+  getTableFromQuery,
+  closeDB
+};
