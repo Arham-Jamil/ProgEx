@@ -1,25 +1,24 @@
 # Note File for Comments 
 
 ## Dennis
--erlauben Categories zu löschen? dann mit cascade on delete?
 
 ### Idee im Moment: 
-    -pro Drink/Dish nur eine Category
-    -Category kann man nicht löschen aber bearbeiten (Name)
-    -Category per DropDown auswählen
-    -Categories als used/not used markieren??
 
-    Dishes/Drinks
-    -Löschen können wäre ja nicht so gut
-    -updaten? dann geht der alte Preis usw verloren
-    -also nicht updaten und nur neue erstellen + "löschen" welche die Dishes einfach nur aus der Ansicht entfernen?
-    -oder updaten lassen aber beim updaten wird eigentlich ein neues Dish erstellt
+    ///
+In ordered Dishes den Preis speichern???????
+DESING ÄNDERN?? HOMEPAGE BILD UND FARBE
+wenn Quantity auf 0 ist dann automatisch keine available?
+    //
+     -ORDERS VON EINER BESTIMMTEN TABLE NUMBER MUESSEN FARBIG MARKIERT WERDEN -> zum mitnehmen
 
-    
-### Freitag:
-    -Edit Dishes & Drinks hinzufügen
-    -Homepage muss solangsam gut aussehn
-    -ORDERS VON EINER BESTIMMTEN TABLE NUMBER MUESSEN FARBIG MARKIERT WERDEN -> zum mitnehmen
+### Samstag
+    -Homepage 
+        -alle Dishes Sortiert nach Category anzeigen
+        -Dishes BIlder anzeigen
+        -Drinks & Extras auch anzeigen
+        -Überschriften für jede Category & horizontale Navigation dadurch
+
+        -Bei Order die Description der Dishes & Drinks mitsenden
 
 ### Sa & So:
     -Auto-reload on order page for kitchen view
@@ -45,3 +44,4 @@
 
  ###   Other
  //wenn man noch Spaß hat Funktionen zusammenfassen und Code verschönern
+     -Categories löschen können wenn es nirgends benutzt wird?

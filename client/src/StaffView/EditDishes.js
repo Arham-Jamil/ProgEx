@@ -18,11 +18,13 @@ const EditDishes = () => {
     Name: '',
     Price: '',
     CategoryName: '',
+    Category_ID: '', 
     Description: '',
     Available: false,
     Quantity: '',
     ImagePath: '',
   });
+  
 
   useEffect(() => {
     fetchDishes();
@@ -32,6 +34,18 @@ const EditDishes = () => {
   const fetchDishes = async () => {
     try {
       const response = await axios.get('http://localhost:3001/dishesjoin');
+      //sorts dishes before displaying them
+      const sortedDishes = response.data.sort((a, b) => {
+        // Sort by availability
+        if (a.Available && !b.Available) {
+          return -1;
+        } else if (!a.Available && b.Available) {
+          return 1;
+        }
+        // Sort by category ID if availability is the same
+        return a.Category_ID - b.Category_ID;
+      });
+
       setDishes(response.data);
     } catch (error) {
       console.error(error);
@@ -50,19 +64,39 @@ const EditDishes = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === 'checkbox' ? checked : value;
-
+  
     if (editingId) {
-      setEditingDish((prevState) => ({
-        ...prevState,
-        [name]: inputValue,
-      }));
+      if (name === 'CategoryName') {
+        const selectedCategory = categories.find((category) => category.Name === value);
+        setEditingDish((prevState) => ({
+          ...prevState,
+          [name]: selectedCategory ? selectedCategory.Name : '',
+          Category_ID: selectedCategory ? selectedCategory.ID : '',
+        }));
+      } else {
+        setEditingDish((prevState) => ({
+          ...prevState,
+          [name]: inputValue,
+        }));
+      }
     } else {
-      setNewDish((prevState) => ({
-        ...prevState,
-        [name]: inputValue,
-      }));
+      if (name === 'CategoryName') {
+        const selectedCategory = categories.find((category) => category.Name === value);
+        setNewDish((prevState) => ({
+          ...prevState,
+          [name]: selectedCategory ? selectedCategory.Name : '',
+          Category_ID: selectedCategory ? selectedCategory.ID : '',
+        }));
+      } else {
+        setNewDish((prevState) => ({
+          ...prevState,
+          [name]: inputValue,
+        }));
+      }
     }
   };
+  
+  
 
   const handleAddDish = async () => {
     try {
@@ -85,6 +119,7 @@ const EditDishes = () => {
   const handleEditDish = async (id) => {
     try {
       await axios.patch(`http://localhost:3001/dishes/${id}`, editingDish);
+      console.log('handleEdit: editDish',editingDish);
       setEditingId(null);
       fetchDishes();
     } catch (error) {
@@ -110,6 +145,18 @@ const EditDishes = () => {
     });
   };
 
+  const handleRemoveDish = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete the dish? You won´t be able to restore it");
+    if(!confirmed) return;
+    console.log('removing from view: ', id);
+    try {
+      await axios.delete(`http://localhost:3001/dishes/${id}`); //remove from table view
+      fetchDishes();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="container">
       <h2>Edit Dishes</h2>
@@ -128,7 +175,11 @@ const EditDishes = () => {
         </thead>
         <tbody>
           {dishes.map((dish) => (
-            <tr key={dish.ID}>
+            <tr 
+            key={dish.ID}
+            style={{ //conditionally formatting of dishes depending on quantity and available value
+              backgroundColor: dish.Quantity === 0 ? 'red' :
+              !dish.Available ? '#fac3c3' : 'inherit' }}>
               <td>
                 {editingId === dish.ID ? (
                   <input
@@ -226,7 +277,11 @@ const EditDishes = () => {
                     <button onClick={handleCancelEdit}>Cancel</button>
                   </div>
                 ) : (
+                  <div style={{ display: 'inline-flex' }}>
                   <button onClick={() => handleStartEdit(dish.ID, dish)}>Edit</button>
+                  <button onClick={() => handleRemoveDish(dish.ID)}>Remove</button>
+                  </div>
+                
                 )}
               </td>
             </tr>
@@ -256,8 +311,7 @@ const EditDishes = () => {
               >
                 <option value="">Select Category</option>
                 {categories.map((category) => (
-                    //work around weil bin grad faul, schreibe in categoryName die ID rein
-                  <option key={category.ID} value={category.ID}>
+                  <option key={category.ID} value={category.Name}>
                     {category.Name}
                   </option>
                 ))}

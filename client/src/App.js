@@ -10,6 +10,7 @@ import EditCategoryDish from "./StaffView/EditCategoryDish";
 import EditCategoryDrinks from "./StaffView/EditCategoryDrinks";
 import Navigation from "./StaffView/Navigation";
 import EditDishes from "./StaffView/EditDishes";
+import EditDrinks from "./StaffView/EditDrinks";
 
 const App = () =>{
  
@@ -28,6 +29,9 @@ const App = () =>{
           <Route path="/editCategoryDish" element={<EditCategoryDish/>}/>
           <Route path="/editCategoryDrinks" element={<EditCategoryDrinks/>}/>
           <Route path="/editDishes" element={<EditDishes/>}/>
+          <Route path="/editDrinks" element={<EditDrinks/>}/>
+
+
 
 
           

@@ -15,8 +15,8 @@ const queries = {
   drinks: 'SELECT * FROM Drinks',
   dishes: 'SELECT * FROM Dishes',
   orders: 'SELECT * FROM Orders',
-  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id',
-  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id'
+  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0',
+  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0'
 };
 
 // Connect to SQLite database
@@ -29,7 +29,7 @@ const db = new sqlite3.Database(dbFilePath, (err) => {
 });
 
 
-// Create a dish
+// -------------------- CREATE functions --------------------------------
 function createDish(name, price, description, available, quantity, imagePath, category_id) {
   return new Promise((resolve, reject) => {
     db.run(
@@ -46,7 +46,22 @@ function createDish(name, price, description, available, quantity, imagePath, ca
   });
 }
 
-// -------------------- CREATE functions --------------------------------
+function createDrink(name, price, description, available, volume, imagePath, category_id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'INSERT INTO Drinks (Name, Price, Description, Available, Volume, ImagePath, Category_ID) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name, price, description, available, volume, imagePath, category_id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+        } else {
+          resolve(this.lastID);
+        }
+      }
+    );
+  });
+}
+
 function createIngredient(name, quantity, unitOfMeasurement) {
   console.log('name: ', name);
   return new Promise((resolve, reject) => {
@@ -143,6 +158,41 @@ function deleteIngredientById(id) {
           reject(err);
         } else {
           console.log(`Ingredient with ID ${id} deleted successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
+//TEST TEST TEST
+function setDishDeletedTrue(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE dishes SET deleted = 1 WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Dish with ID ${id} removed successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
+function setDrinkDeletedTrue(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE drinks SET deleted = 1 WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Drink with ID ${id} removed successfully`);
           resolve();
         }
       }
@@ -254,6 +304,43 @@ function updateDrinkOrderStatus(id, status) {
     );
   });
 };
+
+function updateWholeDishesRow(id, name, price, categoryID, description, available, quantity, imagePath) {
+  return new Promise((resolve, reject) => {
+    console.log('db.run categoryID: ', categoryID);
+    db.run(
+      'UPDATE Dishes SET name = ?, price = ?, category_ID = ?, description = ?, available = ?, quantity = ?, imagePath = ? WHERE id = ?',
+      [name, price, categoryID, description, available, quantity, imagePath, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+function updateWholeDrinksRow(id, name, price, categoryID, description, available, volume, imagePath) {
+  return new Promise((resolve, reject) => {
+    console.log('db.run categoryID: ', categoryID);
+    db.run(
+      'UPDATE Drinks SET name = ?, price = ?, category_ID = ?, description = ?, available = ?, volume = ?, imagePath = ? WHERE id = ?',
+      [name, price, categoryID, description, available, volume, imagePath, id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
 
 //----------------------------------------------------------------------//
 
@@ -445,6 +532,7 @@ function closeDB() {
 module.exports = {
   queries,
   createDish,
+  createDrink,
   createCategoryDrink,
   createCategoryDish,
   createExtra,
@@ -456,9 +544,14 @@ module.exports = {
   updateExtraAvailable,
   updateDishOrderStatus,
   updateDrinkOrderStatus,
+  updateWholeDishesRow,
+  updateWholeDrinksRow,
 
   deleteExtraById,
   deleteIngredientById,
+
+  setDishDeletedTrue,
+  setDrinkDeletedTrue,
 
   checkDishAvailability,
   addOrder,

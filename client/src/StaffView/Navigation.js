@@ -32,6 +32,9 @@ const Navigation = () => {
         <li>
           <Link to="/editDishes">Edit Dishes</Link>
         </li>
+        <li>
+          <Link to="/editDrinks">Edit Drinks</Link>
+        </li>
         <h3>Server</h3>
        
         <li>

@@ -11,7 +11,8 @@ Description VARCHAR(255),
 Available INTEGER UNSINGED NOT NULL DEFAULT 1,
 Quantity INTEGER NOT NULL DEFAULT -1,
 ImagePath VARCHAR(128),
-Category_ID INTEGER UNSINGED NOT NULL,                  -- new
+Category_ID INTEGER UNSINGED NOT NULL,  --new
+Deleted INTEGER UNSINGED NOT NULL DEFAULT 0,                -- new
 FOREIGN KEY (Category_ID) REFERENCES CategoryDish(ID)   -- new
 );
 
@@ -36,7 +37,8 @@ Price DECIMAL(6,2) NOT NULL,
 Available INTEGER UNSINGED NOT NULL DEFAULT 1,
 Description VARCHAR(255),
 ImagePath VARCHAR(128),
-Category_ID INTEGER UNSINGED NOT NULL,                  -- new
+Category_ID INTEGER UNSINGED NOT NULL,    -- new
+Deleted INTEGER UNSINGED NOT NULL DEFAULT 0,              -- new
 FOREIGN KEY (Category_ID) REFERENCES CategoryDrinks(ID)   -- new
 );
 
@@ -129,18 +131,19 @@ VALUES('Water (small)',300,2.0, 1,'Looks like Water, tastes like Water, must be 
 ('TestDrink 1',333,5.5, 0,'Not available','https://www.sueddeutsche.de/image/sz.1.2878721/704x396?v=1519266701',4);
 
 INSERT INTO CategoryDish (Name)
-Values('Appetizer'),
-('Main Course'),
-('Main Course - Vegan'),
-('Dessert'),
-('Dessert - Vegan'),
-('For kids');
+Values  ('Appetizer'),
+        ('Main Course'),
+        ('Main Course - Vegan'),
+        ('Dessert'),
+        ('Dessert - Vegan'),
+        ('For kids');
 
 INSERT INTO CategoryDrinks (Name)
-VALUES('Cold - Alcohol-free'),
-('Cold - Alcoholic'),
-('Hot - Alcohol-free'),
-('Cold - Alcohol');
+VALUES  ('Carbonated Drinks'),
+        ('Fruit Juices'),
+        ('Coffee & Tea'),
+        ('Alcoholic Beverages'),
+        ('Other');
 
 INSERT INTO Extras (Name, Price, Available)
 VALUES('Cheese',0.5,1),
@@ -220,27 +223,15 @@ SELECT * FROM Drinks;
 
 
 
--- -- Join Drinks
--- SELECT Drinks.*, CategoryDrinks.name AS 'Category'
--- FROM Drinks
--- INNER JOIN Drinks_Cat ON Drinks.id = Drinks_Cat.drinks_id
--- INNER JOIN CategoryDrinks ON Drinks_Cat.categoryDrinks_id = CategoryDrinks.id;
 
 --join dishes
-SELECT Dishes.*, CategoryDish.Name AS 'CategoryName'
-FROM Dishes
-INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id;
+SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0 
 
 --join drinks
-SELECT Drinks.*, CategoryDrinks.Name AS 'CategoryName'
-FROM Drinks
-INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id;
+
+SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0 
 
 
--- SELECT Orders.ID, Orders.TableNumber, Orders.Paid, Orders.Date, OrderedDishes.*, OrderedDrinks.*
--- FROM Orders
--- LEFT JOIN OrderedDishes ON Orders.ID = OrderedDishes.Orders_ID
--- LEFT JOIN OrderedDrinks ON Orders.ID = OrderedDrinks.Orders_ID;
 
-
+-- UPDATE Dishes SET deleted = 0 WHERE ID = 7
 
