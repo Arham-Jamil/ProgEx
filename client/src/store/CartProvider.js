@@ -64,6 +64,7 @@ const cartReducer = (state, action) => {
 }
 
 if (action.type === "ADD_TEXT") {
+  console.log('cart provider add text type called');
   const { uniqueId, text } = action;
   const updatedItems = state.items.map((item) =>
     item.uniqueId === uniqueId ? { ...item, text } : item

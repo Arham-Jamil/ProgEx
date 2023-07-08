@@ -67,6 +67,7 @@ const Cart = (props) => {
           price={item.price}
           onRemove={cartItemRemoveHandler.bind(null, item.id)}
           onAdd={cartItemAddHandler.bind(null, item)}
+          specificCartItem = {item}  //Item übergeben damit man im Cart die Description hinzufügen kann
         />
       ))}
     </ul>

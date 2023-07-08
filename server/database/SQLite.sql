@@ -223,8 +223,6 @@ SELECT * FROM CategoryDrinks;
 SELECT * FROM Drinks;
 
 
-
-
 --join dishes
 SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0 
 

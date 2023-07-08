@@ -1,40 +1,55 @@
-import classes from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [categoryDish, setCategoryDish] = useState([]);
+
+  const fetchMeals = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/dishesjoin');
+      setMeals(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const fetchCategoryDish = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/categorydish');
+      setCategoryDish(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    // Function to fetch dishes
-    const fetchMeals = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/dishes'); // Make the GET request to the API endpoint
-        setMeals(response.data); // Set the fetched dishes in the state variable
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchMeals(); // Call the function to fetch dishes when the component mounts
+    fetchCategoryDish();
+    fetchMeals();
   }, []);
 
-    const mealsList = meals.map((meal) => (
-      // the information her comes from MealItem
-      <MealItem
-        id={meal.ID}
-        key={meal.ID}
-        name={meal.Name}
-        description={meal.Description}
-        price={meal.Price}
-      />
-    ));
-
   return (
-    <section className={classes.meals}>
-        {/* list of meals appear here */}
-        <ul>{mealsList}</ul>
+    <section>
+      <ul style={{ listStyle: 'none' }}>
+        {categoryDish.map((category) => (
+          <div key={category.ID} >
+            <h2 style={{ backgroundColor: '#f28a8a', color: 'black', padding: '0.5rem' }}>{category.Name}</h2>
+            {meals
+              .filter((meal) => meal.CategoryName === category.Name)
+              .map((meal) => (
+                <MealItem
+                  id={meal.ID}
+                  key={meal.ID}
+                  name={meal.Name}
+                  description={meal.Description} //bin mir nicht sicher ob das noch benötigt wird hab aber Angst es zu löschen
+                  price={meal.Price}
+                  imagePath={meal.ImagePath}
+                />
+              ))}
+          </div>
+        ))}
+      </ul>
     </section>
   );
 };

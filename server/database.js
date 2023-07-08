@@ -10,6 +10,7 @@ const queries = {
   categorydish: 'SELECT * FROM CategoryDish',
   categorydrinks: 'SELECT * FROM CategoryDrinks',
   extras: 'SELECT * FROM Extras',
+  extrasavailable: 'SELECT * FROM Extras WHERE available = 1',
   ingredients: 'SELECT * FROM Ingredients',
   staffaccount: 'SELECT * FROM StaffAccount',
   drinks: 'SELECT * FROM Drinks',
@@ -455,12 +456,12 @@ function addOrder(tableNumber, orderItems) {
       return new Promise((resolve, reject) => {
         // Prepare the SQL query to insert ordered items
         const sql = `
-          INSERT INTO OrderedDishes (Orders_id, Dishes_id, Status, Refunded)
-          VALUES (?, ?, 0, 0)
+          INSERT INTO OrderedDishes (Orders_id, Dishes_id, Status, Description, Refunded)
+          VALUES (?, ?, 0, ?,0)
         `;
         // Insert each ordered item into the database
         orderItems.forEach((item, index) => {
-          db.run(sql, orderId, item.id, function (err) {
+          db.run(sql, orderId, item.id, item.description ,function (err) {
             if (err) {
               console.error(err);
               reject(err);
