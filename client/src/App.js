@@ -10,12 +10,9 @@ import EditCategoryDish from "./StaffView/EditCategoryDish";
 import EditCategoryDrinks from "./StaffView/EditCategoryDrinks";
 import Navigation from "./StaffView/Navigation";
 import EditDishes from "./StaffView/EditDishes";
-<<<<<<< HEAD
 import PrivateRoutes from "./pages/PrivateRoutes";
 import { AuthProvider } from "./store/AuthContext";
-=======
 import EditDrinks from "./StaffView/EditDrinks";
->>>>>>> b98aa1d421d171d5084a7bf728f474490369405d
 
 const App = () =>{
  
