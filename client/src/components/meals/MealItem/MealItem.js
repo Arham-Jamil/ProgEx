@@ -25,7 +25,8 @@ const MealItem = (props) => {
       amount: enteredAmountNumber, 
       price: props.price,
       description: null,
-      type: props.type //added this to differentiate between dishes and drinks
+      type: props.type, //added this to differentiate between dishes and drinks
+      ...(props.type === 'drink' ? { volume: props.volume } : {}) //mal gucken ob das geht
     })
   };
 

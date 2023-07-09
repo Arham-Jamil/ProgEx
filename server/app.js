@@ -298,6 +298,14 @@ app.patch('/orders', async (req, res) => {
 app.post('/order', (req, res) => {
   const orderItems = req.body.orderItems;
   const tableNumber = req.body.tableNumber;
+
+  //NEW NEW NEW NEWN EWN EWNEW 
+  const orderDishItems = req.body.orderItems.filter((item) => item.type === 'dish');
+  const orderDrinkItems = req.body.orderItems.filter((item) => item.type === 'drink');  
+  console.log("orderDishItems: ",orderDishItems);
+  console.log("orderDrinkItems: ",orderDrinkItems);
+
+
   // Check the availability of orderItems in your database or any other data source
   // Assume you have a function called checkAvailability() that returns a boolean value
   const isAvailable = db.checkDishAvailability(orderItems);
