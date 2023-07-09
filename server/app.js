@@ -222,6 +222,27 @@ app.post('/order', (req, res) => {
   }
 });
 
+// for the check credentials
+
+app.post('/login', async (req, res)=>{
+  const username = req.body.username;
+  const password = req.body.password;
+ console.log('req.body', req.body)
+
+  try{
+    const isActive = await db.checkCredentials(username,password)
+    console.log('isActive', isActive)
+    if(isActive){
+      res.status(200).json({ success: true });
+    }else{
+      res.status(200).json({ success: false });
+    }
+  }catch(error){
+    console.log(error);
+    res.status(500).json({ success: false, error: 'internal server error' });
+  } 
+});
+
 //every get which should be handled differently needs to be declared above this !!
 
 //Route handler. every table as a path results in getting a SELECT * from said table

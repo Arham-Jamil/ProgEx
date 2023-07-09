@@ -10,18 +10,21 @@ import EditCategoryDish from "./StaffView/EditCategoryDish";
 import EditCategoryDrinks from "./StaffView/EditCategoryDrinks";
 import Navigation from "./StaffView/Navigation";
 import EditDishes from "./StaffView/EditDishes";
+import PrivateRoutes from "./pages/PrivateRoutes";
+import { AuthProvider } from "./store/AuthContext";
 
 const App = () =>{
  
 
   return (
-    <>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage/>}/>
           <Route path="/Homepage" element={<HomePage/>}/>
           <Route path="/src/pages/HomePage.js" element={<HomePage/>}/>
           <Route path="/Login" element={<Login/>}/>
+        <Route element={<PrivateRoutes />}>
           <Route path="/src/pages/Kitchen.js" element={<Kitchen/>}/>
           <Route path="/ingredientsList" element={<IngredientsList/>}/>
           <Route path="/editExtras" element={<EditExtras/>}/>
@@ -32,16 +35,22 @@ const App = () =>{
 
           
           <Route path="/Navigation" element={<Navigation/>}/>
+          {/* <Route path="/Nav" element={<Navigation/>}/> */}
+          
           <Route path="/Nav" element={<Navigation/>}/>
+          <Route path="/OrdersPage" element={<OrdersPage/>}/>
+          
 
 
           
 
-          <Route path="/OrdersPage" element={<OrdersPage/>}/>
+          {/* <Route path="/OrdersPage" element={<OrdersPage/>}/> */}
+          
+          </Route>
           <Route path="*" element={<Error/>}/>
         </Routes>
       </BrowserRouter>
-    </>
+    </AuthProvider>
   );
 }
 

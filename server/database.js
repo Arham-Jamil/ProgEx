@@ -430,6 +430,40 @@ function getTableFromQuery(queryString) {
   });
 }
 
+//function to check password in the database
+const checkCredentials = (username, password) =>{
+  return new Promise((resolve, reject) =>{
+    db.get(
+      'SELECT * FROM StaffAccount WHERE Username = ? AND Password = ?',
+      [username, password],
+      (err, row) =>{
+        console.log('row:',row)
+        console.log('Username:',username)
+        console.log('Password:',password)
+        if(err){
+          console.error(err);
+          reject(err)
+        }
+        if(!row){
+          console.log('credentials are not found in the StaffAccount Table')
+          console.log('row:', row)
+        }else{
+          console.log('credentials in the table ')
+        }
+        if(row && row.Active == 1){
+          console.log("Account is active")
+          const isActive = row.Active;
+          console.log('isActive:', isActive)
+          resolve(isActive)
+        }else{
+          console.log('invalid credentials or account not active')
+          resolve(false);
+        }
+      }
+    )
+  })
+}
+
 //
 function closeDB() {
   db.close((err) => {
@@ -461,6 +495,7 @@ module.exports = {
   deleteIngredientById,
 
   checkDishAvailability,
+  checkCredentials,
   addOrder,
   getTableFromQuery,
   closeDB
