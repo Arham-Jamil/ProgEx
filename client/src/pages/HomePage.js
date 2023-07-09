@@ -1,12 +1,13 @@
 import CartProvider from "../store/CartProvider"
 import Header from "../components/layout/Header"
-import Meals from "../components/meals/Meals"
 import Cart from "../components/cart/Cart"
 import { useState } from "react"
 import HomePageNav from "../components/meals/HomePageNav"
 import RestaurantDescription from "../components/meals/RestaurantDescription"
 import AvailableExtras from "../components/meals/AvailableExtras"
 import AvailableDrinks from "../components/meals/AvailableDrinks"
+import AvailableMeals from "../components/meals/AvailableMeals"
+import ServerCalled from "../components/callServer/ServerCalled"
 
 const HomePage = () => {
 
@@ -31,7 +32,13 @@ const HomePage = () => {
           <HomePageNav />
         </div>
 
-        <Meals />
+        {/* move this to the header !!!!!!! */}
+        <ServerCalled />
+
+        <section id="Dishes">
+        <h1 style={{ marginTop: '50px' }}> Dishes</h1>
+      </section>
+      <AvailableMeals />
 
         <section id="Drinks">
         <h1> Drinks</h1>

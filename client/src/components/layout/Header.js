@@ -5,6 +5,7 @@ import CartContext from "../../store/cart-context";
 import Cart from "../cart/Cart";
 import { createPortal } from "react-dom";
 import CartItem from "../cart/CartItem";
+import ServerCalled from "../callServer/ServerCalled";
 
 //this the top bar of the application.
 //It contains the cart button(HeaderCartBtn), app title etc
@@ -66,9 +67,11 @@ const Header = (props) => {
   //for the orders
   return (
     <Fragment>
+            
       <header className={classes.header}>
         
         <h1>Restaurant Order App</h1>
+        
         {/* this ths cart btn       */}
         {/* <HeaderCartButton onClick={props.onShowCart} /> */}
       {<button className={btnClasses} onClick={seeCart}>
