@@ -36,6 +36,13 @@ const EditCategoryDish = () => {
   };
 
   const handleAddCategoryDish = async () => {
+    //input validation
+    if (newCategoryDish.Name.trim() === "" //empty
+    || categoryDishes.some((catDish) => catDish.Name.trim() === newCategoryDish.Name.trim()) //unique
+    ) {
+    alert("Failed! Check your input!!");
+    return;
+  }
     try {
       await axios.post('http://localhost:3001/categorydish', { Name: newCategoryDish.Name });
       setNewCategoryDish({ Name: '' });
@@ -46,6 +53,13 @@ const EditCategoryDish = () => {
   };
 
   const handleEditCategoryDish = async (id) => {
+     //input validation
+     if (editingCategoryDish.Name.trim() === "" //empty
+     || categoryDishes.some((catDish) => catDish.Name.trim() === editingCategoryDish.Name.trim()) //unique
+     ) {
+     alert("Failed! Check your input!!");
+     return;
+   }
     try {
       await axios.patch(`http://localhost:3001/categorydish/${id}`, {
         Name: editingCategoryDish.Name,

@@ -36,6 +36,13 @@ const EditCategoryDrinks = () => {
   };
 
   const handleAddCategoryDrink = async () => {
+       //input validation
+       if (newCategoryDrink.Name.trim() === "" //empty
+       || categoryDrinks.some((catDrink) => catDrink.Name.trim() === newCategoryDrink.Name.trim()) //unique
+       ) {
+       alert("Failed! Check your input!!");
+       return;
+     }
     try {
       await axios.post('http://localhost:3001/categorydrinks', { Name: newCategoryDrink.Name });
       setNewCategoryDrink({ Name: '' });
@@ -46,6 +53,13 @@ const EditCategoryDrinks = () => {
   };
 
   const handleEditCategoryDrink = async (id) => {
+        //input validation
+        if (editingCategoryDrink.Name.trim() === "" //empty
+        || categoryDrinks.some((catDrink) => catDrink.Name.trim() === editingCategoryDrink.Name.trim()) //unique
+        ) {
+        alert("Failed! Check your input!!");
+        return;
+      }
     try {
       await axios.patch(`http://localhost:3001/categorydrinks/${id}`, {
         Name: editingCategoryDrink.Name,

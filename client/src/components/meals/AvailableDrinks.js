@@ -36,7 +36,7 @@ const AvailableDrinks = () => {
           <div key={category.ID} >
             <h2 style={{ backgroundColor: '#f28a8a', color: 'black', padding: '0.3rem' }}>{category.Name}</h2>
             {/* only maps the drinks (dishes) which correspond to the category and are available!! */}
-            {drinks.filter((drink) => (drink.CategoryName === category.Name) && (drink.Available === 1))
+            {drinks.filter((drink) => (drink.CategoryName === category.Name) && (drink.Available === 1)) //wird schon in db gemacht aber egal
               .map((drink) => (
                 <MealItem
                   id={drink.ID}

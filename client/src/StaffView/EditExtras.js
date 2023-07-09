@@ -63,6 +63,15 @@ const EditExtras = () => {
 
 
   const handleAddExtra = async () => {
+    //input validation
+    if (!(/^\d+(\.\d{1,2})?$/.test(newExtra.Price))
+      || newExtra.Name.trim() === ""
+      || extras.some((extra) => extra.Name.trim() === newExtra.Name.trim())
+      ) {
+      alert("Failed! Check your input!!");
+      return;
+    }
+    
     try {
       await axios.post('http://localhost:3001/extras', newExtra);
       setNewExtra({ Name: '', Price: '', Available: false });

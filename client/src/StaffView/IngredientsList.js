@@ -95,9 +95,12 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
 
   const handleAddIngredient = async () => {
 
-    if (!(/^[0-9]+$/.test(newIngredient.Quantity))
-      || newIngredient.UnitOfMeasurement === "" //leerzeichen geht aber, muss noch gefixt werden
-      || newIngredient.Name === "") { //hier muss noch auch unique name getestet werden
+    //input validation
+    if (!(/^[0-9]+$/.test(newIngredient.Quantity)) //number
+      || newIngredient.UnitOfMeasurement.trim() === ""  //not empty
+      || newIngredient.Name.trim() === "" //not empty
+      || ingredients.some((ingredient) => ingredient.Name.trim() === newIngredient.Name.trim())) { //unique
+
       console.error("Keine Zahl");
       alert("Failed! Check your input!!");
       return;
@@ -118,12 +121,21 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
   };
 
   const handleEditQuantity = async (id, newQuantity) => {
+       //input validation
+       if (!(/^[0-9]+$/.test(newQuantity))) { 
+
+       console.error("Keine Zahl");
+       alert("Failed! Only numbers are allowed !");
+       return;
+     }
+     
     try {
       await axios.patch(`http://localhost:3001/ingredients/${id}`, {
         Quantity: newQuantity,
       });
       //updating table after successful table insert
       fetchIngredients();
+      alert("Quantity changed");
     } catch (error) {
       console.error(error);
     }
@@ -177,14 +189,12 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
             </tr>
           ))}
 
-
-
-
           <tr>
             <td>
               <input
                 type="text"
                 name="Name"
+                placeholder='Ingredient Name'
                 value={newIngredient.Name}
                 onChange={handleInputChange}
               />
@@ -193,6 +203,7 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
               <input
                 type="text"
                 name="Quantity"
+                placeholder='Quantity'
                 value={newIngredient.Quantity}
                 onChange={handleInputChange}
               />
@@ -201,6 +212,7 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
               <input
                 type="text"
                 name="UnitOfMeasurement"
+                placeholder='UnitOfMeasurement'
                 value={newIngredient.UnitOfMeasurement}
                 onChange={handleInputChange} //hier eher mit dropdown menu auswählen lassen?
               />

@@ -99,6 +99,15 @@ const EditDrinks = () => {
   
 
   const handleAddDrink = async () => {
+      //input validation
+      if (!(/^\d+(\.\d{1,2})?$/.test(newDrink.Price)) //floating point number
+      || newDrink.Name.trim() === ""  //not empty
+      || !(/^[0-9]+$/.test(newDrink.Volume))
+      || drinks.some((drink)=> drink.Name.trim() === newDrink.Name.trim())) { //unique
+  
+      alert("Failed! Check your input!!");
+      return;
+    }
     try {
       await axios.post('http://localhost:3001/drinks', newDrink);
       setnewDrink({
@@ -128,6 +137,15 @@ const EditDrinks = () => {
   };
 
   const handleEditDrink = async (id) => {
+       //input validation
+       if (!(/^\d+(\.\d{1,2})?$/.test(editingDrink.Price)) //floating point number
+       || editingDrink.Name.trim() === ""  //not empty
+       || !(/^[0-9]+$/.test(editingDrink.Volume))
+       ) { //unique
+   
+       alert("Failed! Check your input!!");
+       return;
+     }
     try {
       await axios.patch(`http://localhost:3001/drinks/${id}`, editingDrink);
       console.log('handleEdit: editdrink',editingDrink);

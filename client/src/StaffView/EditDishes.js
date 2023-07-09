@@ -99,6 +99,17 @@ const EditDishes = () => {
   
 
   const handleAddDish = async () => {
+
+    //input validation
+    if (!(/^\d+(\.\d{1,2})?$/.test(newDish.Price)) //floating point number
+    || newDish.Name.trim() === ""  //not empty
+    || !(/^-?1$|^[0-9]+$/.test(newDish.Quantity)) //not empty
+    || dishes.some((dish) => dish.Name.trim() === newDish.Name.trim())) { //unique
+
+    alert("Failed! Check your input!!");
+    return;
+  }
+
     try {
       await axios.post('http://localhost:3001/dishes', newDish);
       setNewDish({
@@ -117,6 +128,20 @@ const EditDishes = () => {
   };
 
   const handleEditDish = async (id) => {
+    console.log('editing dish: ', editingDish);
+       //input validation
+       if (
+      !(/^\d+(\.\d{1,2})?$/.test(editingDish.Price)) //floating point number
+       || editingDish.Name.trim() === ""  //not empty
+       || !(/^-?1$|^[0-9]+$/.test(editingDish.Quantity)) //not empty
+
+       //geht nicht weil in dishes ja der name der zu editieren ist steht
+      //  || dishes.some((dish) => dish.Name.trim() === editingDish.Name.trim())
+       ) { //unique
+   
+       alert("Failed! Check your input!!");
+       return;
+     }
     try {
       await axios.patch(`http://localhost:3001/dishes/${id}`, editingDish);
       console.log('handleEdit: editDish',editingDish);

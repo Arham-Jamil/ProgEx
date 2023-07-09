@@ -9,6 +9,9 @@
      -ORDERS VON EINER BESTIMMTEN TABLE NUMBER MUESSEN FARBIG MARKIERT WERDEN -> zum mitnehmen
 
 ### Sonntag oder so
+
+/noch gucken wie man bei Update von EditDrinks und Dishes auf unique testen kann!!!
+
     -Homepage 
         -Drinks mit Categories  anzeigen //type= dish / drink hinzufügen und dadurch unterscheiden?
         -Order Drinks mit Description
