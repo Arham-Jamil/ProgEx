@@ -16,13 +16,15 @@ const MealItem = (props) => {
     const enteredAmount = amountInputRef.current.value;
     const enteredAmountNumber = +enteredAmount;
     amountInputRef.current.value = "1";
-      // must be connected to the database to be able to influence the amount of
-      // food or drinks that can be ordered
+    // must be connected to the database to be able to influence the amount of
+    // food or drinks that can be ordered
+    console.log('props: ', props);
     cartCtx.addItem({
       id: props.id,
       name: props.name,
-      amount: enteredAmountNumber,
+      amount: enteredAmountNumber, //wieso ist die amount überhaupt noch da???
       price: props.price,
+      description: null
     })
   };
 
@@ -30,18 +32,41 @@ const MealItem = (props) => {
     // the meals name, description and add button is being return here
     //depending on the meal. The information is going to differ. 
     //the information here is transferred to availableMeals.js and the map function is used to loop throughn it
-    <li>
-      <div>
-        <h3>{props.name}</h3>
-        <div>{props.description}</div>
-        <div>{price}</div>
+    <li style={{ borderBottom: '1px solid gray', paddingBottom: '10px', marginBottom: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <h3 style={{ color: 'black', fontSize: '1.2rem' }}>{props.name}</h3>
+          <div>{props.description}</div>
+          <div style={{ marginTop: '8px', color: 'green', fontWeight: 'bold' }}>{price}</div>
+        </div>
+        <img
+          src={props.imagePath}
+          alt="Kein Bild vorhanden"
+          style={{ maxWidth: '300px', maxHeight: '300px', marginLeft: 'auto' }}
+        />
       </div>
 
       <div>
-        {/* <MealItemForm id={props.id} onAddToCart={addToCartHandler} /> */}
-        <button ref={amountInputRef} value="1" onClick={submitHandler}>+ Add</button>
+        <button
+          ref={amountInputRef}
+          value="1"
+          onClick={submitHandler}
+          style={{
+            backgroundColor: 'red',
+            color: 'white',
+            border: 'none',
+            padding: '0.5rem 1rem',
+            borderRadius: '5px',
+            cursor: 'pointer', 
+          }}
+        >
+          + Add
+        </button>
       </div>
     </li>
+
+
+
   );
 };
 

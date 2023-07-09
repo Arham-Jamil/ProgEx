@@ -22,7 +22,6 @@ app.use(cors());
 
 // API endpoints
 
-
 //------------- POST REQUESTS -----------------------------------------
 app.post('/ingredients', async (req, res) => {
   console.log('req.body: ', req.body);
@@ -80,7 +79,7 @@ app.post('/dishes', async (req, res) => {
   console.log('req.body: ', req.body);
   const { Name: name,
     Price: price,
-    CategoryName: category_id, //In categoryName ist die ID geschrieben
+    Category_ID: category_id, 
     Description: description,
     Available: available,
     Quantity: quantity,
@@ -92,6 +91,25 @@ app.post('/dishes', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to create dish' });
+  }
+});
+
+app.post('/drinks', async (req, res) => {
+  console.log('req.body: ', req.body);
+  const { Name: name,
+    Price: price,
+    Category_ID: category_id, 
+    Description: description,
+    Available: available,
+    Volume: volume,
+    ImagePath: imagePath } = req.body;
+  console.log('name in post: ', name);
+  try {
+    const drinkID = await db.createDrink(name, price, description, available, volume, imagePath, category_id);
+    res.status(201).json({ id: drinkID });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create drink' });
   }
 });
 
@@ -116,6 +134,28 @@ app.delete('/ingredients/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to delete ingredient' });
+  }
+});
+
+app.delete('/dishes/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.setDishDeletedTrue(id);
+    res.status(200).json({ message: `Dish with ID ${id} removed from view successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to remove dish' });
+  }
+});
+
+app.delete('/drinks/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.setDrinkDeletedTrue(id);
+    res.status(200).json({ message: `Drink with ID ${id} removed from view successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to remove drink' });
   }
 });
 
@@ -175,9 +215,51 @@ app.patch('/categorydrinks/:id', async (req, res) => {
   }
 });
 
+app.patch('/dishes/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Name: name,
+    Price: price,
+    Category_ID: categoryID,
+    Description: description,
+    Available: available,
+    Quantity: quantity,
+    ImagePath: imagePath } = req.body;
+  console.log('app.patch() body: ', req.body);
+  console.log('app.patch() categoryID: ', categoryID);
+
+  try {
+    await db.updateWholeDishesRow(id, name,price,categoryID,description,available,quantity,imagePath);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update dish' });
+  }
+});
+
+app.patch('/drinks/:id', async (req, res) => {
+  const { id } = req.params;
+  const { Name: name,
+    Price: price,
+    Category_ID: categoryID,
+    Description: description,
+    Available: available,
+    Volume: volume,
+    ImagePath: imagePath } = req.body;
+  console.log('app.patch() body: ', req.body);
+  console.log('app.patch() categoryID: ', categoryID);
+
+  try {
+    await db.updateWholeDrinksRow(id, name,price,categoryID,description,available,volume,imagePath);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update drink' });
+  }
+});
 
 
 
+// --------------------------------------------------------//
 app.patch('/orderedDishes', async (req, res) => {
   const orderID = req.body.orderId;
   const Status = req.body.newStatus;
