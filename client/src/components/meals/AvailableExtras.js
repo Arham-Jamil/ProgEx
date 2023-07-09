@@ -21,6 +21,7 @@ const AvailableExtras = () => {
     return (
       <section>
         {/* <h2>Extras</h2> */}
+        <p>Extras have to be mentioned in the comment field before placing your order.</p>
         <ul>
           {extras.map((extra) => (
             <li key={extra.ID}>

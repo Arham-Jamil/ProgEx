@@ -14,7 +14,7 @@ const AvailableMeals = () => {
       console.error(error);
     }
   };
-  
+
   const fetchCategoryDish = async () => {
     try {
       const response = await axios.get('http://localhost:3001/categorydish');
@@ -35,16 +35,17 @@ const AvailableMeals = () => {
         {categoryDish.map((category) => (
           <div key={category.ID} >
             <h2 style={{ backgroundColor: '#f28a8a', color: 'black', padding: '0.5rem' }}>{category.Name}</h2>
-            {meals
-              .filter((meal) => meal.CategoryName === category.Name)
+            {/* only maps the meals (dishes) which correspond to the category and are available!! */}
+            {meals.filter((meal) => (meal.CategoryName === category.Name) && (meal.Available === 1))
               .map((meal) => (
                 <MealItem
                   id={meal.ID}
                   key={meal.ID}
                   name={meal.Name}
-                  description={meal.Description} //bin mir nicht sicher ob das noch benötigt wird hab aber Angst es zu löschen
+                  description={meal.Description} //Dish Description
                   price={meal.Price}
                   imagePath={meal.ImagePath}
+                  type = "dish" //added this to differentiate between dishes and drinks
                 />
               ))}
           </div>

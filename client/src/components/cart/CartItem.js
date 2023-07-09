@@ -12,11 +12,7 @@ const CartItem = (props) => {
   const textareaRef = useRef(null);
   const CartCTX = useContext(CartContext)
   const handleChange = (e) =>{
-    // setText(CartCTX.addText(e.target.value))
     setText(e.target.value);
-    // props.specificCartItem = e.target.value;
-    // props.specificCartItem.description = e.target.value;
-    // console.log('props.specificCartItem', props.specificCartItem.description);
   }
 
   const handleSubmitClick = () => {
@@ -32,7 +28,6 @@ const CartItem = (props) => {
 
 
   const theId = useId()
-  // must be adjusted with the database
   const price = `€${props.price.toFixed(2)}`;
 
   return (
@@ -52,12 +47,12 @@ const CartItem = (props) => {
           id={theId}
           value={text}
           onChange={handleChange}
-          placeholder="Your comment here"
+          placeholder={props.specificCartItem.type === "drink" ? "Comment" : "Extra topping? Another wish? Write it here!"}
           ref={textareaRef}
           rows={2}
           cols={30}
+          maxLength={128}
         >
-
           </textarea>
         <button
           name="submitComment"
@@ -69,7 +64,6 @@ const CartItem = (props) => {
             fontSize: '14px'
           }}
             > {buttonText}</button>
-        {/* <button>submit</button> */}
       </div>
     </li>
   );

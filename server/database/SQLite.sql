@@ -223,9 +223,6 @@ SELECT * FROM CategoryDrinks;
 SELECT * FROM Drinks;
 
 
-<<<<<<< HEAD
-
-
 
 -- -- Join Drinks
 -- SELECT Drinks.*, CategoryDrinks.name AS 'Category'
@@ -233,8 +230,6 @@ SELECT * FROM Drinks;
 -- INNER JOIN Drinks_Cat ON Drinks.id = Drinks_Cat.drinks_id
 -- INNER JOIN CategoryDrinks ON Drinks_Cat.categoryDrinks_id = CategoryDrinks.id;
 
-=======
->>>>>>> b98aa1d421d171d5084a7bf728f474490369405d
 --join dishes
 SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0 
 

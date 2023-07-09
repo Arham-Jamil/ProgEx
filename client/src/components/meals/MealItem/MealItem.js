@@ -22,9 +22,10 @@ const MealItem = (props) => {
     cartCtx.addItem({
       id: props.id,
       name: props.name,
-      amount: enteredAmountNumber, //wieso ist die amount überhaupt noch da???
+      amount: enteredAmountNumber, 
       price: props.price,
-      description: null
+      description: null,
+      type: props.type //added this to differentiate between dishes and drinks
     })
   };
 
@@ -33,37 +34,50 @@ const MealItem = (props) => {
     //depending on the meal. The information is going to differ. 
     //the information here is transferred to availableMeals.js and the map function is used to loop throughn it
     <li style={{ borderBottom: '1px solid gray', paddingBottom: '10px', marginBottom: '10px' }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div>
-          <h3 style={{ color: 'black', fontSize: '1.2rem' }}>{props.name}</h3>
-          <div>{props.description}</div>
-          <div style={{ marginTop: '8px', color: 'green', fontWeight: 'bold' }}>{price}</div>
-        </div>
-        <img
-          src={props.imagePath}
-          alt="Kein Bild vorhanden"
-          style={{ maxWidth: '300px', maxHeight: '300px', marginLeft: 'auto' }}
-        />
-      </div>
-
+    <div style={{ display: 'flex', alignItems: 'normal' }}>
       <div>
-        <button
-          ref={amountInputRef}
-          value="1"
-          onClick={submitHandler}
-          style={{
-            backgroundColor: 'red',
-            color: 'white',
-            border: 'none',
-            padding: '0.5rem 1rem',
-            borderRadius: '5px',
-            cursor: 'pointer', 
-          }}
-        >
-          + Add
-        </button>
+        <h3 style={{ color: 'black', fontSize: '1.5rem', marginBottom: '8px' }}>{props.name}</h3>
+        
+        {/* if type=drink display its volume as well */}
+        <div style={{ marginBottom: '1rem' }}>
+          {props.type === 'drink' && <div>{props.volume}</div>}
+        </div>
+        
+        <div>{props.description}</div>
+        <div style={{ marginTop: '1rem', color: 'green', fontWeight: 'bold' }}>{price}</div>
+        
+        
+        <div style={{ marginTop: '1rem'}}>
+      <button
+        ref={amountInputRef}
+        value="1"
+        onClick={submitHandler}
+        style={{
+          backgroundColor: 'red',
+          color: 'white',
+          border: 'none',
+          padding: '0.5rem 1rem',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          marginTop: '8px',
+        }}
+      >
+        + Add
+      </button>
+    </div>
+      
       </div>
-    </li>
+      <img
+        src={props.imagePath}
+        alt="Kein Bild vorhanden"
+        style={{ maxWidth: '250px', maxHeight: '250px', marginLeft: 'auto' }}
+      />
+    </div>
+  
+
+
+  </li>
+  
 
 
 

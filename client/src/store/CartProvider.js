@@ -63,6 +63,7 @@ const cartReducer = (state, action) => {
   }
 }
 
+//mal gucken ob man das noch braucht/ oder überabreiten
 if (action.type === "ADD_TEXT") {
   console.log('cart provider add text type called');
   const { uniqueId, text } = action;
