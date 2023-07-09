@@ -17,7 +17,15 @@ const queries = {
   dishes: 'SELECT * FROM Dishes',
   orders: 'SELECT * FROM Orders',
   drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0',
-  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0'
+  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0',
+  ordereddishesjoin: `SELECT OrderedDishes.*, Dishes.Name, Orders.TableNumber 
+  FROM OrderedDishes 
+  LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
+  LEFT JOIN Orders ON OrderedDishes.Orders_ID = Orders.ID`,
+  ordereddrinksjoin: `SELECT OrderedDrinks.*, Drinks.Name, Orders.TableNumber 
+  FROM OrderedDrinks 
+  LEFT JOIN Drinks ON OrderedDrinks.Drinks_ID = Drinks.ID
+  LEFT JOIN Orders ON OrderedDrinks.Orders_ID = Orders.ID`,
 };
 
 // Connect to SQLite database
@@ -272,11 +280,11 @@ function updateCategoryDrinksName(id, newCategoryName) {
 };
 
 
-function updateDishOrderStatus(id, status) {
+function updateDishOrder(orderedDish) {
   return new Promise((resolve, reject) => {
     db.run(
-      'UPDATE OrderedDishes SET status = ? WHERE id = ? ',
-      [status, id],
+      'UPDATE OrderedDishes SET Status = ?, AdditionalCharges = ?, Refunded = ? WHERE id = ? ',
+      [orderedDish.Status, orderedDish.AdditionalCharges, orderedDish.Refunded, orderedDish.ID],
       function (err) {
         if (err) {
           console.error(err.message);
@@ -289,11 +297,28 @@ function updateDishOrderStatus(id, status) {
   });
 };
 
-function updateDrinkOrderStatus(id, status) {
+function updateDrinkOrder(orderedDrink) {
   return new Promise((resolve, reject) => {
     db.run(
-      'UPDATE OrderedDrinks SET status = ? WHERE id = ? ',
-      [status, id],
+      'UPDATE OrderedDrinks SET Status = ?, AdditionalCharges = ?, Refunded = ? WHERE id = ? ',
+      [orderedDrink.Status, orderedDrink.AdditionalCharges, orderedDrink.Refunded, orderedDrink.ID],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+function updateOrder(order) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE Orders SET Paid = ? WHERE id = ? ',
+      [order.Paid, order.ID],
       function (err) {
         if (err) {
           console.error(err.message);
@@ -577,8 +602,9 @@ module.exports = {
   updateCategoryDrinksName,
   updateIngredientQuantity,
   updateExtraAvailable,
-  updateDishOrderStatus,
-  updateDrinkOrderStatus,
+  updateDishOrder,
+  updateDrinkOrder,
+  updateOrder,
   updateWholeDishesRow,
   updateWholeDrinksRow,
 
