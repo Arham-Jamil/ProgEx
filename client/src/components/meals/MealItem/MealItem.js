@@ -24,8 +24,7 @@ const MealItem = (props) => {
       name: props.name,
       amount: enteredAmountNumber, //wieso ist die amount überhaupt noch da???
       price: props.price,
-      //HIER MUSS DIE SCHEIß DESCRIPTION REIN
-      description: ""
+      description: null
     })
   };
 
@@ -43,7 +42,7 @@ const MealItem = (props) => {
         <img
           src={props.imagePath}
           alt="Kein Bild vorhanden"
-          style={{ maxWidth: '250px', maxHeight: '250px', marginLeft: 'auto' }}
+          style={{ maxWidth: '300px', maxHeight: '300px', marginLeft: 'auto' }}
         />
       </div>
 
