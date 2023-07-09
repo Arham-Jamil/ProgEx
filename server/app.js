@@ -261,11 +261,9 @@ app.patch('/drinks/:id', async (req, res) => {
 
 // --------------------------------------------------------//
 app.patch('/orderedDishes', async (req, res) => {
-  const orderID = req.body.orderId;
-  const Status = req.body.newStatus;
-  console.log(orderID);
+  const orderedDish = req.body.orderData;
   try {
-    await db.updateDishOrderStatus(orderID, Status);
+    await db.updateDishOrder(orderedDish);
     res.sendStatus(204); // Respond with a success status code (No Content)
   } catch (error) {
     console.error(error);
@@ -274,10 +272,20 @@ app.patch('/orderedDishes', async (req, res) => {
 });
 
 app.patch('/orderedDrinks', async (req, res) => {
-  const orderID = req.body.orderId;
-  const Status = req.body.newStatus;
+  const orderedDrink = req.body.orderData;
   try {
-    await db.updateDrinkOrderStatus('orderedDrinks', orderID, Status);
+    await db.updateDrinkOrder(orderedDrink);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update ordered Drink' });
+  }
+});
+
+app.patch('/orders', async (req, res) => {
+  const order = req.body.orderData;
+  try {
+    await db.updateOrder(order);
     res.sendStatus(204); // Respond with a success status code (No Content)
   } catch (error) {
     console.error(error);

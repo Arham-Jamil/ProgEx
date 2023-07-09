@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import axios from 'axios';
 
 const OrderList = ({ type }) => {
   const [orders, setOrders] = useState([]);
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [editingOrder, setEditingOrder] = useState(null);
+
 
   useEffect(() => {
     fetchOrders();
@@ -10,25 +15,81 @@ const OrderList = ({ type }) => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/${type}`);
+
+      let url = `http://localhost:3001/${type}`;
+      if(type !== "Orders")
+      {
+        //we want additional info for the other order types
+          url = `http://localhost:3001/${type}join`;
+      }
+
+      const response = await axios.get(url);
       setOrders(response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleUpdateStatus = (orderId, newStatus) => {
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      setSortDirection((prevDirection) =>
+        prevDirection === 'asc' ? 'desc' : 'asc'
+      );
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  let sortedOrders = [...orders];
+
+  if (sortColumn) {
+    sortedOrders.sort((a, b) => {
+      if (a[sortColumn] < b[sortColumn]) {
+        return sortDirection === 'asc' ? -1 : 1;
+      }
+      if (a[sortColumn] > b[sortColumn]) {
+        return sortDirection === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  const renderSortIcon = (column) => {
+    if (sortColumn === column) {
+      if (sortDirection === 'asc') {
+        return <FaSortUp />;
+      } else {
+        return <FaSortDown />;
+      }
+    } else {
+      return <FaSort />;
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === 'checkbox' ? checked : value;
+  
+    if (editingOrder) {
+        setEditingOrder((prevState) => ({
+          ...prevState,
+          [name]: inputValue,
+        }));
+      }
+    }
+
+  const handleEditOrder = async (orderData) => {
     const postOrder = async () => {
-      const data = {
-        orderId,
-        newStatus
-      };
+      const data = {orderData};
 
       try {
         console.log('accessing db...\n Update Order: ', data);
-        const response = await axios.patch(`http://localhost:3001/${type}`, data);
+        const url = `http://localhost:3001/${type}`;
+        const response = await axios.patch(url, data);
         console.log(response.data.message); // Log the response message
         //Update the Orders if we successfully change the status
+        setEditingOrder(null);
         fetchOrders();
         
       } catch (error) {
@@ -38,74 +99,234 @@ const OrderList = ({ type }) => {
     postOrder();
   };
 
-  const handleStatusChange = (orderId, event, currentStatus) => {
-
-    const newStatus = Number(event.target.value);
-
-    if(newStatus >= 0 && newStatus !== currentStatus)
-    {
-      handleUpdateStatus(orderId, newStatus);
-    }
+  const handleStartEdit = (order) => {
+    setEditingOrder(order);    
   };
 
-  const getOrderStatus = (statusNr) => {
-    switch(statusNr) {
-      case 0:
-        return 'Received';
-      case 1:
-        return 'In Progress';
-      case 2:
-        return 'Completed';
-      case 3:
-        return 'Cancled';
-      default:
-        return 'UnknownStatus';
-    }
+  const handleCancelEdit = () => {
+    setEditingOrder(null);
   };
 
-  const renderOrderInfo = (order) => {
+  const renderOrderInfo = () => {
     // Render the order-specific information based on the selected type
     if (type === 'OrderedDishes') {
-      return (
+      return (       
         <div>
-          <p>Dish ID: {order.Dishes_ID}</p>
-          <p>Status: {getOrderStatus(order.Status)}</p>
-          <p>Description: {order.Description}</p>
-          <p>Additional Charges: {order.AdditionalCharges}</p>
-          <p>Refunded: {order.refunded=== 0 ? 'NO' : 'YES'}</p>
-          <select onChange={(event) => handleStatusChange(order.ID, event, order.Status)}>
-          <option value="-1"></option>
-            <option value="0">Received</option>
-            <option value="1">In Progress</option>
-            <option value="2">Completed</option>
-            <option value="3">Canceled</option>
-          </select>
+          <table>
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('ID')}>
+                  ID {renderSortIcon('ID')}
+                </th>
+                <th>Table Number</th>
+                <th>Dish Name</th>
+                <th>Description</th>
+                <th>Additional Charges</th>
+                <th>Refunded</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {sortedOrders.map((order) => (
+       <tr key={order.ID}>
+       <td>{order.ID}</td>
+       <td>{order.TableNumber}</td>
+       <td>{order.Name}</td>
+       <td>{order.Description}</td>
+       <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <input
+                    type="text"
+                    name="AdditionalCharges"
+                    value={editingOrder.AdditionalCharges}
+                    onChange={(event) => handleInputChange(event)}
+                  />
+                ) : (
+                  order.AdditionalCharges
+                )}
+          </td>
+        <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <input
+                    type="checkbox"
+                    name="Refunded"
+                    checked={editingOrder.Refunded}
+                    onChange={(event) => handleInputChange(event)}
+                  />
+                ) : (
+                  order.Refunded ? 'Yes' : 'No'
+                )}
+          </td>
+          <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <select
+                  name="Status"
+                  value={editingOrder.Status}
+                   onChange={(event) => handleInputChange(event)}>
+                   <option value="0">Received</option>
+                   <option value="1">In Progress</option>
+                   <option value="2">Completed</option>
+                   <option value="3">Canceled</option>
+                 </select>
+                ) : (
+                  order.Status
+                )}
+              </td>
+       <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <div>
+                    <button onClick={() => handleEditOrder(editingOrder)}>Save</button>
+                    <button onClick={handleCancelEdit}>Cancel</button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'inline-flex' }}>
+                  <button onClick={() => handleStartEdit(order)}>Edit</button>
+                  </div>
+                
+                )}
+              </td>
+     </tr>
+      ))}
+              
+            </tbody>
+          </table>
         </div>
       );
     } else if (type === 'OrderedDrinks') {
       return (
         <div>
-          <p>Drink ID: {order.Drinks_ID}</p>
-          <p>Status: {getOrderStatus(order.Status)}</p>
-          <p>Description: {order.Description}</p>
-          <p>Additional Charges: {order.AdditionalCharges}</p>
-          <p>Refunded: {order.Refunded=== 0 ? 'NO' : 'YES'}</p>
-          <select onChange={(event) => handleStatusChange(order.ID, event, order.Status)}>
-          <option value='-1'></option>
-            <option value='0'>Received</option>
-            <option value='1'>In Progress</option>
-            <option value='2'>Completed</option>
-            <option value='3'>Canceled</option>
-          </select>
+          <table>
+            <thead>
+              <tr>
+              <th onClick={() => handleSort('ID')}>
+                  ID {renderSortIcon('ID')}
+                  </th>
+                  <th>Table Number</th>
+                <th>Drink Name</th>
+                <th>Description</th>
+                <th>Additional Charges</th>
+                <th>Refunded</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {sortedOrders.map((order) => (
+              <tr key={order.ID}>
+              <td>{order.ID}</td>
+              <td>{order.TableNumber}</td>
+              <td>{order.Name}</td>
+              <td>{order.Description}</td>
+              <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <input
+                    type="text"
+                    name="AdditionalCharges"
+                    value={editingOrder.AdditionalCharges}
+                    onChange={(event) => handleInputChange(event)}
+                  />
+                ) : (
+                  order.AdditionalCharges
+                )}
+          </td>
+        <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <input
+                    type="checkbox"
+                    name="Refunded"
+                    checked={editingOrder.Refunded}
+                    onChange={(event) => handleInputChange(event)}
+                  />
+                ) : (
+                  order.Refunded ? 'Yes' : 'No'
+                )}
+          </td>
+          <td>
+                { editingOrder && editingOrder.ID === order.ID ? (
+                  <select
+                  name="Status"
+                  value={editingOrder.Status}
+                   onChange={(event) => handleInputChange(event)}>
+                   <option value="0">Received</option>
+                   <option value="1">In Progress</option>
+                   <option value="2">Completed</option>
+                   <option value="3">Canceled</option>
+                 </select>
+                ) : (
+                  order.Status
+                )}
+              </td>
+       <td>
+                { editingOrder && editingOrder.ID === order.ID ? (
+                  <div>
+                    <button onClick={() => handleEditOrder(editingOrder)}>Save</button>
+                    <button onClick={handleCancelEdit}>Cancel</button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'inline-flex' }}>
+                  <button onClick={() => handleStartEdit(order)}>Edit</button>
+                  </div>
+                
+                )}
+              </td>
+            </tr>
+            ))}
+            </tbody>
+          </table>
         </div>
       );
     } else {
       // Default to orders
       return (
         <div>
-          <p>Table Number: {order.TableNumber}</p>
-          <p>Paid: {order.Paid === 0 ? 'NO' : 'YES'}</p>
-          <p>Date: {order.Datetime}</p>
+          <table>
+            <thead>
+              <tr>
+              <th onClick={() => handleSort('ID')}>
+                  ID {renderSortIcon('ID')}
+                  </th>
+                <th>Table Number</th>
+                <th>Paid</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {orders.map((order) => (
+              <tr key={order.ID}>
+              <td>{order.ID}</td>
+              <td>{order.TableNumber}</td>
+              <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <input
+                    type="checkbox"
+                    name="Paid"
+                    checked={editingOrder.Paid}
+                    onChange={(event) => handleInputChange(event)}
+                  />
+                ) : (
+                  order.Paid ? 'Yes' : 'No'
+                )}
+          </td>
+              <td>{order.Datetime}</td>
+              <td>
+                {editingOrder && editingOrder.ID === order.ID ? (
+                  <div>
+                    <button onClick={() => handleEditOrder(editingOrder)}>Save</button>
+                    <button onClick={handleCancelEdit}>Cancel</button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'inline-flex' }}>
+                  <button onClick={() => handleStartEdit(order)}>Edit</button>
+                  </div>
+                
+                )}
+              </td>
+            </tr>
+            ))}
+            </tbody>
+          </table>
         </div>
       );
     }
@@ -114,13 +335,7 @@ const OrderList = ({ type }) => {
   return (
     <div>
       <h2>{type === 'all' ? 'All Orders' : ` ${type}`}</h2>
-
-      {orders.map((order) => (
-        <div key={order.ID}>
-          <p>Order ID: {order.ID}</p>
-          {renderOrderInfo(order)}
-        </div>
-      ))}
+      {renderOrderInfo()}
     </div>
   );
 };
