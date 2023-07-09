@@ -296,7 +296,7 @@ app.patch('/orders', async (req, res) => {
 //-----------------------------------------------------------------------------------//
 
 app.post('/order', (req, res) => {
-  const orderItems = req.body.orderItems;
+  // const orderItems = req.body.orderItems;
   const tableNumber = req.body.tableNumber;
 
   //NEW NEW NEW NEWN EWN EWNEW 
@@ -308,10 +308,10 @@ app.post('/order', (req, res) => {
 
   // Check the availability of orderItems in your database or any other data source
   // Assume you have a function called checkAvailability() that returns a boolean value
-  const isAvailable = db.checkDishAvailability(orderItems);
+  const isAvailable = db.checkDishAvailability(orderDishItems);//in geändert orderDishItems
 
   if (isAvailable && tableNumber != null) {
-    db.addOrder(tableNumber, orderItems);
+    db.addOrder(tableNumber, orderDishItems); //in geändert orderDishItems
     // Send a success response
     res.status(200).json({ message: 'Order placed successfully!' });
   } else {
