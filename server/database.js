@@ -7,8 +7,8 @@ const path = require('path');
 const queries = {
   ordereddishes: 'SELECT * FROM OrderedDishes',
   ordereddrinks: 'SELECT * FROM OrderedDrinks',
-  categorydish: 'SELECT * FROM CategoryDish',
-  categorydrinks: 'SELECT * FROM CategoryDrinks',
+  categorydish: 'SELECT * FROM CategoryDish WHERE deleted = 0',
+  categorydrinks: 'SELECT * FROM CategoryDrinks WHERE deleted = 0',
   extras: 'SELECT * FROM Extras',
   extrasavailable: 'SELECT * FROM Extras WHERE available = 1',
   ingredients: 'SELECT * FROM Ingredients',
@@ -16,8 +16,8 @@ const queries = {
   drinks: 'SELECT * FROM Drinks',
   dishes: 'SELECT * FROM Dishes',
   orders: 'SELECT * FROM Orders',
-  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0',
-  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0',
+  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE Drinks.deleted = 0',
+  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE Dishes.deleted = 0',
   ordereddishesjoin: `SELECT OrderedDishes.*, Dishes.Name, Orders.TableNumber 
   FROM OrderedDishes 
   LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
@@ -208,6 +208,43 @@ function setDrinkDeletedTrue(id) {
     );
   });
 }
+
+
+function setDishCategoryDeletedTrue(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE categorydish SET deleted = 1 WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Dishcategory with ID ${id} removed successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
+function setDrinkCategoryDeletedTrue(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE categorydrinks SET deleted = 1 WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Drinkcategory with ID ${id} removed successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
+
 
 // -------------------- UPDATE functions --------------------------------
 function updateIngredientQuantity(id, newQuantity) {
@@ -610,9 +647,12 @@ module.exports = {
 
   deleteExtraById,
   deleteIngredientById,
+  
 
   setDishDeletedTrue,
   setDrinkDeletedTrue,
+  setDishCategoryDeletedTrue,
+  setDrinkCategoryDeletedTrue,
 
   checkDishAvailability,
   checkCredentials,

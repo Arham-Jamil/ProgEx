@@ -6,15 +6,27 @@ const EditCategoryDish = () => {
   const [newCategoryDish, setNewCategoryDish] = useState({ Name: '' });
   const [editingId, setEditingId] = useState(null);
   const [editingCategoryDish, setEditingCategoryDish] = useState({ Name: '' });
+  const [dishes, setDishes] = useState([]);
+
 
   useEffect(() => {
     fetchCategoryDishes();
+    fetchDishes();
   }, []);
 
   const fetchCategoryDishes = async () => {
     try {
       const response = await axios.get('http://localhost:3001/categorydish');
       setCategoryDishes(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchDishes = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/dishesjoin');
+      setDishes(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -38,11 +50,11 @@ const EditCategoryDish = () => {
   const handleAddCategoryDish = async () => {
     //input validation
     if (newCategoryDish.Name.trim() === "" //empty
-    || categoryDishes.some((catDish) => catDish.Name.trim() === newCategoryDish.Name.trim()) //unique
+      || categoryDishes.some((catDish) => catDish.Name.trim() === newCategoryDish.Name.trim()) //unique
     ) {
-    alert("Failed! Check your input!!");
-    return;
-  }
+      alert("Failed! Check your input!!");
+      return;
+    }
     try {
       await axios.post('http://localhost:3001/categorydish', { Name: newCategoryDish.Name });
       setNewCategoryDish({ Name: '' });
@@ -51,15 +63,46 @@ const EditCategoryDish = () => {
       console.error(error);
     }
   };
+//new new new new new new new new new new new new new new new new new new 
+  const handleRemoveCategoryDish = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this category? You won´t be able to restore it");
+    if(!confirmed) return;
+
+    //map all dishes and compare category ID
+    fetchDishes();
+    console.log('id: ',id );
+    console.log('dishes',dishes);
+
+    if(dishes.some((dish) =>
+    dish.Category_ID === id //if category is in use
+    )
+    ){
+      alert("Category is in use. Can´t delete!");
+      return;
+    }
+
+    console.log('removing from view: ', id);
+    try {
+      await axios.delete(`http://localhost:3001/categorydish/${id}`); //remove from table view
+      fetchCategoryDishes();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleEditCategoryDish = async (id) => {
-     //input validation
-     if (editingCategoryDish.Name.trim() === "" //empty
-     || categoryDishes.some((catDish) => catDish.Name.trim() === editingCategoryDish.Name.trim()) //unique
-     ) {
-     alert("Failed! Check your input!!");
-     return;
-   }
+    // Input validation
+    if (
+      editingCategoryDish.Name.trim() === "" || // Empty name
+      categoryDishes.some(
+        (catDish) =>
+          catDish.Name.trim() === editingCategoryDish.Name.trim() &&
+          catDish.ID !== id // Unique name except for the current edited category
+      )
+    ) {
+      alert("Failed! Check your input!!");
+      return;
+    }
     try {
       await axios.patch(`http://localhost:3001/categorydish/${id}`, {
         Name: editingCategoryDish.Name,
@@ -113,9 +156,11 @@ const EditCategoryDish = () => {
                     <button onClick={handleCancelEdit}>Cancel</button>
                   </div>
                 ) : (
-                  <button onClick={() => handleStartEdit(categoryDish.ID, categoryDish.Name)}>
-                    Edit
-                  </button>
+                 <div style={{ display: 'inline-flex' }}>
+                  <button onClick={() => handleStartEdit(categoryDish.ID, categoryDish.Name)}> Edit</button>
+                  <button onClick={() => handleRemoveCategoryDish(categoryDish.ID)}>Remove</button>
+                 </div>
+                
                 )}
               </td>
             </tr>
