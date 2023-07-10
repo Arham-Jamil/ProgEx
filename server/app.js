@@ -339,16 +339,11 @@ app.post('/order', (req, res) => {
   //NEW NEW NEW NEWN EWN EWNEW 
   const orderDishItems = req.body.orderItems.filter((item) => item.type === 'dish');
   const orderDrinkItems = req.body.orderItems.filter((item) => item.type === 'drink');  
-  console.log("orderDishItems: ",orderDishItems);
-  console.log("orderDrinkItems: ",orderDrinkItems);
-
-
-  // Check the availability of orderItems in your database or any other data source
-  // Assume you have a function called checkAvailability() that returns a boolean value
-  const isAvailable = db.checkDishAvailability(orderDishItems);//in geändert orderDishItems
+ 
+  const isAvailable = db.checkDishAvailability(orderDishItems) && db.checkDrinkAvailability(orderDrinkItems);
 
   if (isAvailable && tableNumber != null) {
-    db.addOrder(tableNumber, orderDishItems); //in geändert orderDishItems
+    db.addOrder(tableNumber, orderDishItems, orderDrinkItems);
     // Send a success response
     res.status(200).json({ message: 'Order placed successfully!' });
   } else {
