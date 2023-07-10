@@ -376,9 +376,9 @@ async function updateOrder(order) {
 
     // Update the order
     await new Promise((resolve, reject) => {
-      const updateOrderSql = `UPDATE Orders SET Paid = ? WHERE ID = ?`;
+      const updateOrderSql = `UPDATE Orders SET Paid = ?, ServerCalled = ? WHERE ID = ?`;
 
-      db.run(updateOrderSql, [order.Paid, order.ID], function (err) {
+      db.run(updateOrderSql, [order.Paid, order.ServerCalled, order.ID], function (err) {
         if (err) {
           console.error(err);
           reject(err);

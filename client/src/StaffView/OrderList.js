@@ -312,6 +312,7 @@ const OrderList = ({ type }) => {
                 <th>Paid</th>
                 <th>PaidPrice</th>
                 <th>Date</th>
+                <th>Server Called</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -320,7 +321,8 @@ const OrderList = ({ type }) => {
               <tr key={order.ID}
               style={{ //conditionally formatting of orders
                 backgroundColor: order.TableNumber < 0 ? 'orange' :
-                order.Paid ? 'green' : 'inherit' }}>
+                order.Paid ? 'green' :
+                order.ServerCalled ? 'red' : 'inherit' }}>
               <td>{order.ID}</td>
               <td>{order.TableNumber}</td>
               <td>
@@ -337,6 +339,16 @@ const OrderList = ({ type }) => {
           </td>
           <td>{order.Paid ? order.PaidPrice : 'Not paid yet'}</td>
               <td>{order.Datetime}</td>
+              <td>{editingOrder && editingOrder.ID === order.ID ? (
+                  <input
+                    type="checkbox"
+                    name="ServerCalled"
+                    checked={editingOrder.ServerCalled}
+                    onChange={(event) => handleInputChange(event)}
+                  />
+                ) : (
+                  order.ServerCalled ? 'Yes' : 'No'
+                )}</td>
               <td>
                 {editingOrder && editingOrder.ID === order.ID ? (
                   <div>
