@@ -148,6 +148,7 @@ const EditDishes = () => {
       setEditingId(null);
       fetchDishes();
     } catch (error) {
+      alert('Irgendwas stimmt hier nicht');
       console.error(error);
     }
   };

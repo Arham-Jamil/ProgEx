@@ -177,7 +177,7 @@ function deleteIngredientById(id) {
 function setDishDeletedTrue(id) {
   return new Promise((resolve, reject) => {
     db.run(
-      'UPDATE dishes SET deleted = 1 WHERE id = ?',
+      'UPDATE dishes SET deleted = 1, available = 0 WHERE id = ?',
       [id],
       function (err) {
         if (err) {
@@ -194,7 +194,7 @@ function setDishDeletedTrue(id) {
 function setDrinkDeletedTrue(id) {
   return new Promise((resolve, reject) => {
     db.run(
-      'UPDATE drinks SET deleted = 1 WHERE id = ?',
+      'UPDATE drinks SET deleted = 1, available = 0 WHERE id = ?',
       [id],
       function (err) {
         if (err) {
