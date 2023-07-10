@@ -239,7 +239,6 @@ SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN Catego
 SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0 
 
 
-
 -- UPDATE Dishes SET deleted = 0 WHERE ID = 7
 
 SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0 

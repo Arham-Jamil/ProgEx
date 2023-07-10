@@ -315,6 +315,21 @@ app.patch('/orders', async (req, res) => {
   }
 });
 
+app.patch('/ordersCallServer', async (req, res) => {
+  const tableNumber = req.body.tableNumber;
+  console.log('req.body: ',req.body);
+  try {
+    await db.orderCallServer(tableNumber);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to call server' });
+  }
+});
+
+
+
+
 //-----------------------------------------------------------------------------------//
 
 app.post('/order', (req, res) => {

@@ -368,6 +368,27 @@ function updateOrder(order) {
   });
 };
 
+
+function orderCallServer(tableNumber) {
+  return new Promise((resolve, reject) => {
+    console.log('table NUmber: ', tableNumber);
+    db.run(
+      'UPDATE Orders SET ServerCalled = 1 WHERE tablenumber = ? AND paid = 0',
+      [tableNumber],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+};
+
+
+
 function updateWholeDishesRow(id, name, price, categoryID, description, available, quantity, imagePath) {
   return new Promise((resolve, reject) => {
     console.log('db.run categoryID: ', categoryID);
@@ -644,6 +665,8 @@ module.exports = {
   updateOrder,
   updateWholeDishesRow,
   updateWholeDrinksRow,
+
+  orderCallServer,
 
   deleteExtraById,
   deleteIngredientById,
