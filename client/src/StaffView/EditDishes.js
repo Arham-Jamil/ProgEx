@@ -8,10 +8,10 @@ const EditDishes = () => {
     Name: '',
     Price: '',
     CategoryName: '',
-    Description: '',
+    Description: null,
     Available: false,
     Quantity: '',
-    ImagePath: '',
+    ImagePath: null,
   });
   const [editingId, setEditingId] = useState(null);
   const [editingDish, setEditingDish] = useState({
@@ -19,10 +19,10 @@ const EditDishes = () => {
     Price: '',
     CategoryName: '',
     Category_ID: '', 
-    Description: '',
+    Description: null,
     Available: false,
     Quantity: '',
-    ImagePath: '',
+    ImagePath: null,
   });
   
 
@@ -96,6 +96,16 @@ const EditDishes = () => {
     }
   };
   
+  //input formatting
+  const removeWhitespaces = (string) => {
+    if(string !== null){
+      string = string.trim();
+    }
+    if(string === ""){
+      return null;
+    }
+    return string;
+  }
   
 
   const handleAddDish = async () => {
@@ -104,11 +114,19 @@ const EditDishes = () => {
     if (!(/^\d+(\.\d{1,2})?$/.test(newDish.Price)) //floating point number
     || newDish.Name.trim() === ""  //not empty
     || !(/^-?1$|^[0-9]+$/.test(newDish.Quantity)) //not empty
-    || dishes.some((dish) => dish.Name.trim() === newDish.Name.trim())) { //unique
+    || dishes.some((dish) => dish.Name.trim() === newDish.Name.trim())
+   
+    ) { //unique
 
     alert("Failed! Check your input!!");
     return;
   }
+
+  //formatting user input
+  newDish.Description = removeWhitespaces(newDish.Description);
+  newDish.ImagePath= removeWhitespaces(newDish.ImagePath); 
+  newDish.Name = newDish.Name.trim();
+
 
     try {
       await axios.post('http://localhost:3001/dishes', newDish);
@@ -134,6 +152,7 @@ const EditDishes = () => {
       !(/^\d+(\.\d{1,2})?$/.test(editingDish.Price)) //floating point number
        || editingDish.Name.trim() === ""  //not empty
        || !(/^-?1$|^[0-9]+$/.test(editingDish.Quantity)) //not empty
+  
 
        //geht nicht weil in dishes ja der name der zu editieren ist steht
       //  || dishes.some((dish) => dish.Name.trim() === editingDish.Name.trim())
@@ -142,7 +161,13 @@ const EditDishes = () => {
        alert("Failed! Check your input!!");
        return;
      }
+     //formatting user input
+       editingDish.Description = removeWhitespaces(editingDish.Description);
+       editingDish.ImagePath= removeWhitespaces(editingDish.ImagePath);
+       editingDish.Name = editingDish.Name.trim();
+
     try {
+
       await axios.patch(`http://localhost:3001/dishes/${id}`, editingDish);
       console.log('handleEdit: editDish',editingDish);
       setEditingId(null);

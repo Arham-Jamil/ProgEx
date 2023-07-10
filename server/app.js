@@ -84,6 +84,7 @@ app.post('/dishes', async (req, res) => {
     Available: available,
     Quantity: quantity,
     ImagePath: imagePath } = req.body;
+
   console.log('name in post: ', name);
   try {
     const dishID = await db.createDish(name, price, description, available, quantity, imagePath, category_id);

@@ -96,7 +96,16 @@ const EditDrinks = () => {
     }
   };
   
-  
+    //sollte gehen
+    const removeWhitespaces = (string) => {
+      if(string !== null){
+        string = string.trim();
+      }
+      if(string === ""){
+        return null;
+      }
+      return string;
+    }
 
   const handleAddDrink = async () => {
       //input validation
@@ -108,6 +117,11 @@ const EditDrinks = () => {
       alert("Failed! Check your input!!");
       return;
     }
+     //formatting user input
+     newDrink.Description = removeWhitespaces(newDrink.Description);
+     newDrink.ImagePath= removeWhitespaces(newDrink.ImagePath); 
+     newDrink.Name = newDrink.Name.trim();
+
     try {
       await axios.post('http://localhost:3001/drinks', newDrink);
       setnewDrink({
@@ -146,6 +160,10 @@ const EditDrinks = () => {
        alert("Failed! Check your input!!");
        return;
      }
+         //formatting user input
+         editingDrink.Description = removeWhitespaces(editingDrink.Description);
+         editingDrink.ImagePath= removeWhitespaces(editingDrink.ImagePath); 
+         editingDrink.Name = editingDrink.Name.trim();
     try {
       await axios.patch(`http://localhost:3001/drinks/${id}`, editingDrink);
       console.log('handleEdit: editdrink',editingDrink);

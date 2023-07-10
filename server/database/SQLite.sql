@@ -223,7 +223,6 @@ SELECT * FROM CategoryDrinks;
 SELECT * FROM Drinks;
 
 
-
 -- -- Join Drinks
 -- SELECT Drinks.*, CategoryDrinks.name AS 'Category'
 -- FROM Drinks
