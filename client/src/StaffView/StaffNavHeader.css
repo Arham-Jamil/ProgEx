@@ -1,0 +1,22 @@
+.nav-header {
+    background-color: #f2f2f2;
+    padding: 10px;
+  }
+  
+  .nav-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: space-between;
+  }
+  
+  .nav-list li {
+    margin-right: 10px;
+  }
+  
+  .active {
+    color: rgb(71, 195, 67);
+    font-weight: bold;
+  }
+  
