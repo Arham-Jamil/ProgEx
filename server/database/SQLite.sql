@@ -18,7 +18,8 @@ FOREIGN KEY (Category_ID) REFERENCES CategoryDish(ID)   -- new
 
 CREATE TABLE IF NOT EXISTS CategoryDish(
 ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-Name VARCHAR(64) NOT NULL
+Name VARCHAR(64) NOT NULL,
+Deleted INTEGER NOT NULL DEFAULT 0
 );
 
 -- CREATE TABLE IF NOT EXISTS Dish_Cat(
@@ -44,7 +45,8 @@ FOREIGN KEY (Category_ID) REFERENCES CategoryDrinks(ID)   -- new
 
 CREATE TABLE IF NOT EXISTS CategoryDrinks(
 ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-Name VARCHAR(64) NOT NULL
+Name VARCHAR(64) NOT NULL,
+Deleted INTEGER NOT NULL DEFAULT 0
 );
 
 -- CREATE TABLE IF NOT EXISTS Drinks_Cat(
@@ -67,7 +69,8 @@ ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 TableNumber INTEGER UNSINGED NOT NULL,
 Paid INTEGER UNSINGED NOT NULL DEFAULT 0,
 PaidPrice DECIMAL(6,2) NOT NULL DEFAULT 0, 
-Datetime DATETIME NOT NULL DEFAULT (datetime('now'))
+Datetime DATETIME NOT NULL DEFAULT (datetime('now')),
+ServerCalled INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS OrderedDishes(
@@ -222,6 +225,7 @@ SELECT * FROM CategoryDish;
 SELECT * FROM CategoryDrinks;
 SELECT * FROM Drinks;
 
+<<<<<<< HEAD
 SELECT SUM( Dishes.Price) AS DishPrice
       FROM Dishes
       JOIN OrderedDishes ON Dishes.ID = OrderedDishes.Dishes_ID
@@ -233,6 +237,8 @@ SELECT SUM( Drinks.Price) AS DrinkPrice
       JOIN Orders ON OrderedDrinks.Orders_ID = Orders.ID
     
 
+=======
+>>>>>>> c1a63c3e4a54f63f16cfe21f11833c2cd342eb25
 -- -- Join Drinks
 -- SELECT Drinks.*, CategoryDrinks.name AS 'Category'
 -- FROM Drinks
@@ -245,7 +251,6 @@ SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN Catego
 --join drinks
 
 SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0 
-
 
 
 -- UPDATE Dishes SET deleted = 0 WHERE ID = 7

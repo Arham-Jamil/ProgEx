@@ -195,17 +195,17 @@ const EditDrinks = () => {
   return (
     <div className="container">
       <h2>Edit drinks</h2>
-      <table>
+      <table style={{ tableLayout: 'fixed', width: '100%' }}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Category Name</th>
-            <th>Description</th>
-            <th>Available</th>
-            <th>Volume</th>
-            <th>Image Path</th>
-            <th>Actions</th>
+            <th style={{ width: '15%' }}>Name</th>
+            <th style={{ width: '10%' }}>Price</th>
+            <th style={{ width: '15%' }}>Category Name</th>
+            <th style={{ width: '15%' }}>Description</th>
+            <th style={{ width: '5%' }}>Available</th>
+            <th style={{ width: '10%' }}>Volume</th>
+            <th style={{ width: '20%' }}>Image Path</th>
+            <th style={{ width: '10%' }}>Actions</th>
           </tr>
         </thead>
         <tbody>

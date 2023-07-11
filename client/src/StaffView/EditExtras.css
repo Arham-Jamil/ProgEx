@@ -5,16 +5,23 @@
   table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
   }
   
   th, td {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
   }
   
   th {
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
     background-color: #45bcd1;
   }
   
@@ -29,11 +36,11 @@
   .add-form label {
     margin-right: 10px;
   }
-  
-  .add-form input[type="text"],
+
   .add-form input[type="checkbox"] {
-    margin-right: 10px;
+    margin-right: 10px; 
   }
+
   
   .add-form button {
     margin-top: 10px;

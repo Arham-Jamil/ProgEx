@@ -67,6 +67,22 @@ const OrderList = ({ type }) => {
     }
   };
 
+
+  const getStatusName = (status) => {
+    switch(status) {
+      case 0:
+       return 'Received';
+      case 1:
+        return 'In Progress';
+      case 2:
+        return 'Completed';
+      case 3:
+        return 'Canceled';
+      default:
+        return 'Invalid Status';
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === 'checkbox' ? checked : value;
@@ -129,7 +145,10 @@ const OrderList = ({ type }) => {
             </thead>
             <tbody>
             {sortedOrders.map((order) => (
-       <tr key={order.ID}>
+       <tr key={order.ID}
+          style={{ //conditionally formatting of orders
+        backgroundColor: order.TableNumber < 0 ? 'orange' :
+        order.Refunded ? 'red' : 'inherit' }}>
        <td>{order.ID}</td>
        <td>{order.TableNumber}</td>
        <td>{order.Name}</td>
@@ -170,7 +189,7 @@ const OrderList = ({ type }) => {
                    <option value="3">Canceled</option>
                  </select>
                 ) : (
-                  order.Status
+                  getStatusName(order.Status)
                 )}
               </td>
        <td>
@@ -213,7 +232,10 @@ const OrderList = ({ type }) => {
             </thead>
             <tbody>
             {sortedOrders.map((order) => (
-              <tr key={order.ID}>
+              <tr key={order.ID}
+              style={{ //conditionally formatting of orders
+                backgroundColor: order.TableNumber < 0 ? 'orange' :
+                order.Refunded ? 'red' : 'inherit' }}>
               <td>{order.ID}</td>
               <td>{order.TableNumber}</td>
               <td>{order.Name}</td>
@@ -254,7 +276,7 @@ const OrderList = ({ type }) => {
                    <option value="3">Canceled</option>
                  </select>
                 ) : (
-                  order.Status
+                  getStatusName(order.Status)
                 )}
               </td>
        <td>
@@ -288,13 +310,19 @@ const OrderList = ({ type }) => {
                   </th>
                 <th>Table Number</th>
                 <th>Paid</th>
+                <th>PaidPrice</th>
                 <th>Date</th>
+                <th>Server Called</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
             {orders.map((order) => (
-              <tr key={order.ID}>
+              <tr key={order.ID}
+              style={{ //conditionally formatting of orders
+                backgroundColor: order.TableNumber < 0 ? 'orange' :
+                order.Paid ? 'green' :
+                order.ServerCalled ? 'red' : 'inherit' }}>
               <td>{order.ID}</td>
               <td>{order.TableNumber}</td>
               <td>
@@ -309,7 +337,18 @@ const OrderList = ({ type }) => {
                   order.Paid ? 'Yes' : 'No'
                 )}
           </td>
+          <td>{order.Paid ? order.PaidPrice : 'Not paid yet'}</td>
               <td>{order.Datetime}</td>
+              <td>{editingOrder && editingOrder.ID === order.ID ? (
+                  <input
+                    type="checkbox"
+                    name="ServerCalled"
+                    checked={editingOrder.ServerCalled}
+                    onChange={(event) => handleInputChange(event)}
+                  />
+                ) : (
+                  order.ServerCalled ? 'Yes' : 'No'
+                )}</td>
               <td>
                 {editingOrder && editingOrder.ID === order.ID ? (
                   <div>

@@ -1,5 +1,7 @@
 import {useState} from "react";
 import "./ServerCalled.css";
+import axios from 'axios';
+
 
 const ServerCalled = (props) =>{
     const [popup, setPopup] = useState(false);
@@ -7,7 +9,18 @@ const ServerCalled = (props) =>{
     const togglePopup = () => {
     setPopup(!popup);
     ///////
+    const queryParams = new URLSearchParams(window.location.search); // URL parameter
+    callServer(queryParams.get('tableNumber'));
   };
+
+  const callServer = async (tableNumber) => {
+    try {
+      await axios.patch('http://localhost:3001/ordersCallServer', {tableNumber});
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
     return(
         <>
         <button onClick={togglePopup} className="btn-modal">

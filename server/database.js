@@ -7,8 +7,8 @@ const path = require('path');
 const queries = {
   ordereddishes: 'SELECT * FROM OrderedDishes',
   ordereddrinks: 'SELECT * FROM OrderedDrinks',
-  categorydish: 'SELECT * FROM CategoryDish',
-  categorydrinks: 'SELECT * FROM CategoryDrinks',
+  categorydish: 'SELECT * FROM CategoryDish WHERE deleted = 0',
+  categorydrinks: 'SELECT * FROM CategoryDrinks WHERE deleted = 0',
   extras: 'SELECT * FROM Extras',
   extrasavailable: 'SELECT * FROM Extras WHERE available = 1',
   ingredients: 'SELECT * FROM Ingredients',
@@ -16,8 +16,8 @@ const queries = {
   drinks: 'SELECT * FROM Drinks',
   dishes: 'SELECT * FROM Dishes',
   orders: 'SELECT * FROM Orders',
-  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0',
-  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0',
+  drinksjoin: 'SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE Drinks.deleted = 0',
+  dishesjoin: 'SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE Dishes.deleted = 0',
   ordereddishesjoin: `SELECT OrderedDishes.*, Dishes.Name, Orders.TableNumber 
   FROM OrderedDishes 
   LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
@@ -209,6 +209,43 @@ function setDrinkDeletedTrue(id) {
   });
 }
 
+
+function setDishCategoryDeletedTrue(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE categorydish SET deleted = 1 WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Dishcategory with ID ${id} removed successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
+function setDrinkCategoryDeletedTrue(id) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE categorydrinks SET deleted = 1 WHERE id = ?',
+      [id],
+      function (err) {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+        } else {
+          console.log(`Drinkcategory with ID ${id} removed successfully`);
+          resolve();
+        }
+      }
+    );
+  });
+}
+
+
 // -------------------- UPDATE functions --------------------------------
 function updateIngredientQuantity(id, newQuantity) {
   return new Promise((resolve, reject) => {
@@ -314,11 +351,144 @@ function updateDrinkOrder(orderedDrink) {
   });
 };
 
-function updateOrder(order) {
+async function updateOrder(order) {
+  try {
+    const getOrderPaidStatusSql = `SELECT Paid FROM Orders WHERE ID = ?`;
+
+    // Get the current status of the order
+    const { Paid: currentStatus } = await new Promise((resolve, reject) => {
+      db.get(getOrderPaidStatusSql, [order.ID], (err, row) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+          return;
+        }
+        resolve(row);
+      });
+    });
+
+    // Check if the order has already been paid
+    if (currentStatus === 1) {
+      const errorMessage = 'Order has already been paid and cannot be edited.';
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    // Update the order
+    await new Promise((resolve, reject) => {
+      const updateOrderSql = `UPDATE Orders SET Paid = ?, ServerCalled = ? WHERE ID = ?`;
+
+      db.run(updateOrderSql, [order.Paid, order.ServerCalled, order.ID], function (err) {
+        if (err) {
+          console.error(err);
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+
+    if (order.Paid) {
+      const getOrderDishTotal = () => {
+        return new Promise((resolve, reject) => {
+          const getOrderDishSql = `
+            SELECT 
+              OrderedDishes.AdditionalCharges,
+              Dishes.Price
+            FROM 
+              OrderedDishes 
+              LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
+            WHERE 
+              OrderedDishes.Orders_ID = ? AND
+              OrderedDishes.Refunded = 0
+          `;
+
+          db.all(getOrderDishSql, [order.ID], (err, rows) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+              return;
+            }
+
+            const dishTotal = rows.reduce((total, row) => {
+              const itemPrice = row.Price || 0;
+              const itemTotal = itemPrice + row.AdditionalCharges;
+              return total + itemTotal;
+            }, 0);
+
+            console.log('dish total:', dishTotal);
+            resolve(dishTotal);
+          });
+        });
+      };
+
+      const getOrderDrinkTotal = () => {
+        return new Promise((resolve, reject) => {
+          const getOrderDrinkSql = `
+            SELECT 
+              OrderedDrinks.AdditionalCharges,
+              Drinks.Price
+            FROM 
+              OrderedDrinks 
+              LEFT JOIN Drinks ON OrderedDrinks.Drinks_ID = Drinks.ID
+            WHERE 
+              OrderedDrinks.Orders_ID = ? AND
+              OrderedDrinks.Refunded = 0
+          `;
+
+          db.all(getOrderDrinkSql, [order.ID], (err, rows) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+              return;
+            }
+
+            const drinkTotal = rows.reduce((total, row) => {
+              const itemPrice = row.Price || 0;
+              const itemTotal = itemPrice + row.AdditionalCharges;
+              return total + itemTotal;
+            }, 0);
+
+            console.log('drink total:', drinkTotal);
+            resolve(drinkTotal);
+          });
+        });
+      };
+
+      const dishTotal = await getOrderDishTotal();
+      const drinkTotal = await getOrderDrinkTotal();
+
+      console.log('dish total:', dishTotal);
+      console.log('drink total:', drinkTotal);
+
+      const paidPrice = dishTotal + drinkTotal;
+
+      // Update the order with the calculated total price
+      await new Promise((resolve, reject) => {
+        const updatePaidPriceSql = `UPDATE Orders SET PaidPrice = ? WHERE ID = ?`;
+        db.run(updatePaidPriceSql, [paidPrice, order.ID], (err) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+            return;
+          }
+          resolve();
+        });
+      });
+    }
+  } catch (err) {
+    console.error('Failed to update order:', err);
+    throw err;
+  }
+}
+
+
+function orderCallServer(tableNumber) {
   return new Promise((resolve, reject) => {
+    console.log('table NUmber: ', tableNumber);
     db.run(
-      'UPDATE Orders SET Paid = ? WHERE id = ? ',
-      [order.Paid, order.ID],
+      'UPDATE Orders SET ServerCalled = 1 WHERE tablenumber = ? AND paid = 0',
+      [tableNumber],
       function (err) {
         if (err) {
           console.error(err.message);
@@ -330,6 +500,8 @@ function updateOrder(order) {
     );
   });
 };
+
+
 
 function updateWholeDishesRow(id, name, price, categoryID, description, available, quantity, imagePath) {
   return new Promise((resolve, reject) => {
@@ -370,56 +542,104 @@ function updateWholeDrinksRow(id, name, price, categoryID, description, availabl
 
 //----------------------------------------------------------------------//
 
-// Function to check the availability and quantity of order items
+// Function to check the availability and quantity of order dishes
 function checkDishAvailability(orderItems) {
 
+   // Extract the dish IDs from the dish objects
+   const dishIds = orderItems.map((item) => item.ID);
+
   return new Promise((resolve, reject) => {
-    // Create a map to store the available quantities of each ordered item
-    const availableQuantities = new Map();
-
-    // Iterate through each order item
-    orderItems.forEach((item, index) => {
-      // Prepare the SQL query to check the availability and quantity
-      const sql = `
-        SELECT Available, Quantity
-        FROM Dishes
-        WHERE ID = ?
-      `;
-
-      // Execute the query with the order item as a parameter
-      db.get(sql, item.id, (err, row) => {
+    
+    db.all(
+      `SELECT Dishes.ID, Dishes.quantity, COUNT(Dishes.ID) AS orderCount
+       FROM Dishes
+       WHERE Dishes.ID IN (${dishIds.join(',')})
+       GROUP BY Dishes.ID, Dishes.quantity`,
+      (err, rows) => {
         if (err) {
           console.error(err);
           reject(err);
-          return;
-        }
-
-        // Check if the item is available and the quantity is sufficient
-        const isAvailable = row.Available === 1;
-        const hasEnoughQuantity = row.Quantity >= item.amount;
-        const hasUnrestrictedQuantity = row.Quantity < 0;
-
-        if (!isAvailable || (!hasEnoughQuantity && !hasUnrestrictedQuantity)) {
-          // Set the available quantity of the item to 0
-          availableQuantities.set(item, 0);
-        } else if (hasUnrestrictedQuantity) {
-          // Set the available quantity of the item to the requested quantity if quantity is not restriced
-          availableQuantities.set(item, item.amount);
         } else {
-          // Set the available quantity of the item to the retrieved quantity
-          availableQuantities.set(item, row.quantity);
+          const dishAvailability = rows.map((row) => ({
+            ID: row.ID,
+            available: row.quantity - row.orderCount,
+          }));
+          const allDishesAvailable = dishAvailability.every(
+            (dish) => dish.available >= 0
+          );
+          resolve(allDishesAvailable)
         }
-      });
-    });
-
-    // Check if all items have sufficient quantity
-    const allAvailable = [...availableQuantities.values()].every(quantity => quantity >= 1);
-    resolve(allAvailable);
+      }
+    );
   });
 };
 
+// Function to check the availability and quantity of order dishes
+function checkDishAvailability(orderItems) {
+
+  // Extract the dish IDs from the dish objects
+  const dishIds = orderItems.map((item) => item.ID);
+
+ return new Promise((resolve, reject) => {
+   db.all(
+     `SELECT Dishes.ID, Dishes.Quantity, Dishes.Available, COUNT(Dishes.ID) AS OrderCount
+      FROM Dishes
+      WHERE Dishes.ID IN (${ dishIds.fill('?') })
+      GROUP BY Dishes.ID, Dishes.Quantity, Dishes.Available `, dishIds,
+     (err, rows) => {
+       if (err) {
+         console.error(err);
+         reject(err);
+       } else {
+         const dishAvailability = rows.map((row) => ({
+          ID: row.ID,
+          availableCount: row.Quantity - row.OrderCount,
+          available: row.Available,
+         }));
+         const allDishesAvailable = dishAvailability.every(
+           (dish) => dish.availableCount >= 0 && dish.available != 0
+         );
+         resolve(allDishesAvailable)
+       }
+     }
+   );
+ });
+};
+
+// Function to check the availability and quantity of order drinks
+function checkDrinkAvailability(orderItems) {
+
+  // Extract the dish IDs from the drink objects
+  const drinkIds = orderItems.map((item) => item.ID);
+
+ return new Promise((resolve, reject) => {
+   
+   db.all(
+     `SELECT Drinks.ID, Drinks.Available, COUNT(Drinks.ID) AS OrderCount
+      FROM Drinks
+      WHERE Drinks.ID IN (${ drinkIds.fill('?') })
+      GROUP BY Drinks.ID, Drinks.Available`, drinkIds,
+     (err, rows) => {
+       if (err) {
+         console.error(err);
+         reject(err);
+       } else {
+         const drinkAvailability = rows.map((row) => ({
+           ID: row.ID,
+           available: row.Available,
+         }));
+         const allDrinksAvailable = drinkAvailability.every(
+           (drink) => drink.available != 0
+         );
+         resolve(allDrinksAvailable)
+       }
+     }
+   );
+ });
+};
+
 // Function to add to an existing order or create a new one
-function addOrder(tableNumber, orderItems) {
+function addOrder(tableNumber, orderDishes, orderDrinks) {
 
   return new Promise((resolve, reject) => {
     // Check if an unpaid order with the same table number exists
@@ -476,41 +696,94 @@ function addOrder(tableNumber, orderItems) {
       });
     };
 
-    // Function to add ordered items to an order
-    const addItemsToOrder = (orderId) => {
+    const addDishesToOrder = (orderId) => {
       return new Promise((resolve, reject) => {
-        // Prepare the SQL query to insert ordered items
-        const sql = `
-          INSERT INTO OrderedDishes (Orders_id, Dishes_id, Status, Description, Refunded)
-          VALUES (?, ?, 0, ?,0)
-        `;
-        // Insert each ordered item into the database
-        orderItems.forEach((item, index) => {
-          db.run(sql, orderId, item.id, item.description ,function (err) {
-            if (err) {
-              console.error(err);
-              reject(err);
-              return;
+        orderDishes.forEach((dish, index) => {
+          db.get(
+            `SELECT Quantity FROM Dishes WHERE ID = ?`,
+            [dish.id],
+            (err, row) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+                return;
+              } else {
+                if (row && row.Quantity != 0) {
+
+                  if(row.Quantity > 0)
+                  {
+                    const newQuantity = row.Quantity - 1;
+                    const newAvailable = newQuantity != 0;
+                    db.run(`UPDATE Dishes SET quantity = ?,  available = ? WHERE ID = ?`, [newQuantity, newAvailable, dish.id], (err) => {
+                      if (err) {
+                        console.error(err);
+                        reject(err);
+                        return;
+                      }
+                    });
+                  }
+                  
+                  const sql = `
+                    INSERT INTO OrderedDishes (Orders_id, Dishes_id, Status, Description, Refunded)
+                    VALUES (?, ?, 0, ?,0)
+                    `;
+                  
+                  db.run(sql, orderId, dish.id, dish.description, function (err) {
+                    if (err) {
+                      console.error(err);
+                      reject(err);
+                      return;
+                    }
+                  });
+
+                }
+              }
             }
-          });
+          );
         });
 
         resolve();
-      });
-    };
+      })
+    }
+
+    const addDrinksToOrder = (orderId) => {
+      return new Promise((resolve, reject) => {
+        
+        orderDrinks.forEach((drink, index) => {
+          console.log(drink.id);
+          const sql = `
+            INSERT INTO OrderedDrinks (Orders_id, Drinks_id, Status, Description, Refunded)
+            VALUES (?, ?, 0, ?, 0)
+            `;
+                  
+            db.run(sql, orderId, drink.id, drink.description, function (err) {
+              if (err) {
+                console.error(err);
+                reject(err);
+                return;
+                }
+            });
+        });
+        resolve();
+      })
+    }
 
     // Check if an existing unpaid order with the same table number exists
     checkExistingOrder()
       .then((existingOrderId) => {
         if (existingOrderId != null) {
-          // Add the ordered items to the existing order
-          return addItemsToOrder(existingOrderId);
+          // Add the ordered items to the new order
+          successDish = addDishesToOrder(existingOrderId);
+          successDrink = addDrinksToOrder(existingOrderId);
+          return successDish && successDrink;
         } else {
           // Insert a new order into the database
           return insertNewOrder()
             .then((newOrderId) => {
               // Add the ordered items to the new order
-              return addItemsToOrder(newOrderId);
+              successDish = addDishesToOrder(newOrderId);
+              successDrink = addDrinksToOrder(newOrderId);
+              return successDish && successDrink;
             });
         }
       })
@@ -698,17 +971,26 @@ module.exports = {
   updateWholeDishesRow,
   updateWholeDrinksRow,
 
+  orderCallServer,
+
   deleteExtraById,
   deleteIngredientById,
+  
 
   setDishDeletedTrue,
   setDrinkDeletedTrue,
+  setDishCategoryDeletedTrue,
+  setDrinkCategoryDeletedTrue,
 
   checkDishAvailability,
+<<<<<<< HEAD
   getTotalDishLastOrders,
   getTotalDrinkLastOrders,
   getLastOrderedDrinks,
   getLastOrderedDishes,
+=======
+  checkDrinkAvailability,
+>>>>>>> c1a63c3e4a54f63f16cfe21f11833c2cd342eb25
   checkCredentials,
   addOrder,
   getTableFromQuery,

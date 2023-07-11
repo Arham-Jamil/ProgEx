@@ -160,6 +160,27 @@ app.delete('/drinks/:id', async (req, res) => {
   }
 });
 
+app.delete('/categorydish/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.setDishCategoryDeletedTrue(id);
+    res.status(200).json({ message: `Dishcategory with ID ${id} removed from view successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to remove dishcategory' });
+  }
+});
+app.delete('/categorydrinks/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.setDrinkCategoryDeletedTrue(id);
+    res.status(200).json({ message: `Drinkcategory with ID ${id} removed from view successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to remove drinkcategory' });
+  }
+});
+
 //------------- Patch/Update REQUESTS --------------------------------
 app.patch('/ingredients/:id', async (req, res) => {
   const { id } = req.params;
@@ -294,6 +315,21 @@ app.patch('/orders', async (req, res) => {
   }
 });
 
+app.patch('/ordersCallServer', async (req, res) => {
+  const tableNumber = req.body.tableNumber;
+  console.log('req.body: ',req.body);
+  try {
+    await db.orderCallServer(tableNumber);
+    res.sendStatus(204); // Respond with a success status code (No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to call server' });
+  }
+});
+
+
+
+
 //-----------------------------------------------------------------------------------//
 
 app.post('/order', (req, res) => {
@@ -303,16 +339,11 @@ app.post('/order', (req, res) => {
   //NEW NEW NEW NEWN EWN EWNEW 
   const orderDishItems = req.body.orderItems.filter((item) => item.type === 'dish');
   const orderDrinkItems = req.body.orderItems.filter((item) => item.type === 'drink');  
-  console.log("orderDishItems: ",orderDishItems);
-  console.log("orderDrinkItems: ",orderDrinkItems);
-
-
-  // Check the availability of orderItems in your database or any other data source
-  // Assume you have a function called checkAvailability() that returns a boolean value
-  const isAvailable = db.checkDishAvailability(orderDishItems);//in geändert orderDishItems
+ 
+  const isAvailable = db.checkDishAvailability(orderDishItems) && db.checkDrinkAvailability(orderDrinkItems);
 
   if (isAvailable && tableNumber != null) {
-    db.addOrder(tableNumber, orderDishItems); //in geändert orderDishItems
+    db.addOrder(tableNumber, orderDishItems, orderDrinkItems);
     // Send a success response
     res.status(200).json({ message: 'Order placed successfully!' });
   } else {

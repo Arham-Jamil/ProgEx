@@ -1,40 +1,56 @@
 # Note File for Comments 
 
-## Dennis
+## HomePage
 
-### Idee im Moment: 
-
-    -wenn Quantity auf 0 ist dann automatisch keine available?
-    //
-     -ORDERS VON EINER BESTIMMTEN TABLE NUMBER MUESSEN FARBIG MARKIERT WERDEN -> zum mitnehmen
+- (HomePage navig zu allen Dish und Drink-Categories?)
+-+ im header banner ein button um wieder hoch zu kommen
 
 
-/noch gucken wie man bei Update von EditDrinks und Dishes auf unique testen kann!!!
-/sollen dishes NAMES überhaupt Unique sein?
-
-
-        -Titelbild sowie Text ändern können -> neuw StaffView? -> neue db table dafür? :/
-
-
--lastOrders: all orders till now (mit berechnetem Preis)
 -Call Server: wo pop up?
 -Call Server to Pay: wo pop up? weitere ansicht mit einer tabelle und allen Tischen die Server gerufen haben und bezahlen wollen???
 
+-Titelbild sowie Text ändern können -> neuw StaffView? -> neue db table dafür? :/
 
-### Irgendwann noch:
-    -Auto-reload on order page for kitchen view
-    -Navigation bei KitchenViw hinzufügen (am Rand? mit vor + zurück?)
+## Staff View
 
-    -Login mit gehashtem PW
 
-###   Montag:
-    -Mögliche Errors, Probleme, Bugs, SQL Injection usw testen
+    Login mit gehashtem PW
+    Login in cookies setzen?
+    
+-Navigation bei KitchenViw hinzufügen (am Rand? mit vor + zurück?) oder auch ein Header?
+-Auto-reload on order page for kitchen view
+
+   
+/noch gucken wie man bei Update von EditDrinks und Dishes auf unique testen kann!!!
+/sollen dishes NAMES überhaupt Unique sein?  
+
+## other
+ -wenn Quantity auf 0 ist dann automatisch keine available?
+
+-ORDERS (zb. 1-10) VON BESTIMMTEN TABLE NUMBER MUESSEN FARBIG MARKIERT WERDEN -> zum mitnehmen
+
+
+
+
+
+
+
+
+
+    
+   
+   
+
+
+
+
 
 ###   Dienstag:
 
+    -beim zoomen soll alles noch gut angezeigt werden
     -css Dateien bearbeiten 
-    -angemessene Testdaten reinschreiben
-    
+    -angemessene Testdaten in DB reinschreiben
+
     -DB KOnzept überarbeiten
     -Projektplan überarbeiten
     -Anleitung für Sabba zum Testen schreiben
