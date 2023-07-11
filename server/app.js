@@ -339,16 +339,11 @@ app.post('/order', (req, res) => {
   //NEW NEW NEW NEWN EWN EWNEW 
   const orderDishItems = req.body.orderItems.filter((item) => item.type === 'dish');
   const orderDrinkItems = req.body.orderItems.filter((item) => item.type === 'drink');  
-  console.log("orderDishItems: ",orderDishItems);
-  console.log("orderDrinkItems: ",orderDrinkItems);
-
-
-  // Check the availability of orderItems in your database or any other data source
-  // Assume you have a function called checkAvailability() that returns a boolean value
-  const isAvailable = db.checkDishAvailability(orderDishItems);//in geändert orderDishItems
+ 
+  const isAvailable = db.checkDishAvailability(orderDishItems) && db.checkDrinkAvailability(orderDrinkItems);
 
   if (isAvailable && tableNumber != null) {
-    db.addOrder(tableNumber, orderDishItems); //in geändert orderDishItems
+    db.addOrder(tableNumber, orderDishItems, orderDrinkItems);
     // Send a success response
     res.status(200).json({ message: 'Order placed successfully!' });
   } else {
@@ -377,6 +372,73 @@ app.post('/login', async (req, res)=>{
     res.status(500).json({ success: false, error: 'internal server error' });
   } 
 });
+
+// for the last ordered dishes
+app.get('/LastOrderedDishes', async (req, res) =>{
+  try{
+    const getLastOrderedDishes = await db.getLastOrderedDishes();
+    console.log(getLastOrderedDishes);
+    if(getLastOrderedDishes){
+      res.status(200).json(getLastOrderedDishes);
+      console.log('the last ordered dishes sent')
+    }else{
+      res.status(500).send('no data found');
+    }
+  }catch(error){
+    console.log(error);
+    res.status(500).json({error: 'internal server error' });
+  }
+});
+
+// the last ordered drinks
+app.get('/LastOrderedDrinks', async (req, res) =>{
+  try{
+    const getLastOrderedDrinks = await db.getLastOrderedDrinks();
+    console.log(getLastOrderedDrinks);
+    if(getLastOrderedDrinks){
+      res.status(200).json(getLastOrderedDrinks);
+      console.log('the last ordered drinks sent')
+    }else{
+      res.status(500).send('no data found');
+    }
+  }catch(error){
+    console.log(error);
+    res.status(500).json({error: 'internal server error' });
+  }
+});
+
+app.get('/LastOrdersDishSum', async (req, res) =>{
+  try{
+    const getTotalDishLastOrders = await db.getTotalDishLastOrders();
+    console.log(getTotalDishLastOrders);
+    if(getTotalDishLastOrders){
+      res.status(200).json(getTotalDishLastOrders);
+      console.log('get last orders dish sent')
+    }else{
+      res.status(500).send('no data found');
+    }
+  }catch(error){
+    console.log(error);
+    res.status(500).json({error: 'internal server error' });
+  }
+});
+
+app.get('/LastOrdersDrinkSum', async (req, res) =>{
+  try{
+    const getTotalDrinkLastOrders = await db.getTotalDrinkLastOrders();
+    console.log(getTotalDrinkLastOrders);
+    if(getTotalDrinkLastOrders){
+      res.status(200).json(getTotalDrinkLastOrders);
+      console.log('get last orders drinks sent')
+    }else{
+      res.status(500).send('no data found');
+    }
+  }catch(error){
+    console.log(error);
+    res.status(500).json({error: 'internal server error' });
+  }
+});
+
 
 //every get which should be handled differently needs to be declared above this !!
 

@@ -4,13 +4,16 @@ import classes from "./Header.module.css";
 import CartContext from "../../store/cart-context";
 import Cart from "../cart/Cart";
 import { createPortal } from "react-dom";
-import CartItem from "../cart/CartItem";
-import ServerCalled from "../callServer/ServerCalled";
+
+import Modal from "react-modal";
+import LastOrderedStuff from "./LastOrderedStuff";
+
+
 
 //this the top bar of the application.
 //It contains the cart button(HeaderCartBtn), app title etc
 //fragment allows you to group various elements in a component without having to add them to app.js
-const Header = (props) => {
+const Header = () => {
   const [btnIsHighlighted, setBtnIsHighlighted] = useState(false);
   const cartCtx = useContext(CartContext);
  
@@ -43,26 +46,16 @@ const Header = (props) => {
   const seeCart = () =>{
     showCart(true)
   }
+////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////
-  const lastOrders = useContext(CartContext);
-  const totalAmount = `: €${lastOrders.totalAmount.toFixed(2)}`;
-  const[order, seeOrder] = useState(false);
-  const seeOrders = () =>{
-    seeOrder(true);
-  }
-  const orders = (
-    <ul className={classes["cart-items"]}>
-      {lastOrders.items.map((item) => (
-        <CartItem 
-          key={item.id}
-          name={item.name}
-          amount={item.amount}
-          price={item.price}
-        />
-      ))}
-    </ul>
-  )
+//////////////////////////////////////////////////////
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
 
   //for the orders
   return (
@@ -91,23 +84,8 @@ const Header = (props) => {
         document.body
       )
     }
-    <button onClick={seeOrders}>last orders</button>
-    {order &&(
-      <>
-           <>
-          {orders}
-          <div className={classes.total}>
-            <span>Total Amount</span>
-            <span>{totalAmount}</span>
-          </div>
-          <div className={classes.actions}>
-            <button className={classes["button--alt"]} onClick={()=>seeOrder(false)}>
-              Close
-            </button>
-          </div>
-           </>
-      </>
-    )}
+    <button onClick={togglePopup}>last orders</button>
+    <LastOrderedStuff isOpen={isPopupOpen} onClose={togglePopup}/>
       </header>
       <div className={classes["main-image"]}>
         <img src={mainheaderImage} alt="Frontpage Image" />
