@@ -983,14 +983,10 @@ module.exports = {
   setDrinkCategoryDeletedTrue,
 
   checkDishAvailability,
-<<<<<<< HEAD
   getTotalDishLastOrders,
   getTotalDrinkLastOrders,
   getLastOrderedDrinks,
   getLastOrderedDishes,
-=======
-  checkDrinkAvailability,
->>>>>>> c1a63c3e4a54f63f16cfe21f11833c2cd342eb25
   checkCredentials,
   addOrder,
   getTableFromQuery,
