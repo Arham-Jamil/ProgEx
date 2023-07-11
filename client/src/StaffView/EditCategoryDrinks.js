@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import StaffNavHeader from './StaffNavHeader';
+
 
 const EditCategoryDrinks = () => {
   const [categoryDrinks, setCategoryDrinks] = useState([]);
@@ -125,6 +127,7 @@ const handleRemoveCategoryDrink = async (id) => {
 
   return (
     <div className="container">
+         <StaffNavHeader/>
       <h2>Edit Category Drinks</h2>
       <table>
         <thead>

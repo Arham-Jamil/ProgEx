@@ -22,11 +22,11 @@ const AvailableExtras = () => {
       <section>
         {/* <h2>Extras</h2> */}
         <p>Extras have to be mentioned in the comment field before placing your order.</p>
-        <ul>
+        <ul style={{marginBottom: '50px'}}>
           {extras.map((extra) => (
-            <li key={extra.ID}>
+            <li style={{marginBottom: '20px'}} key={extra.ID}>
               <strong>{extra.Name}</strong>
-              <div>Price: {extra.Price} €</div>
+              <div >Price: {extra.Price} €</div>
             </li>
           ))}
         </ul>

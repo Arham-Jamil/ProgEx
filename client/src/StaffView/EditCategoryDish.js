@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import StaffNavHeader from './StaffNavHeader';
+
 
 const EditCategoryDish = () => {
   const [categoryDishes, setCategoryDishes] = useState([]);
@@ -126,6 +128,7 @@ const EditCategoryDish = () => {
 
   return (
     <div className="container">
+      <StaffNavHeader/>
       <h2>Edit Category Dishes</h2>
       <table>
         <thead>

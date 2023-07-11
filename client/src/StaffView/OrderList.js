@@ -152,7 +152,7 @@ const OrderList = ({ type }) => {
        <td>{order.ID}</td>
        <td>{order.TableNumber}</td>
        <td>{order.Name}</td>
-       <td>{order.Description}</td>
+       <td style={{whiteSpace: 'normal'}}>{order.Description}</td>
        <td>
                 {editingOrder && editingOrder.ID === order.ID ? (
                   <input

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import OrderList from './OrderList.js';
+import StaffNavHeader from './StaffNavHeader';
+
 
 const OrdersPage = () => {
   const [activeTab, setActiveTab] = useState('OrderedDishes');
@@ -10,6 +12,7 @@ const OrdersPage = () => {
 
   return (
     <div>
+<StaffNavHeader/>
       <h1>Orders Page</h1>
 
       <div className="tabs">

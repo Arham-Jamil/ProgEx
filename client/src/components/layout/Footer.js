@@ -12,7 +12,6 @@ const Footer = () => {
 
     <ServerCalled/>
 
-
     </footer>
   );
 };

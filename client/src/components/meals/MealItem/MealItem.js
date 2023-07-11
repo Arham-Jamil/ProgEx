@@ -71,7 +71,7 @@ const MealItem = (props) => {
       <img
         src={props.imagePath}
         alt="Kein Bild vorhanden"
-        style={{ maxWidth: '250px', maxHeight: '250px', marginLeft: 'auto' }}
+        style={{ width: '250px', height: '250px', marginLeft: 'auto' ,objectFit: 'cover'}}
       />
     </div>
   

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import './IngredientsList.css';
+import StaffNavHeader from './StaffNavHeader';
 
 const IngredientsList = () => {
   
@@ -143,6 +144,7 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
 
   return (
     <div className="ingredients-list-container">
+      <StaffNavHeader/>
       <h1 className="ingredients-list-heading">Ingredients List</h1>
       <table className="ingredients-table">
         <thead>

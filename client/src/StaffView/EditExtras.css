@@ -1,5 +1,5 @@
 .container {
-    margin: 20px;
+    /* margin: 10px; */
   }
   
   table {
@@ -29,20 +29,11 @@
     background-color: #f5f5f5;
   }
   
-  .add-form {
-    margin-top: 20px;
+   /* button{
+    background-color: #e6805e;
+    border-color: #000000;
   }
-  
-  .add-form label {
-    margin-right: 10px;
-  }
-
-  .add-form input[type="checkbox"] {
-    margin-right: 10px; 
-  }
-
-  
-  .add-form button {
-    margin-top: 10px;
-  }
+  button:hover{
+    background-color: #ec0909;
+  } */
   

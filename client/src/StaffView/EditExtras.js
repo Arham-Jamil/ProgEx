@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './EditExtras.css';
+import StaffNavHeader from './StaffNavHeader';
 
 const EditExtras = () => {
   const [extras, setExtras] = useState([]);
@@ -92,6 +93,9 @@ const EditExtras = () => {
 
   return (
     <div className="container">
+
+    <StaffNavHeader/>
+    
       <h2>Edit Extras</h2>
       <table>
         <thead>

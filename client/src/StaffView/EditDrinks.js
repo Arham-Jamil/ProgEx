@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import StaffNavHeader from './StaffNavHeader';
+
 
 const EditDrinks = () => {
   const [drinks, setdrinks] = useState([]);
@@ -194,18 +196,19 @@ const EditDrinks = () => {
 
   return (
     <div className="container">
+    <StaffNavHeader/>
       <h2>Edit drinks</h2>
       <table style={{ tableLayout: 'fixed', width: '100%' }}>
         <thead>
           <tr>
             <th style={{ width: '15%' }}>Name</th>
-            <th style={{ width: '10%' }}>Price</th>
-            <th style={{ width: '15%' }}>Category Name</th>
-            <th style={{ width: '15%' }}>Description</th>
-            <th style={{ width: '5%' }}>Available</th>
-            <th style={{ width: '10%' }}>Volume</th>
-            <th style={{ width: '20%' }}>Image Path</th>
-            <th style={{ width: '10%' }}>Actions</th>
+            <th style={{ width: '5%' }}>Price</th>
+            <th style={{ width: '10%' }}>Category Name</th>
+            <th >Description</th>
+            <th style={{ width: '6%' }}>Available</th>
+            <th style={{ width: '7%' }}>Volume</th>
+            <th style={{ width: '6%' }}>Image Path</th>
+            <th style={{ width: '6%' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -228,7 +231,7 @@ const EditDrinks = () => {
               </td>
               <td>
                 {editingId === drink.ID ? (
-                  <input
+                  <input style={{ width: '50%' }}
                     type="text"
                     name="Price"
                     value={editingDrink.Price}
@@ -258,7 +261,7 @@ const EditDrinks = () => {
               </td>
               <td>
                 {editingId === drink.ID ? (
-                  <input
+                  <input style={{ width: '100%' }}
                     type="text"
                     name="Description"
                     value={editingDrink.Description}
@@ -282,7 +285,7 @@ const EditDrinks = () => {
               </td>
               <td>
                 {editingId === drink.ID ? (
-                  <input
+                  <input style={{ width: '50%' }}
                     type="text"
                     name="Volume"
                     value={editingDrink.Volume} 
@@ -294,7 +297,7 @@ const EditDrinks = () => {
               </td>
               <td>
                 {editingId === drink.ID ? (
-                  <input
+                  <input style={{ width: '80%' }}
                     type="text"
                     name="ImagePath"
                     value={editingDrink.ImagePath}
@@ -329,7 +332,7 @@ const EditDrinks = () => {
               />
             </td>
             <td>
-              <input
+              <input style={{ width: '50%' }}
                 type="text"
                 name="Price"
                 value={newDrink.Price}
@@ -351,7 +354,7 @@ const EditDrinks = () => {
               </select>
             </td>
             <td>
-              <input
+              <input style={{ width: '100%' }}
                 type="text"
                 name="Description"
                 value={newDrink.Description}
@@ -370,7 +373,7 @@ const EditDrinks = () => {
               </label>
             </td>
             <td>
-              <input
+              <input style={{ width: '50%' }}
                 type="text"
                 name="Volume"
                 value={newDrink.Volume}
@@ -378,7 +381,7 @@ const EditDrinks = () => {
               />
             </td>
             <td>
-              <input
+              <input style={{ width: '80%' }}
                 type="text"
                 name="ImagePath"
                 value={newDrink.ImagePath}

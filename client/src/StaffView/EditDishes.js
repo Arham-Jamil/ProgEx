@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import StaffNavHeader from './StaffNavHeader';
+
 
 const EditDishes = () => {
   const [dishes, setDishes] = useState([]);
@@ -210,18 +212,19 @@ const EditDishes = () => {
 
   return (
     <div className="container">
+         <StaffNavHeader/>
       <h2>Edit Dishes</h2>
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Category Name</th>
+            <th style={{ width: '15%' }}>Name</th>
+            <th style={{ width: '5%' }}>Price</th>
+            <th style={{ width: '10%' }}>Category Name</th>
             <th>Description</th>
-            <th>Available</th>
-            <th>Quantity</th>
-            <th>Image Path</th>
-            <th>Actions</th>
+            <th style={{ width: '6%' }}>Available</th>
+            <th style={{ width: '5%' }}>Quantity</th>
+            <th style={{ width: '6%' }}>Image Path</th>
+            <th style={{ width: '6%' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -233,7 +236,7 @@ const EditDishes = () => {
               !dish.Available ? '#fac3c3' : 'inherit' }}>
               <td>
                 {editingId === dish.ID ? (
-                  <input
+                  <input  style={{ width: '80%' }}
                     type="text"
                     name="Name"
                     value={editingDish.Name}
@@ -243,9 +246,9 @@ const EditDishes = () => {
                   dish.Name
                 )}
               </td>
-              <td>
+              <td >
                 {editingId === dish.ID ? (
-                  <input
+                  <input style={{ width: '50%' }}   
                     type="text"
                     name="Price"
                     value={editingDish.Price}
@@ -275,7 +278,7 @@ const EditDishes = () => {
               </td>
               <td>
                 {editingId === dish.ID ? (
-                  <input
+                  <input  style={{ width: '100%' }}
                     type="text"
                     name="Description"
                     value={editingDish.Description}
@@ -299,7 +302,7 @@ const EditDishes = () => {
               </td>
               <td>
                 {editingId === dish.ID ? (
-                  <input
+                  <input  style={{ width: '50%' }}
                     type="text"
                     name="Quantity"
                     value={editingDish.Quantity}
@@ -311,7 +314,7 @@ const EditDishes = () => {
               </td>
               <td>
                 {editingId === dish.ID ? (
-                  <input
+                  <input style={{ width: '100%' }}
                     type="text"
                     name="ImagePath"
                     value={editingDish.ImagePath}
@@ -339,15 +342,15 @@ const EditDishes = () => {
           ))}
           <tr>
             <td>
-              <input
+              <input style={{ width: '80%' }}
                 type="text"
                 name="Name"
                 value={newDish.Name}
                 onChange={handleInputChange}
               />
             </td>
-            <td>
-              <input
+            <td >
+              <input style={{ width: '50%' }}
                 type="text"
                 name="Price"
                 value={newDish.Price}
@@ -369,7 +372,7 @@ const EditDishes = () => {
               </select>
             </td>
             <td>
-              <input
+              <input  style={{ width: '100%' }}
                 type="text"
                 name="Description"
                 value={newDish.Description}
@@ -388,7 +391,7 @@ const EditDishes = () => {
               </label>
             </td>
             <td>
-              <input
+              <input style={{ width: '50%' }}
                 type="text"
                 name="Quantity"
                 value={newDish.Quantity}
@@ -396,7 +399,7 @@ const EditDishes = () => {
               />
             </td>
             <td>
-              <input
+              <input style={{ width: '80%' }}
                 type="text"
                 name="ImagePath"
                 value={newDish.ImagePath}

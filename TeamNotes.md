@@ -4,7 +4,9 @@
 
 -+ im header banner ein button um wieder hoch zu kommen
 
+ //npm install react-modal
 
+ 
 ### VISUELL 
 
     -vvisuell besser zeigen dass man Sachen in Warenkorb gepackt hat

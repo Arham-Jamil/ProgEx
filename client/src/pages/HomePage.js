@@ -8,6 +8,7 @@ import AvailableExtras from "../components/meals/AvailableExtras"
 import AvailableDrinks from "../components/meals/AvailableDrinks"
 import AvailableMeals from "../components/meals/AvailableMeals"
 import ServerCalled from "../components/callServer/ServerCalled"
+import Footer from "../components/layout/Footer"
 
 const HomePage = () => {
 
@@ -32,8 +33,7 @@ const HomePage = () => {
           <HomePageNav />
         </div>
 
-        {/* move this to the header !!!!!!! */}
-        <ServerCalled />
+  
 
         <section id="Dishes">
         <h1 style={{ marginTop: '50px' }}> Dishes</h1>
@@ -49,8 +49,8 @@ const HomePage = () => {
         <h1> Extras</h1>
       </section>
       <AvailableExtras />
-
-      </main>
+    <Footer/>
+        </main>
     </CartProvider>
   )
 }
