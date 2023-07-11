@@ -577,6 +577,96 @@ const checkCredentials = (username, password) =>{
   })
 }
 
+//to get the last ordered dishes
+const getLastOrderedDishes = () =>{
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT Dishes.Name AS DishName, Dishes.Price AS DishPrice, OrderedDishes.Description AS OrderedDishDescripttion
+      FROM Dishes
+      JOIN OrderedDishes ON Dishes.ID = OrderedDishes.Dishes_ID 
+      JOIN Orders ON OrderedDishes.Orders_ID = Orders.ID
+      WHERE Orders.Paid = 0`,
+      (err, rows) =>{
+        if(err){
+          console.error(err);
+          reject(err);
+        }
+        if(rows){
+          console.log('rows: ',rows);
+          resolve(rows);
+        }
+      }
+    )
+  })
+}
+
+//to get the last ordered drinks
+const getLastOrderedDrinks = () =>{
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT Drinks.Name AS DrinkName, Drinks.Price AS DrinkPrice
+      FROM Drinks
+      JOIN OrderedDrinks ON Drinks.ID = OrderedDrinks.Drinks_ID
+      JOIN Orders ON OrderedDrinks.Orders_ID = Orders.ID 
+      WHERE Orders.Paid = 0`,
+      (err, row) =>{
+        if(err){
+          console.error(err);
+          reject(err);
+        }
+        if(row){
+          console.log('row: ',row);
+          resolve(row);
+        }
+      }
+    )
+  })
+}
+
+//getting the total sum of last orders for dishes
+const getTotalDishLastOrders = () =>{
+  return new Promise((resolve, reject) =>{
+    db.get(
+      `SELECT SUM( Dishes.Price) AS DishPrice
+      FROM Dishes
+      JOIN OrderedDishes ON Dishes.ID = OrderedDishes.Dishes_ID
+      JOIN Orders ON OrderedDishes.Orders_ID = Orders.ID`,
+      (err,row) =>{
+        if(err){
+          console.error(err);
+          reject(err);
+        }
+        if(row){
+          console.log('row dish: ',row);
+          resolve(row);
+        }
+      }
+    )
+  })
+}
+
+//getting the total sum of last orders for drinks
+const getTotalDrinkLastOrders = () =>{
+  return new Promise((resolve, reject) =>{
+    db.get(
+      `SELECT SUM( Drinks.Price) AS DrinkPrice
+      FROM Drinks
+      JOIN OrderedDrinks ON Drinks.ID = OrderedDrinks.Drinks_ID
+      JOIN Orders ON OrderedDrinks.Orders_ID = Orders.ID`,
+      (err,row) =>{
+        if(err){
+          console.error(err);
+          reject(err);
+        }
+        if(row){
+          console.log('row drink:',row);
+          resolve(row);
+        }
+      }
+    )
+  })
+}
+
 //
 function closeDB() {
   db.close((err) => {
@@ -615,6 +705,10 @@ module.exports = {
   setDrinkDeletedTrue,
 
   checkDishAvailability,
+  getTotalDishLastOrders,
+  getTotalDrinkLastOrders,
+  getLastOrderedDrinks,
+  getLastOrderedDishes,
   checkCredentials,
   addOrder,
   getTableFromQuery,
