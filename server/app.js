@@ -374,9 +374,12 @@ app.post('/login', async (req, res)=>{
 });
 
 // for the last ordered dishes
-app.get('/LastOrderedDishes', async (req, res) =>{
+app.use(express.json());
+app.post('/LastOrderedDishes', async (req, res) =>{
+  const tableNumber = req.body.tableNumber;
+  console.log('tableNumber in app.js: ',tableNumber);
   try{
-    const getLastOrderedDishes = await db.getLastOrderedDishes();
+    const getLastOrderedDishes = await db.getLastOrderedDishes(tableNumber);
     console.log(getLastOrderedDishes);
     if(getLastOrderedDishes){
       res.status(200).json(getLastOrderedDishes);
@@ -391,9 +394,12 @@ app.get('/LastOrderedDishes', async (req, res) =>{
 });
 
 // the last ordered drinks
-app.get('/LastOrderedDrinks', async (req, res) =>{
+app.use(express.json());
+app.post('/LastOrderedDrinks', async (req, res) =>{
+  const tableNumber = req.body.tableNumber;
+  console.log('tableNumber in app.js: ',tableNumber);
   try{
-    const getLastOrderedDrinks = await db.getLastOrderedDrinks();
+    const getLastOrderedDrinks = await db.getLastOrderedDrinks(tableNumber);
     console.log(getLastOrderedDrinks);
     if(getLastOrderedDrinks){
       res.status(200).json(getLastOrderedDrinks);
@@ -407,9 +413,11 @@ app.get('/LastOrderedDrinks', async (req, res) =>{
   }
 });
 
-app.get('/LastOrdersDishSum', async (req, res) =>{
+app.use(express.json());
+app.post('/LastOrdersDishSum', async (req, res) =>{
+  const tableNumber = req.body.tableNumber;
   try{
-    const getTotalDishLastOrders = await db.getTotalDishLastOrders();
+    const getTotalDishLastOrders = await db.getTotalDishLastOrders(tableNumber);
     console.log(getTotalDishLastOrders);
     if(getTotalDishLastOrders){
       res.status(200).json(getTotalDishLastOrders);
@@ -423,9 +431,11 @@ app.get('/LastOrdersDishSum', async (req, res) =>{
   }
 });
 
-app.get('/LastOrdersDrinkSum', async (req, res) =>{
+app.use(express.json());
+app.post('/LastOrdersDrinkSum', async (req, res) =>{
+  const tableNumber = req.body.tableNumber;
   try{
-    const getTotalDrinkLastOrders = await db.getTotalDrinkLastOrders();
+    const getTotalDrinkLastOrders = await db.getTotalDrinkLastOrders(tableNumber);
     console.log(getTotalDrinkLastOrders);
     if(getTotalDrinkLastOrders){
       res.status(200).json(getTotalDrinkLastOrders);
