@@ -356,7 +356,7 @@ app.post('/order', (req, res) => {
 
 app.post('/login', async (req, res)=>{
   const username = req.body.username;
-  const password = req.body.password;
+  const password = req.body.passwordHashed;
  console.log('req.body', req.body)
 
   try{
