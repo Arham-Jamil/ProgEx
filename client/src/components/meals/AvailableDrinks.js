@@ -34,7 +34,7 @@ const AvailableDrinks = () => {
       <ul style={{ listStyle: 'none' }}>
         {categoryDrinks.map((category) => (
           <div key={category.ID} >
-            <h2 style={{ backgroundColor: '#f28a8a', color: 'black', padding: '0.3rem' }}>{category.Name}</h2>
+            <h2 style={{ backgroundColor: '#f28a8a', color: 'black', padding: '0.3rem' , fontSize: 30 }}>{category.Name}</h2>
             {/* only maps the drinks (dishes) which correspond to the category and are available!! */}
             {drinks.filter((drink) => (drink.CategoryName === category.Name) && (drink.Available === 1)) 
               .map((drink) => (

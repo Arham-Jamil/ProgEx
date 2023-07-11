@@ -5,14 +5,16 @@ import HomePageNav from '../meals/HomePageNav';
 
 const Footer = () => {
   return (
+
     <footer className="footer">
       {/* Content of the footer */}
       
-      {/* <HomePageNav/> */}
+      <HomePageNav/>
 
     <ServerCalled/>
 
     </footer>
+  
   );
 };
 

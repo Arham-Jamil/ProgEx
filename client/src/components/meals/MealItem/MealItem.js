@@ -45,7 +45,7 @@ const MealItem = (props) => {
         </div>
         
         <div>{props.description}</div>
-        <div style={{ marginTop: '1rem', color: 'green', fontWeight: 'bold' }}>{price}</div>
+        <div style={{ marginTop: '1rem', color: 'black', fontWeight: 'bold' }}>{price}</div>
         
         
         <div style={{ marginTop: '1rem'}}>
@@ -54,7 +54,7 @@ const MealItem = (props) => {
         value="1"
         onClick={submitHandler}
         style={{
-          backgroundColor: 'red',
+          backgroundColor: '#039dfe',
           color: 'white',
           border: 'none',
           padding: '0.5rem 1rem',

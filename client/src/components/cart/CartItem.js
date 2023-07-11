@@ -4,7 +4,7 @@ import {useContext, useId, useState, useRef} from 'react'
 
 const CartItem = (props) => {
   // const [description, setDescription] = useState(props.specificCartItem);
-  const [buttonColor, setButtonColor] = useState('inherit');
+  const [buttonColor, setButtonColor] = useState('white');
   const [buttonText, setButtonText] = useState('Add comment');
   const [buttonTextColor, SetButtonTextColor] = useState('');
   
@@ -61,9 +61,16 @@ const CartItem = (props) => {
             backgroundColor: buttonColor,
              color: buttonTextColor,
             width: '90px',
-            fontSize: '14px'
+            fontSize: '14px',
+            transition: 'background-color 0.3s',
           }}
-            > {buttonText}</button>
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = '#3697fe';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'white';
+          }}
+        > {buttonText}</button>
       </div>
     </li>
   );

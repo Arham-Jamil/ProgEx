@@ -9,6 +9,7 @@ import AvailableDrinks from "../components/meals/AvailableDrinks"
 import AvailableMeals from "../components/meals/AvailableMeals"
 import ServerCalled from "../components/callServer/ServerCalled"
 import Footer from "../components/layout/Footer"
+import LoginPop from "./LoginPop"
 
 const HomePage = () => {
 
@@ -30,23 +31,21 @@ const HomePage = () => {
       <main>
         <RestaurantDescription />
         <div style={{ marginTop: '50px' }} >
-          <HomePageNav />
         </div>
-
-  
+     
 
         <section id="Dishes">
-        <h1 style={{ marginTop: '50px' }}> Dishes</h1>
+        <h1 style={{ marginTop: '50px',borderBottom: '4px solid black', fontSize: 40 , textAlign: 'center'}}> Dishes</h1>
       </section>
       <AvailableMeals />
 
         <section id="Drinks">
-        <h1> Drinks</h1>
+        <h1 style={{ marginTop: '50px',borderBottom: '4px solid black', fontSize: 40 , textAlign: 'center'}}> Drinks</h1>
         <AvailableDrinks/>
       </section>
 
       <section id="Extras">
-        <h1> Extras</h1>
+        <h1 style={{ marginTop: '50px',borderBottom: '4px solid black', fontSize: 40 , textAlign: 'center'}}> Extras</h1>
       </section>
       <AvailableExtras />
     <Footer/>

@@ -24,9 +24,9 @@ const AvailableExtras = () => {
         <p>Extras have to be mentioned in the comment field before placing your order.</p>
         <ul style={{marginBottom: '50px'}}>
           {extras.map((extra) => (
-            <li style={{marginBottom: '20px'}} key={extra.ID}>
+            <li style={{marginBottom: '60px'}} key={extra.ID}>
               <strong>{extra.Name}</strong>
-              <div >Price: {extra.Price} €</div>
+              <div style={{marginTop: '15px'}}>Price: {extra.Price} €</div>
             </li>
           ))}
         </ul>

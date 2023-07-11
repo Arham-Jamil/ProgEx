@@ -3,13 +3,14 @@ import React from 'react';
 const HomePageNav = () => {
     const linkStyle = {
         textDecoration: 'none',
-        color: 'white',
-        backgroundColor: 'red',
+        color: 'black',
+        backgroundColor: 'white',
         padding: '0.5rem 1rem',
-        marginRight: '1rem',
+        marginRight: '10rem',
         fontFamily: 'Arial, sans-serif',
         borderRadius: '5px',
         transition: 'background-color 0.3s',
+        
       };
  
     return (
