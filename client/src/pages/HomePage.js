@@ -2,14 +2,11 @@ import CartProvider from "../store/CartProvider"
 import Header from "../components/layout/Header"
 import Cart from "../components/cart/Cart"
 import { useState } from "react"
-import HomePageNav from "../components/meals/HomePageNav"
 import RestaurantDescription from "../components/meals/RestaurantDescription"
 import AvailableExtras from "../components/meals/AvailableExtras"
 import AvailableDrinks from "../components/meals/AvailableDrinks"
 import AvailableMeals from "../components/meals/AvailableMeals"
-import ServerCalled from "../components/callServer/ServerCalled"
 import Footer from "../components/layout/Footer"
-import LoginPop from "./LoginPop"
 
 const HomePage = () => {
 

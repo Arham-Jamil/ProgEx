@@ -41,6 +41,7 @@ const LoginPop = (props) => {
         setLoggedIn(true);
         console.log("logged in");
       } else {
+        alert("Incorrect username or password");
         console.log("login failed");
       }
     } catch (error) {
@@ -86,10 +87,10 @@ const LoginPop = (props) => {
               placeholder="******"
               style={{width:'10rem' , marginLeft:'10px'}}
             />
-                <button type="cancel" onClick={handleCancel} style={{marginTop: '10px', marginRight:'146px', backgroundColor: '#f77b72'}}>
+                <button type="button" onClick={handleCancel} style={{marginTop: '10px', marginRight:'146px', backgroundColor: '#f77b72'}}>
               Cancel
             </button>
-            <button type="submit" onClick={handleSubmit} style={{backgroundColor: '#3697fe' }}>
+            <button type="submit" onClick={handleSubmit} style={{backgroundColor: '#3697fe' }} >
               Log in
             </button>
 

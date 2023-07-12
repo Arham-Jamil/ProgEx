@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
-import './IngredientsList.css';
+// import './IngredientsList.css';
 import StaffNavHeader from './StaffNavHeader';
 
 const IngredientsList = () => {
@@ -220,7 +220,7 @@ const handleInputChangeForUpdatingQuantity = (e, index) => {
               />
             </td>
             <td>
-              <button onClick={handleAddIngredient} style={{ backgroundColor: 'green' }}>Add</button>
+              <button onClick={handleAddIngredient}>Add</button>
             </td>
           </tr>
         </tbody>

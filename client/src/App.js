@@ -24,9 +24,9 @@ const App = () =>{
           <Route index element={<HomePage/>}/>
           <Route path="/Homepage" element={<HomePage/>}/>
           <Route path="/src/pages/HomePage.js" element={<HomePage/>}/>
-          <Route path="/Login" element={<Login/>}/>
+          {/* <Route path="/Login" element={<Login/>}/> */}
         <Route element={<PrivateRoutes />}>
-          <Route path="/src/pages/Kitchen.js" element={<Kitchen/>}/>
+          {/* <Route path="/src/pages/Kitchen.js" element={<Kitchen/>}/> */}
           <Route path="/ingredientsList" element={<IngredientsList/>}/>
           <Route path="/editExtras" element={<EditExtras/>}/>
           <Route path="/editCategoryDish" element={<EditCategoryDish/>}/>
