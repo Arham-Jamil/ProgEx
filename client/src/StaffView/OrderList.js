@@ -11,6 +11,13 @@ const OrderList = ({ type }) => {
 
   useEffect(() => {
     fetchOrders();
+
+    const interval = setInterval(() => {
+      fetchOrders();
+      console.log('updating orders Page');
+    }, 6000);
+
+    return () => clearInterval(interval);
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchOrders = async () => {
@@ -134,12 +141,15 @@ const OrderList = ({ type }) => {
                 <th onClick={() => handleSort('ID')}>
                   ID {renderSortIcon('ID')}
                 </th>
-                <th>Table Number</th>
+                <th onClick={() => handleSort('TableNumber')}>
+                  Table Number {renderSortIcon('TableNumber')}</th>
                 <th>Dish Name</th>
                 <th>Description</th>
                 <th>Additional Charges</th>
-                <th>Refunded</th>
-                <th>Status</th>
+                <th onClick={() => handleSort('Refunded')}>
+                  Refunded {renderSortIcon('Refunded')}</th>
+                <th onClick={() => handleSort('Status')}>
+                  Status {renderSortIcon('Status')}</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -221,12 +231,15 @@ const OrderList = ({ type }) => {
               <th onClick={() => handleSort('ID')}>
                   ID {renderSortIcon('ID')}
                   </th>
-                  <th>Table Number</th>
+                  <th onClick={() => handleSort('TableNumber')}>
+                  Table Number {renderSortIcon('TableNumber')}</th>
                 <th>Drink Name</th>
                 <th>Description</th>
                 <th>Additional Charges</th>
-                <th>Refunded</th>
-                <th>Status</th>
+                <th onClick={() => handleSort('Refunded')}>
+                  Refunded {renderSortIcon('Refunded')}</th>
+                <th onClick={() => handleSort('Status')}>
+                  Status {renderSortIcon('Status')}</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -308,7 +321,8 @@ const OrderList = ({ type }) => {
               <th onClick={() => handleSort('ID')}>
                   ID {renderSortIcon('ID')}
                   </th>
-                <th>Table Number</th>
+                <th onClick={() => handleSort('TableNumber')}>
+                  Table Number {renderSortIcon('TableNumber')}</th>
                 <th>Paid</th>
                 <th>PaidPrice</th>
                 <th>Date</th>
