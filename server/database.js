@@ -545,47 +545,16 @@ function updateWholeDrinksRow(id, name, price, categoryID, description, availabl
 // Function to check the availability and quantity of order dishes
 function checkDishAvailability(orderItems) {
 
-   // Extract the dish IDs from the dish objects
-   const dishIds = orderItems.map((item) => item.ID);
-
-  return new Promise((resolve, reject) => {
-    
-    db.all(
-      `SELECT Dishes.ID, Dishes.quantity, COUNT(Dishes.ID) AS orderCount
-       FROM Dishes
-       WHERE Dishes.ID IN (${dishIds.join(',')})
-       GROUP BY Dishes.ID, Dishes.quantity`,
-      (err, rows) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          const dishAvailability = rows.map((row) => ({
-            ID: row.ID,
-            available: row.quantity - row.orderCount,
-          }));
-          const allDishesAvailable = dishAvailability.every(
-            (dish) => dish.available >= 0
-          );
-          resolve(allDishesAvailable)
-        }
-      }
-    );
-  });
-};
-
-// Function to check the availability and quantity of order dishes
-function checkDishAvailability(orderItems) {
-
   // Extract the dish IDs from the dish objects
-  const dishIds = orderItems.map((item) => item.ID);
-
- return new Promise((resolve, reject) => {
-   db.all(
-     `SELECT Dishes.ID, Dishes.Quantity, Dishes.Available, COUNT(Dishes.ID) AS OrderCount
+  const dishIds = orderItems.map((item) => item.id);
+  //console.log('dishIds' , dishIds);
+  return new Promise((resolve, reject) => {
+    const placeholders = dishIds.map(() => '?').join(', ');
+    db.all(
+      `SELECT Dishes.ID, Dishes.Quantity, Dishes.Available
       FROM Dishes
-      WHERE Dishes.ID IN (${ dishIds.fill('?') })
-      GROUP BY Dishes.ID, Dishes.Quantity, Dishes.Available `, dishIds,
+      WHERE Dishes.ID IN (${placeholders})`,
+      dishIds,
      (err, rows) => {
        if (err) {
          console.error(err);
@@ -593,12 +562,30 @@ function checkDishAvailability(orderItems) {
        } else {
          const dishAvailability = rows.map((row) => ({
           ID: row.ID,
-          availableCount: row.Quantity - row.OrderCount,
+          availableCount: row.Quantity,
           available: row.Available,
+          infinite: row.Quantity === -1,
          }));
+
+         
+
+         dishAvailability.forEach((availability)=> {
+            dishIds.forEach((id)=> {
+              //console.log('for id', id);
+              //console.log('id true', id === availability.ID);
+              if(id === availability.ID && !availability.infinite){availability.availableCount -= 1;}})
+            console.log('1 avail', availability);
+         });
+
+         //console.log('rows', rows);
+         //console.log('dishaval', dishAvailability)
+
          const allDishesAvailable = dishAvailability.every(
-           (dish) => dish.availableCount >= 0 && dish.available != 0
+           (dish) => (dish.availableCount >= 0 || dish.infinite) && dish.available != 0
          );
+
+         console.log('is avail', allDishesAvailable);
+
          resolve(allDishesAvailable)
        }
      }
@@ -606,19 +593,17 @@ function checkDishAvailability(orderItems) {
  });
 };
 
-// Function to check the availability and quantity of order drinks
 function checkDrinkAvailability(orderItems) {
 
   // Extract the dish IDs from the drink objects
-  const drinkIds = orderItems.map((item) => item.ID);
+  const drinkIds = orderItems.map((item) => item.id);
 
- return new Promise((resolve, reject) => {
-   
-   db.all(
-     `SELECT Drinks.ID, Drinks.Available, COUNT(Drinks.ID) AS OrderCount
+  return new Promise((resolve, reject) => {
+    const placeholders = drinkIds.map(() => '?').join(', ');
+    db.all(
+      `SELECT Drinks.ID, Drinks.Available
       FROM Drinks
-      WHERE Drinks.ID IN (${ drinkIds.fill('?') })
-      GROUP BY Drinks.ID, Drinks.Available`, drinkIds,
+      WHERE Drinks.ID IN (${placeholders})`, drinkIds,
      (err, rows) => {
        if (err) {
          console.error(err);
