@@ -7,8 +7,8 @@ import Modal from "react-modal";
 
 const customModalStyles = {
   content: {
-    width: "300px",
-    height: "200px",
+    width: "17rem",
+    height: "5rem",
     margin: "auto",
     borderRadius: "8px",
     padding: "20px",
@@ -48,6 +48,11 @@ const LoginPop = (props) => {
     }
   };
 
+  const handleCancel = () => {
+    setShowPopup(false);
+  };
+
+
   const handleLoginButtonClick = () => {
     setShowPopup(true);
   };
@@ -59,7 +64,7 @@ const LoginPop = (props) => {
   return (
     <Fragment>
       <button onClick={handleLoginButtonClick} 
-      style={{marginBottom: '2px',backgroundColor: 'white', width: '100px',borderRadius: '10px', marginLeft: '1px'
+      style={{marginBottom: '10px',backgroundColor: 'white', width: '100px',borderRadius: '10px', marginLeft: '1px'
 }}>Login</button>
 
       {showPopup && (
@@ -71,17 +76,24 @@ const LoginPop = (props) => {
               onChange={(e) => setUsername(e.target.value)}
               type="text"
               placeholder="Username"
+              style={{width:'10rem', marginLeft:'5px'}}
             />
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" >Password</label>
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
-              placeholder="*****"
+              placeholder="******"
+              style={{width:'10rem' , marginLeft:'10px'}}
             />
-            <button type="submit" onClick={handleSubmit}>
+                <button type="cancel" onClick={handleCancel} style={{marginTop: '10px', marginRight:'146px', backgroundColor: '#f77b72'}}>
+              Cancel
+            </button>
+            <button type="submit" onClick={handleSubmit} style={{backgroundColor: '#3697fe' }}>
               Log in
             </button>
+
+        
           </form>
         </Modal>
       )}

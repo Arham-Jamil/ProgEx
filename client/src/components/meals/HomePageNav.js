@@ -5,12 +5,16 @@ const HomePageNav = () => {
         textDecoration: 'none',
         color: 'black',
         backgroundColor: 'white',
-        padding: '0.5rem 1rem',
+        padding: '6px 10px',
         marginRight: '10rem',
         fontFamily: 'Arial, sans-serif',
-        borderRadius: '5px',
+        borderRadius: '3px',
         transition: 'background-color 0.3s',
-        
+
+        width: '40px',
+        height: '20px',
+        display: 'flex',
+        justifyContent: 'center',
       };
  
     return (

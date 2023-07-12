@@ -32,10 +32,10 @@ const ServerCalled = (props) =>{
             <div onClick={togglePopup} className="overlay"></div>
             <div className="modal-content">
               <p>
-                A server is on his way
+                A server is on their way!
               </p>
-              <button className="close-modal" onClick={togglePopup}>
-                CLOSE
+              <button className="close-modal" onClick={togglePopup} style={{marginTop: '30px'}}>
+               Confirm {'\u2713'}
               </button>
             </div>
           </div>

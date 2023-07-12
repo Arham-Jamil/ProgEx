@@ -54,11 +54,14 @@ const MealItem = (props) => {
         value="1"
         onClick={submitHandler}
         style={{
-          backgroundColor: '#039dfe',
-          color: 'white',
-          border: 'none',
+          // backgroundColor: '#039dfe',
+          backgroundColor: '#fe9d36',
+
+          color: 'black',
+          fontWeight: '1000',
+          border: '#black',
           padding: '0.5rem 1rem',
-          borderRadius: '5px',
+          borderRadius: '15px',
           cursor: 'pointer',
           marginTop: '8px',
         }}

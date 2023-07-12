@@ -3,11 +3,12 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    /* background-color: rgb(235, 54, 66); */
-    background-color:rgb(54, 151, 254);
-
-    padding: 1px;
+    background-color: #7bbbfe;
+    /* background-color:rgb(54, 151, 254); */
+    height: 3rem;
+    /* padding: 1px; */
     display: flex;
+    padding-bottom: 5px;
     
   }
   
