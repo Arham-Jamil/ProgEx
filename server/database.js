@@ -860,13 +860,11 @@ const getLastOrderedDishes = (tableNumber) =>{
       JOIN Orders ON OrderedDishes.Orders_ID = Orders.ID
       WHERE Orders.Paid = 0 AND Orders.TableNumber = ?`, [tableNumber],
       (err, rows) =>{
-        console.log('tableNumber in database.js:', tableNumber);
         if(err){
           console.error(err);
           reject(err);
         }
         if(rows){
-          console.log('rows: ',rows);
           resolve(rows);
         }
       }
@@ -884,13 +882,11 @@ const getLastOrderedDrinks = (tableNumber) =>{
       JOIN Orders ON OrderedDrinks.Orders_ID = Orders.ID 
       WHERE Orders.Paid = 0 AND Orders.TableNumber = ?`,[tableNumber],
       (err, row) =>{
-        console.log('tableNumber in database.js:', tableNumber);
         if(err){
           console.error(err);
           reject(err);
         }
         if(row){
-          console.log('row: ',row);
           resolve(row);
         }
       }
@@ -913,7 +909,6 @@ const getTotalDishLastOrders = (tableNumber) =>{
           reject(err);
         }
         if(row){
-          console.log('row dish: ',row);
           resolve(row);
         }
       }

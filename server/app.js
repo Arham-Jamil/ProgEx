@@ -377,10 +377,8 @@ app.post('/login', async (req, res)=>{
 app.use(express.json());
 app.post('/LastOrderedDishes', async (req, res) =>{
   const tableNumber = req.body.tableNumber;
-  console.log('tableNumber in app.js: ',tableNumber);
   try{
     const getLastOrderedDishes = await db.getLastOrderedDishes(tableNumber);
-    console.log(getLastOrderedDishes);
     if(getLastOrderedDishes){
       res.status(200).json(getLastOrderedDishes);
       console.log('the last ordered dishes sent')

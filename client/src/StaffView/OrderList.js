@@ -14,7 +14,7 @@ const OrderList = ({ type }) => {
 
     const interval = setInterval(() => {
       fetchOrders();
-      console.log('updating orders Page');
+      console.log('updating orders Page!');
     }, 6000);
 
     return () => clearInterval(interval);

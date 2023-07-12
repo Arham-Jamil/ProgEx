@@ -10,8 +10,6 @@ const [sumLastOrders, setSumLastOrders] = useState(null);
 
 const urlParams = new URLSearchParams(window.location.search);
 const tableNumber = urlParams.get('tableNumber');
-console.log('tablenumber:', tableNumber);
-
 
 useEffect(() => {
     fetchLastOrderedDishes();
@@ -22,7 +20,6 @@ useEffect(() => {
 const fetchLastOrderedDishes = async () =>{
   try{
     const responseLastOrderedDishes = await axios.post('http://localhost:3001/LastOrderedDishes', {tableNumber});
-    console.log('responseLastOrderedDishes: ',responseLastOrderedDishes.data);
     setLastOrderedDishes(responseLastOrderedDishes.data);
   }catch(error){
     console.log(error);
@@ -33,7 +30,6 @@ const fetchLastOrderedDishes = async () =>{
 const fetchLastOrderedDrinks = async () =>{
   try{
     const responseLastOrderedDrinks = await axios.post('http://localhost:3001/LastOrderedDrinks', {tableNumber});
-    console.log('responseLastOrderedDrink: ',responseLastOrderedDrinks.data);
     setLastOrderedDrinks(responseLastOrderedDrinks.data);
   }catch(error){
     console.log(error);
@@ -44,9 +40,7 @@ const fetchLastOrderedDrinks = async () =>{
 const fetchSumLastOrders = async () =>{
   try{
     const responseSumDishLastOrders = await axios.post('http://localhost:3001/LastOrdersDishSum', {tableNumber});
-    console.log('responseSumDishLastOrders: ',responseSumDishLastOrders.data);
     const responseSumDrinkLastOrders = await axios.post('http://localhost:3001/LastOrdersDrinkSum', {tableNumber});
-    console.log('responseSumLastOrders: ',responseSumDrinkLastOrders.data);
     const TotalDishPrice = responseSumDishLastOrders.data.DishPrice || 0;
     const TotalDrinkPrice = responseSumDrinkLastOrders.data.DrinkPrice || 0;
     const totalprice = TotalDishPrice + TotalDrinkPrice;
