@@ -6,7 +6,7 @@ const CartItem = (props) => {
   // const [description, setDescription] = useState(props.specificCartItem);
   const [buttonColor, setButtonColor] = useState('white');
   const [buttonText, setButtonText] = useState('Add comment');
-  const [buttonTextColor, SetButtonTextColor] = useState('');
+  const [buttonTextColor, SetButtonTextColor] = useState('black');
   
   const[text, setText] = useState("")
   const textareaRef = useRef(null);
@@ -62,14 +62,10 @@ const CartItem = (props) => {
              color: buttonTextColor,
             width: '90px',
             fontSize: '14px',
-            transition: 'background-color 0.3s',
+            // transition: 'background-color 0.3s',
           }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = '#3697fe';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = 'white';
-          }}
+      
+       
         > {buttonText}</button>
       </div>
     </li>
