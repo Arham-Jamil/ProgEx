@@ -51,7 +51,7 @@ const CartItem = (props) => {
           ref={textareaRef}
           rows={2}
           cols={30}
-          maxLength={128}
+          maxLength={69}
         >
           </textarea>
         <button
