@@ -483,23 +483,60 @@ async function updateOrder(order) {
 }
 
 
+// function orderCallServer(tableNumber) {
+//   return new Promise((resolve, reject) => {
+//     console.log('table NUmber: ', tableNumber);
+//     db.run(
+//       'UPDATE Orders SET ServerCalled = 1 WHERE tablenumber = ? AND paid = 0',
+//       [tableNumber],
+//       function (err) {
+//         if (err) {
+//           console.error(err.message);
+//           reject(err);
+//         } else {
+//           resolve();
+//         }
+//       }
+//     );
+//   });
+// };
+
+
+//new
 function orderCallServer(tableNumber) {
   return new Promise((resolve, reject) => {
-    console.log('table NUmber: ', tableNumber);
     db.run(
-      'UPDATE Orders SET ServerCalled = 1 WHERE tablenumber = ? AND paid = 0',
-      [tableNumber],
+      'INSERT OR IGNORE INTO Orders (tablenumber, ServerCalled) SELECT ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Orders WHERE tablenumber = ? AND paid = 0)',
+      [tableNumber, tableNumber],
       function (err) {
         if (err) {
           console.error(err.message);
           reject(err);
         } else {
-          resolve();
+          if (this.changes === 0) {
+            // Entry already exists, update the existing row with paid = 0
+            db.run(
+              'UPDATE Orders SET ServerCalled = 1 WHERE tablenumber = ? AND paid = 0',
+              [tableNumber],
+              function (err) {
+                if (err) {
+                  console.error(err.message);
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              }
+            );
+          } else {
+            // New row inserted, resolve without updating
+            resolve();
+          }
         }
       }
     );
   });
-};
+}
+
 
 
 

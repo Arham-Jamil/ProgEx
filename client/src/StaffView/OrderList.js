@@ -31,7 +31,28 @@ const OrderList = ({ type }) => {
       }
 
       const response = await axios.get(url);
+      console.log('response data: ' ,response.data);
+
+    console.log('response.data.Paid: ',response.data.Paid);
+
+      if(type === "Orders"){
+      const sortedOrders = response.data.sort((a, b) => {
+
+        if (a.Paid && !b.Paid) {
+          return 1; // a is available, b is not available
+        } else if (!a.Paid && b.Paid) {
+          return -1; // a is not available, b is available
+        } else {
+          return 0; // both have same availability, maintain original order
+        }
+      });
+        console.log('setting sorted orders...');
+        setOrders(sortedOrders);
+
+    }else{
+      console.log('setting orders');
       setOrders(response.data);
+    }
     } catch (error) {
       console.error(error);
     }
@@ -103,6 +124,15 @@ const OrderList = ({ type }) => {
     }
 
   const handleEditOrder = async (orderData) => {
+    console.log('orderData: ', orderData);
+
+    //input validation!!!!
+    if (orderData.AdditionalCharges !== undefined){
+     if (!(/^\d+(\.\d{1,2})?$/.test(orderData.AdditionalCharges))){
+        alert('Invalid input!');
+        return;
+     }}
+
     const postOrder = async () => {
       const data = {orderData};
 

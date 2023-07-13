@@ -256,6 +256,7 @@ SELECT * FROM CategoryDish;
 SELECT * FROM CategoryDrinks;
 SELECT * FROM Drinks;
 
+
 -- SELECT SUM( Dishes.Price) AS DishPrice
 --       FROM Dishes
 --       JOIN OrderedDishes ON Dishes.ID = OrderedDishes.Dishes_ID
