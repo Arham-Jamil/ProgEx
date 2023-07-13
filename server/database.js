@@ -885,6 +885,59 @@ function getTableFromQuery(queryString) {
   });
 }
 
+function getOrders () {
+  return new Promise((resolve, reject) => {
+    const getOrdersSql = `
+    SELECT
+    Orders.ID,
+    Orders.TableNumber,
+    Orders.Paid,
+    Orders.Datetime,
+    (COALESCE(DishPrice.TotalPrice, 0) + COALESCE(DrinkPrice.TotalPrice, 0)) AS TotalPrice
+  FROM Orders
+  LEFT JOIN (
+    SELECT
+      OrderedDishes.Orders_ID,
+      SUM(Dishes.Price + OrderedDishes.AdditionalCharges) AS TotalPrice
+    FROM OrderedDishes
+    LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
+    WHERE OrderedDishes.Refunded = 0 OR OrderedDishes.Status < 3
+    GROUP BY OrderedDishes.Orders_ID
+  ) AS DishPrice ON Orders.ID = DishPrice.Orders_ID
+  LEFT JOIN (
+    SELECT
+      OrderedDrinks.Orders_ID,
+      SUM(Drinks.Price + OrderedDrinks.AdditionalCharges) AS TotalPrice
+    FROM OrderedDrinks
+    LEFT JOIN Drinks ON OrderedDrinks.Drinks_ID = Drinks.ID
+    WHERE OrderedDrinks.Refunded = 0 OR OrderedDrinks.Status < 3
+    GROUP BY OrderedDrinks.Orders_ID
+  ) AS DrinkPrice ON Orders.ID = DrinkPrice.Orders_ID;
+    `;
+
+    db.all(getOrdersSql, (err, rows) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+        return;
+      }
+
+      const orders = rows.map((row) => ({
+        ID: row.ID,
+        TableNumber: row.TableNumber,
+        Paid: row.Paid,
+        Datetime: row.Datetime,
+        PaidPrice: row.TotalPrice
+      }));
+
+      console.log('rows', rows);
+      console.log('orders', orders);
+
+      resolve(orders);
+    });
+  });
+};
+
 //function to check password in the database
 const checkCredentials = (username, password) =>{
   return new Promise((resolve, reject) =>{
@@ -1059,5 +1112,6 @@ module.exports = {
   checkCredentials,
   addOrder,
   getTableFromQuery,
+  getOrders,
   closeDB
 };

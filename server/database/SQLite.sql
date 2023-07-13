@@ -287,4 +287,32 @@ SELECT * FROM Drinks;
 -- SELECT Drinks.*, CategoryDrinks.Name AS CategoryName FROM Drinks INNER JOIN CategoryDrinks ON Drinks.Category_ID = CategoryDrinks.id WHERE deleted = 0 
 -- SELECT Dishes.*, CategoryDish.Name AS CategoryName FROM Dishes INNER JOIN CategoryDish ON Dishes.Category_ID = Categorydish.id WHERE deleted = 0 AND AVAILABLE = 1
 
+SELECT
+  Orders.ID,
+  Orders.TableNumber,
+  Orders.Paid,
+  Orders.Datetime,
+  (COALESCE(DishPrice.TotalPrice, 0) + COALESCE(DrinkPrice.TotalPrice, 0)) AS TotalPrice
+FROM Orders
+LEFT JOIN (
+  SELECT
+    OrderedDishes.Orders_ID,
+    SUM(Dishes.Price + OrderedDishes.AdditionalCharges) AS TotalPrice
+  FROM OrderedDishes
+  LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
+  WHERE OrderedDishes.Refunded IS NULL OR OrderedDishes.Status < 3
+  GROUP BY OrderedDishes.Orders_ID
+) AS DishPrice ON Orders.ID = DishPrice.Orders_ID
+LEFT JOIN (
+  SELECT
+    OrderedDrinks.Orders_ID,
+    SUM(Drinks.Price + OrderedDrinks.AdditionalCharges) AS TotalPrice
+  FROM OrderedDrinks
+  LEFT JOIN Drinks ON OrderedDrinks.Drinks_ID = Drinks.ID
+  WHERE OrderedDrinks.Refunded IS NULL OR OrderedDrinks.Status < 3
+  GROUP BY OrderedDrinks.Orders_ID
+) AS DrinkPrice ON Orders.ID = DrinkPrice.Orders_ID;
+
+
+  
 

@@ -451,6 +451,16 @@ app.post('/LastOrdersDrinkSum', async (req, res) =>{
   }
 });
 
+app.get(['/Orders'], async (req, res) => {
+  try {
+    const resourceData = await db.getOrders();
+    res.json(resourceData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
 
 //every get which should be handled differently needs to be declared above this !!
 
