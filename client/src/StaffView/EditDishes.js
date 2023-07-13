@@ -10,10 +10,10 @@ const EditDishes = () => {
     Name: '',
     Price: '',
     CategoryName: '',
-    Description: null,
+    Description: '',
     Available: false,
     Quantity: '',
-    ImagePath: null,
+    ImagePath: '',
   });
   const [editingId, setEditingId] = useState(null);
   const [editingDish, setEditingDish] = useState({
@@ -21,10 +21,10 @@ const EditDishes = () => {
     Price: '',
     CategoryName: '',
     Category_ID: '', 
-    Description: null,
+    Description: '',
     Available: false,
     Quantity: '',
-    ImagePath: null,
+    ImagePath: '',
   });
   
 

@@ -7,11 +7,13 @@ const ServerCalled = (props) =>{
     const [popup, setPopup] = useState(false);
 
     const togglePopup = () => {
+      console.log('serverCalled: ');
     setPopup(!popup);
     ///////
     const queryParams = new URLSearchParams(window.location.search); // URL parameter
     callServer(queryParams.get('tableNumber'));
   };
+
 
   const callServer = async (tableNumber) => {
     try {
@@ -34,7 +36,7 @@ const ServerCalled = (props) =>{
               <p>
                 A server is on their way!
               </p>
-              <button className="close-modal" onClick={togglePopup} style={{marginTop: '30px'}}>
+              <button className="close-modal" onClick={() => setPopup(!popup)} style={{marginTop: '30px'}}>
                Confirm {'\u2713'}
               </button>
             </div>
