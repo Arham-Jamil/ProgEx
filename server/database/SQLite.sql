@@ -302,7 +302,7 @@ LEFT JOIN (
     SUM(Dishes.Price + OrderedDishes.AdditionalCharges) AS TotalPrice
   FROM OrderedDishes
   LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
-  WHERE OrderedDishes.Refunded IS NULL OR OrderedDishes.Status < 3
+  WHERE OrderedDishes.Refunded = 0 AND OrderedDishes.Status < 3
   GROUP BY OrderedDishes.Orders_ID
 ) AS DishPrice ON Orders.ID = DishPrice.Orders_ID
 LEFT JOIN (
@@ -311,10 +311,36 @@ LEFT JOIN (
     SUM(Drinks.Price + OrderedDrinks.AdditionalCharges) AS TotalPrice
   FROM OrderedDrinks
   LEFT JOIN Drinks ON OrderedDrinks.Drinks_ID = Drinks.ID
-  WHERE OrderedDrinks.Refunded IS NULL OR OrderedDrinks.Status < 3
+  WHERE OrderedDrinks.Refunded = 0 AND OrderedDrinks.Status < 3
   GROUP BY OrderedDrinks.Orders_ID
 ) AS DrinkPrice ON Orders.ID = DrinkPrice.Orders_ID;
 
 
   
 
+ SELECT
+    Orders.ID,
+    Orders.TableNumber,
+    Orders.Paid,
+    Orders.Datetime,
+    Orders.ServerCalled,
+    (COALESCE(DishPrice.TotalPrice, 0) + COALESCE(DrinkPrice.TotalPrice, 0)) AS TotalPrice
+  FROM Orders
+  LEFT JOIN (
+    SELECT
+      OrderedDishes.Orders_ID,
+      SUM(Dishes.Price + OrderedDishes.AdditionalCharges) AS TotalPrice
+    FROM OrderedDishes
+    LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
+    WHERE OrderedDishes.Refunded = 0 AND OrderedDishes.Status = 2
+    GROUP BY OrderedDishes.Orders_ID
+  ) AS DishPrice ON Orders.ID = DishPrice.Orders_ID
+  LEFT JOIN (
+    SELECT
+      OrderedDrinks.Orders_ID,
+      SUM(Drinks.Price + OrderedDrinks.AdditionalCharges) AS TotalPrice
+    FROM OrderedDrinks
+    LEFT JOIN Drinks ON OrderedDrinks.Drinks_ID = Drinks.ID
+    WHERE OrderedDrinks.Refunded = 0 AND OrderedDrinks.Status = 2
+    GROUP BY OrderedDrinks.Orders_ID
+  ) AS DrinkPrice ON Orders.ID = DrinkPrice.Orders_ID;

@@ -505,6 +505,7 @@ async function updateOrder(order) {
 //new
 function orderCallServer(tableNumber) {
   return new Promise((resolve, reject) => {
+    console.log('db call, trying to call server with : ', tableNumber);
     db.run(
       'INSERT OR IGNORE INTO Orders (tablenumber, ServerCalled) SELECT ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Orders WHERE tablenumber = ? AND paid = 0)',
       [tableNumber, tableNumber],
@@ -893,6 +894,7 @@ function getOrders () {
     Orders.TableNumber,
     Orders.Paid,
     Orders.Datetime,
+    Orders.ServerCalled,
     (COALESCE(DishPrice.TotalPrice, 0) + COALESCE(DrinkPrice.TotalPrice, 0)) AS TotalPrice
   FROM Orders
   LEFT JOIN (
@@ -901,7 +903,7 @@ function getOrders () {
       SUM(Dishes.Price + OrderedDishes.AdditionalCharges) AS TotalPrice
     FROM OrderedDishes
     LEFT JOIN Dishes ON OrderedDishes.Dishes_ID = Dishes.ID
-    WHERE OrderedDishes.Refunded = 0 OR OrderedDishes.Status < 3
+    WHERE OrderedDishes.Refunded = 0 AND OrderedDishes.Status = 2
     GROUP BY OrderedDishes.Orders_ID
   ) AS DishPrice ON Orders.ID = DishPrice.Orders_ID
   LEFT JOIN (
@@ -910,10 +912,11 @@ function getOrders () {
       SUM(Drinks.Price + OrderedDrinks.AdditionalCharges) AS TotalPrice
     FROM OrderedDrinks
     LEFT JOIN Drinks ON OrderedDrinks.Drinks_ID = Drinks.ID
-    WHERE OrderedDrinks.Refunded = 0 OR OrderedDrinks.Status < 3
+    WHERE OrderedDrinks.Refunded = 0 AND OrderedDrinks.Status = 2
     GROUP BY OrderedDrinks.Orders_ID
   ) AS DrinkPrice ON Orders.ID = DrinkPrice.Orders_ID;
-    `;
+    `
+    ;
 
     db.all(getOrdersSql, (err, rows) => {
       if (err) {
@@ -927,7 +930,8 @@ function getOrders () {
         TableNumber: row.TableNumber,
         Paid: row.Paid,
         Datetime: row.Datetime,
-        PaidPrice: row.TotalPrice
+        PaidPrice: row.TotalPrice,
+        ServerCalled: row.ServerCalled
       }));
 
       console.log('rows', rows);
