@@ -31,9 +31,6 @@ const OrderList = ({ type }) => {
       }
 
       const response = await axios.get(url);
-      console.log('response data: ' ,response.data);
-
-    console.log('response.data.Paid: ',response.data.Paid);
 
       if(type === "Orders"){
       const sortedOrders = response.data.sort((a, b) => {
@@ -46,10 +43,11 @@ const OrderList = ({ type }) => {
           return 0; // both have same availability, maintain original order
         }
       });
-        console.log('setting sorted orders...');
         setOrders(sortedOrders);
 
     }else{
+      //hier das gleiche aber mit a.Status === 
+
       console.log('setting orders');
       setOrders(response.data);
     }
@@ -381,7 +379,7 @@ const OrderList = ({ type }) => {
                   order.Paid ? 'Yes' : 'No'
                 )}
           </td>
-          <td>{order.Paid ? order.PaidPrice.toFixed(2) : 'Not paid yet'}</td>
+          <td>{order.PaidPrice.toFixed(2)}</td> 
               <td>{order.Datetime}</td>
               <td>{editingOrder && editingOrder.ID === order.ID ? (
                   <input
