@@ -116,9 +116,9 @@ const EditDishes = () => {
     if (!(/^\d+(\.\d{1,2})?$/.test(newDish.Price)) //floating point number
     || newDish.Name.trim() === ""  //not empty
     || !(/^-?1$|^[0-9]+$/.test(newDish.Quantity)) //not empty
-    || dishes.some((dish) => dish.Name.trim() === newDish.Name.trim())
+    // || dishes.some((dish) => dish.Name.trim() === newDish.Name.trim())//unique
    
-    ) { //unique
+    ) { 
 
     alert("Failed! Check your input!!");
     return;
@@ -233,7 +233,7 @@ const EditDishes = () => {
             key={dish.ID}
             style={{ //conditionally formatting of dishes depending on quantity and available value
               backgroundColor: dish.Quantity === 0 ? 'red' :
-              !dish.Available ? '#fac3c3' : 'inherit' }}>
+              !dish.Available ? '#ff8178' : 'inherit' }}>
               <td>
                 {editingId === dish.ID ? (
                   <input  style={{ width: '80%' }}

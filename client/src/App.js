@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Error from "./pages/Error";
-import Login from "./pages/Login";
+// import Login from "./pages/Login";
 import Kitchen from "./pages/Kitchen";
 import IngredientsList from "./StaffView/IngredientsList";
 import EditExtras from "./StaffView/EditExtras";

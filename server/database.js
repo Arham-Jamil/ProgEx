@@ -916,7 +916,7 @@ const getTotalDrinkLastOrders = (tableNumber) =>{
           reject(err);
         }
         if(row){
-          console.log('row drink:',row);
+          // console.log('row drink:',row);
           resolve(row);
         }
       }

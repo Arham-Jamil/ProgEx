@@ -44,6 +44,12 @@ const LoginPop = (props) => {
         alert("Incorrect username or password");
         console.log("login failed");
       }
+
+      //For testing !!!!!!!!!!!!!!!
+      // login();
+      // setLoggedIn(true);
+
+
     } catch (error) {
       console.error(error);
     }
@@ -78,6 +84,7 @@ const LoginPop = (props) => {
               type="text"
               placeholder="Username"
               style={{width:'10rem', marginLeft:'5px'}}
+              autoFocus 
             />
             <label htmlFor="password" >Password</label>
             <input

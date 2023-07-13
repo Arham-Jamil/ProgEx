@@ -381,7 +381,7 @@ app.post('/LastOrderedDishes', async (req, res) =>{
     const getLastOrderedDishes = await db.getLastOrderedDishes(tableNumber);
     if(getLastOrderedDishes){
       res.status(200).json(getLastOrderedDishes);
-      console.log('the last ordered dishes sent')
+      // console.log('the last ordered dishes sent')
     }else{
       res.status(500).send('no data found');
     }
@@ -395,13 +395,13 @@ app.post('/LastOrderedDishes', async (req, res) =>{
 app.use(express.json());
 app.post('/LastOrderedDrinks', async (req, res) =>{
   const tableNumber = req.body.tableNumber;
-  console.log('tableNumber in app.js: ',tableNumber);
+  // console.log('tableNumber in app.js: ',tableNumber);
   try{
     const getLastOrderedDrinks = await db.getLastOrderedDrinks(tableNumber);
-    console.log(getLastOrderedDrinks);
+    // console.log(getLastOrderedDrinks);
     if(getLastOrderedDrinks){
       res.status(200).json(getLastOrderedDrinks);
-      console.log('the last ordered drinks sent')
+      // console.log('the last ordered drinks sent')
     }else{
       res.status(500).send('no data found');
     }
@@ -416,10 +416,10 @@ app.post('/LastOrdersDishSum', async (req, res) =>{
   const tableNumber = req.body.tableNumber;
   try{
     const getTotalDishLastOrders = await db.getTotalDishLastOrders(tableNumber);
-    console.log(getTotalDishLastOrders);
+    // console.log(getTotalDishLastOrders);
     if(getTotalDishLastOrders){
       res.status(200).json(getTotalDishLastOrders);
-      console.log('get last orders dish sent')
+      // console.log('get last orders dish sent')
     }else{
       res.status(500).send('no data found');
     }
@@ -434,10 +434,10 @@ app.post('/LastOrdersDrinkSum', async (req, res) =>{
   const tableNumber = req.body.tableNumber;
   try{
     const getTotalDrinkLastOrders = await db.getTotalDrinkLastOrders(tableNumber);
-    console.log(getTotalDrinkLastOrders);
+    // console.log(getTotalDrinkLastOrders);
     if(getTotalDrinkLastOrders){
       res.status(200).json(getTotalDrinkLastOrders);
-      console.log('get last orders drinks sent')
+      // console.log('get last orders drinks sent')
     }else{
       res.status(500).send('no data found');
     }

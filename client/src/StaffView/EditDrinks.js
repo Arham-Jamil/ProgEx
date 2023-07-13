@@ -114,7 +114,9 @@ const EditDrinks = () => {
       if (!(/^\d+(\.\d{1,2})?$/.test(newDrink.Price)) //floating point number
       || newDrink.Name.trim() === ""  //not empty
       || !(/^[0-9]+$/.test(newDrink.Volume))
-      || drinks.some((drink)=> drink.Name.trim() === newDrink.Name.trim())) { //unique
+      // || drinks.some((drink)=> drink.Name.trim() === newDrink.Name.trim())//unique
+      ) 
+      { 
   
       alert("Failed! Check your input!!");
       return;

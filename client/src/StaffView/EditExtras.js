@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './EditExtras.css';
+// import './EditExtras.css';
 import StaffNavHeader from './StaffNavHeader';
+import './StaffViewPages.css';
 
 const EditExtras = () => {
   const [extras, setExtras] = useState([]);
@@ -14,11 +15,21 @@ const EditExtras = () => {
   const fetchExtras = async () => {
     try {
       const response = await axios.get('http://localhost:3001/extras');
-      setExtras(response.data);
+      const sortedExtras = response.data.sort((a, b) => {
+        if (a.Available && !b.Available) {
+          return -1; // a is available, b is not available
+        } else if (!a.Available && b.Available) {
+          return 1; // a is not available, b is available
+        } else {
+          return 0; // both have same availability, maintain original order
+        }
+      });
+      setExtras(sortedExtras);
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -108,7 +119,9 @@ const EditExtras = () => {
         </thead>
         <tbody>
           {extras.map((extra) => (
-            <tr key={extra.ID}>
+            <tr key={extra.ID}
+            style={{ //conditionally formatting of dishes depending on quantity and available value
+              backgroundColor: extra.Available === 0 ? '#ff8178' :'inherit' }}>
               <td>{extra.Name}</td>
               {/* //hier kann man vllt noch die Währung variable machen */}
               <td>{extra.Price + " €"}</td> 

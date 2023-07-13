@@ -1,5 +1,40 @@
 # Note File for Comments 
 
+ Dish mit Quantity hinzufügen um dann vorzeugen zu können
+
+
+# OrdersPage
+
+    Quantity und Available muss bei Orders berücksichtigt werden und angepasst werden
+
+## All Orders
+    -Bezahlte werden noch angezeigt
+        -Sortierung (Buttons funktionieren nicht) -> standard nach ID dec sortieren
+        -Paid muss wenn angezeigt, dann ganz nach unten
+        Paid Price soll eigentlich Price to Pay sein (direkt anzeigen und immer aktualisieren)
+        -rounding error (nur 2 nachkommastellen anzeigen)
+
+## Ordered Drinks & Dishes
+
+    -Additional Charges lässt Buchstaben zu (das nicht gut)
+    -canceled wird zum Preis mit berechnet (das auch nicht)
+    -Status Änderung braucht noch Farbänderung
+    -werden nicht ausgeblended (auch nicht nach Paid ORder)
+
+
+
+Call a Server auch ohne Order???
+
+
+
+
+
+
+
+
+
+
+
 ## HomePage
 
 -+ im header banner ein button um wieder hoch zu kommen
