@@ -46,6 +46,7 @@ const Cart = (props) => {
       const response = await axios.post('http://localhost:3001/order', data);
       console.log(response.data.message); // Log the response message
   } catch (error) {
+    alert("Some Dishes are not available or have not enough Quantity available. Please ask a server!");
     console.error(error);
   }
 };

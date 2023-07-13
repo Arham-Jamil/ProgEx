@@ -381,7 +381,7 @@ const OrderList = ({ type }) => {
                   order.Paid ? 'Yes' : 'No'
                 )}
           </td>
-          <td>{order.Paid ? order.PaidPrice : 'Not paid yet'}</td>
+          <td>{order.Paid ? order.PaidPrice.toFixed(2) : 'Not paid yet'}</td>
               <td>{order.Datetime}</td>
               <td>{editingOrder && editingOrder.ID === order.ID ? (
                   <input

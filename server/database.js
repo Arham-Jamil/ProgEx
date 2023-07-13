@@ -718,105 +718,152 @@ function addOrder(tableNumber, orderDishes, orderDrinks) {
       });
     };
 
-    const addDishesToOrder = (orderId) => {
-      return new Promise((resolve, reject) => {
-        orderDishes.forEach((dish, index) => {
-          db.get(
-            `SELECT Quantity FROM Dishes WHERE ID = ?`,
-            [dish.id],
-            (err, row) => {
-              if (err) {
-                console.error(err);
-                reject(err);
-                return;
-              } else {
-                if (row && row.Quantity != 0) {
-
-                  if(row.Quantity > 0)
-                  {
-                    const newQuantity = row.Quantity - 1;
-                    const newAvailable = newQuantity != 0;
-                    db.run(`UPDATE Dishes SET quantity = ?,  available = ? WHERE ID = ?`, [newQuantity, newAvailable, dish.id], (err) => {
-                      if (err) {
-                        console.error(err);
-                        reject(err);
-                        return;
-                      }
-                    });
-                  }
-                  
-                  const sql = `
-                    INSERT INTO OrderedDishes (Orders_id, Dishes_id, Status, Description, Refunded)
-                    VALUES (?, ?, 0, ?,0)
-                    `;
-                  
-                  db.run(sql, orderId, dish.id, dish.description, function (err) {
+    const addDishesToOrder = async (orderId) => {
+      await new Promise((resolve, reject) => {
+        db.serialize(() => {
+          db.run('BEGIN TRANSACTION');
+    
+          const insertPromises = [];
+    
+          const updateAndInsert = async (dish) => {
+            try {
+              const row = await new Promise((resolve, reject) => {
+                db.get(
+                  `SELECT Quantity, Available FROM Dishes WHERE ID = ? AND Available = 1`,
+                  [dish.id],
+                  (err, row) => {
                     if (err) {
                       console.error(err);
                       reject(err);
-                      return;
                     }
-                  });
-
+                    resolve(row);
+                  }
+                );
+              });
+    
+              if (row) {
+                if (row.Quantity > 0 || row.Quantity === -1) {
+                  if (row.Quantity > 0) {
+                    const newQuantity = row.Quantity - 1;
+                    const newAvailable = newQuantity > 0;
+    
+                    await new Promise((resolve, reject) => {
+                      db.run(
+                        `UPDATE Dishes SET Quantity = ?, Available = ? WHERE ID = ?`,
+                        [newQuantity, newAvailable ? 1 : 0, dish.id],
+                        (err) => {
+                          if (err) {
+                            console.error(err);
+                            reject(err);
+                          }
+                          resolve();
+                        }
+                      );
+                    });
+                  }
+    
+                  insertPromises.push(
+                    new Promise((resolve, reject) => {
+                      db.run(
+                        `INSERT INTO OrderedDishes (Orders_ID, Dishes_ID, Status, Description, Refunded)
+                        VALUES (?, ?, 0, ?, 0)`,
+                        [orderId, dish.id, dish.description],
+                        (err) => {
+                          if (err) {
+                            console.error(err);
+                            reject(err);
+                          }
+                          resolve();
+                        }
+                      );
+                    })
+                  );
                 }
               }
+            } catch (err) {
+              reject(err);
             }
-          );
+          };
+          
+          (async () => {
+            for (const dish of orderDishes) {
+              await updateAndInsert(dish);
+            }
+    
+            Promise.all(insertPromises)
+              .then(() => {
+                db.run('COMMIT', (err) => {
+                  if (err) {
+                    console.error(err);
+                    reject(err);
+                  }
+                  resolve();
+                });
+              })
+              .catch((err) => {
+                db.run('ROLLBACK', (rollbackErr) => {
+                  if (rollbackErr) {
+                    console.error(rollbackErr);
+                  }
+                  reject(err);
+                });
+              });
+          })();
         });
-
-        resolve();
-      })
-    }
+      });
+    };
+    
 
     const addDrinksToOrder = (orderId) => {
-      return new Promise((resolve, reject) => {
-        
-        orderDrinks.forEach((drink, index) => {
-          console.log(drink.id);
+      const promises = orderDrinks.map((drink) => {
+        return new Promise((resolve, reject) => {
           const sql = `
-            INSERT INTO OrderedDrinks (Orders_id, Drinks_id, Status, Description, Refunded)
+            INSERT INTO OrderedDrinks (Orders_ID, Drinks_ID, Status, Description, Refunded)
             VALUES (?, ?, 0, ?, 0)
-            `;
-                  
-            db.run(sql, orderId, drink.id, drink.description, function (err) {
-              if (err) {
-                console.error(err);
-                reject(err);
-                return;
-                }
-            });
+          `;
+    
+          db.run(sql, orderId, drink.id, drink.description, function (err) {
+            if (err) {
+              console.error(err);
+              reject(err);
+              return;
+            }
+            resolve();
+          });
         });
-        resolve();
-      })
-    }
-
-    // Check if an existing unpaid order with the same table number exists
-    checkExistingOrder()
-      .then((existingOrderId) => {
-        if (existingOrderId != null) {
-          // Add the ordered items to the new order
-          successDish = addDishesToOrder(existingOrderId);
-          successDrink = addDrinksToOrder(existingOrderId);
-          return successDish && successDrink;
-        } else {
-          // Insert a new order into the database
-          return insertNewOrder()
-            .then((newOrderId) => {
-              // Add the ordered items to the new order
-              successDish = addDishesToOrder(newOrderId);
-              successDrink = addDrinksToOrder(newOrderId);
-              return successDish && successDrink;
-            });
-        }
-      })
-      .then(() => {
-        // Resolve the promise
-        resolve();
-      })
-      .catch((err) => {
-        // Reject the promise with the error
-        reject(err);
       });
+    
+      return Promise.all(promises);
+    };
+
+    checkExistingOrder()
+    .then((existingOrderId) => {
+      if (existingOrderId != null) {
+        // Add the ordered items to the existing order
+        return Promise.all([
+          addDishesToOrder(existingOrderId),
+          addDrinksToOrder(existingOrderId)
+        ]);
+      } else {
+        // Insert a new order into the database
+        return insertNewOrder()
+          .then((newOrderId) => {
+            // Add the ordered items to the new order
+            return Promise.all([
+              addDishesToOrder(newOrderId),
+              addDrinksToOrder(newOrderId)
+            ]);
+          });
+      }
+    })
+    .then(() => {
+      // Resolve the promise
+      resolve();
+    })
+    .catch((err) => {
+      // Reject the promise with the error
+      reject(err);
+    });
   });
 };
 

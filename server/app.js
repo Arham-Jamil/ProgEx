@@ -332,23 +332,27 @@ app.patch('/ordersCallServer', async (req, res) => {
 
 //-----------------------------------------------------------------------------------//
 
-app.post('/order', (req, res) => {
-  // const orderItems = req.body.orderItems;
+app.post('/order', async (req, res) => {
   const tableNumber = req.body.tableNumber;
-
-  //NEW NEW NEW NEWN EWN EWNEW 
   const orderDishItems = req.body.orderItems.filter((item) => item.type === 'dish');
-  const orderDrinkItems = req.body.orderItems.filter((item) => item.type === 'drink');  
- 
-  const isAvailable = db.checkDishAvailability(orderDishItems) && db.checkDrinkAvailability(orderDrinkItems);
+  const orderDrinkItems = req.body.orderItems.filter((item) => item.type === 'drink');
 
-  if (isAvailable && tableNumber != null) {
-    db.addOrder(tableNumber, orderDishItems, orderDrinkItems);
-    // Send a success response
-    res.status(200).json({ message: 'Order placed successfully!' });
-  } else {
-    // Send an error response indicating the unavailable items
-    res.status(400).json({ message: 'Some items are not available for order.' });
+  try {
+    const isDishesAvailable = await db.checkDishAvailability(orderDishItems);
+    const isDrinksAvailable = await db.checkDrinkAvailability(orderDrinkItems);
+
+    if (isDishesAvailable && isDrinksAvailable && tableNumber != null) {
+      await db.addOrder(tableNumber, orderDishItems, orderDrinkItems);
+      // Send a success response
+      res.status(200).json({ message: 'Order placed successfully!' });
+    } else {
+      // Send an error response indicating the unavailable items
+      res.status(400).json({ message: 'Some items are not available for order.' });
+    }
+  } catch (error) {
+    console.error('Error placing order:', error);
+    // Send an error response
+    res.status(500).json({ message: 'Failed to place order.' });
   }
 });
 
