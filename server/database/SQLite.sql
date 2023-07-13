@@ -128,7 +128,8 @@ VALUES
   ('Vegan Chocolate Pudding', 7.99, 'Rich and velvety vegan chocolate pudding made with plant-based ingredients.', 1, -1, 'https://delightfuladventures.com/wp-content/uploads/2022/07/chocolate-pudding-with-almond-milk.jpg', 5),
   ('Fruit Salad', 6.99, 'Fresh and colorful assortment of seasonal fruits.', 1, -1, 'https://herbsandflour.com/wp-content/uploads/2019/11/Summer-Fruit-Salad.jpg', 5),
   ('Chicken Nuggets', 5.99, 'Crispy and golden chicken nuggets served with a side of fries.', 1, -1, 'https://images.unsplash.com/photo-1562967914-608f82629710?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1473&q=80', 6),
-  ('Macaroni and Cheese', 7.99, 'Classic comfort food dish with creamy macaroni and cheese.', 1, -1, 'https://plus.unsplash.com/premium_photo-1664478288635-b9703a502393?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80', 6);
+  ('Macaroni and Cheese', 7.99, 'Classic comfort food dish with creamy macaroni and cheese.', 1, -1, 'https://plus.unsplash.com/premium_photo-1664478288635-b9703a502393?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80', 6),
+  ('Classic Tiramisu', 5.99, 'A heavenly Italian dessert featuring layers of espresso-soaked ladyfingers and creamy mascarpone, dusted with cocoa powder for a perfectly balanced indulgence.', 1, 20, 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGlyYW1pc3V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=400&q=60', 4);
 
 
 INSERT INTO Drinks (Name, Volume, Price, Available, Description, ImagePath, Category_ID)
